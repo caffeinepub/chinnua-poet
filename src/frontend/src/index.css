@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Parisienne&display=swap");
+
+@font-face {
+  font-family: "PlayfairDisplay";
+  src: url("/assets/fonts/PlayfairDisplay.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.25rem;
+    --background: 0.065 0.005 50;
+    --foreground: 0.93 0.025 65;
+    --card: 0.095 0.008 55;
+    --card-foreground: 0.93 0.025 65;
+    --popover: 0.1 0.009 55;
+    --popover-foreground: 0.93 0.025 65;
+    --primary: 0.72 0.09 75;
+    --primary-foreground: 0.065 0.005 50;
+    --secondary: 0.1 0.009 55;
+    --secondary-foreground: 0.93 0.025 65;
+    --muted: 0.12 0.008 55;
+    --muted-foreground: 0.55 0.04 65;
+    --accent: 0.72 0.09 75;
+    --accent-foreground: 0.065 0.005 50;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.22 0.02 60;
+    --input: 0.12 0.008 55;
+    --ring: 0.72 0.09 75;
+    --chart-1: 0.72 0.09 75;
+    --chart-2: 0.6 0.08 70;
+    --chart-3: 0.5 0.06 60;
+    --chart-4: 0.75 0.1 80;
+    --chart-5: 0.65 0.08 55;
+    --sidebar: 0.095 0.008 55;
+    --sidebar-foreground: 0.93 0.025 65;
+    --sidebar-primary: 0.72 0.09 75;
+    --sidebar-primary-foreground: 0.065 0.005 50;
+    --sidebar-accent: 0.12 0.008 55;
+    --sidebar-accent-foreground: 0.93 0.025 65;
+    --sidebar-border: 0.22 0.02 60;
+    --sidebar-ring: 0.72 0.09 75;
+    --gold: oklch(0.72 0.09 75);
+    --gold-dim: oklch(0.55 0.06 70);
+    --gold-bright: oklch(0.78 0.11 78);
+    --surface: oklch(0.095 0.008 55);
+    --surface-raised: oklch(0.11 0.009 55);
+    --text-primary: oklch(0.93 0.025 65);
+    --text-muted: oklch(0.55 0.04 65);
+  }
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Lora", Georgia, serif;
+    background-color: oklch(0.065 0.005 50);
+  }
+}
+
+@layer utilities {
+  .font-cinzel {
+    font-family: "PlayfairDisplay", Georgia, serif;
+  }
+  .font-lora {
+    font-family: "Lora", Georgia, serif;
+  }
+  .font-parisienne {
+    font-family: "Parisienne", cursive;
+  }
+  .font-playfair {
+    font-family: "PlayfairDisplay", Georgia, serif;
+  }
+  .text-gold {
+    color: var(--gold);
+  }
+  .text-gold-dim {
+    color: var(--gold-dim);
+  }
+  .border-gold {
+    border-color: var(--gold-dim);
+  }
+  .bg-gold {
+    background-color: var(--gold);
+  }
+  .bg-surface {
+    background-color: var(--surface);
+  }
+  .bg-surface-raised {
+    background-color: var(--surface-raised);
+  }
+  .gold-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.72 0.09 75),
+      oklch(0.58 0.07 68)
+    );
+  }
+  .hero-vignette {
+    background: radial-gradient(
+      ellipse at center,
+      transparent 30%,
+      oklch(0.065 0.005 50 / 0.7) 80%,
+      oklch(0.065 0.005 50) 100%
+    );
+  }
+  .section-divider {
+    border-color: oklch(0.22 0.02 60 / 0.4);
+  }
+}
