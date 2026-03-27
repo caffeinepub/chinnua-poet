@@ -1,0 +1,587 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { motion } from "motion/react";
+import { useState } from "react";
+import { LoginGate } from "../components/LoginGate";
+import { POEMS } from "../poems-data";
+
+const CATEGORIES = [
+  "All",
+  "Sad",
+  "Romantic",
+  "Dark",
+  "Hopeful",
+  "Love",
+  "Loss",
+  "Nature",
+  "Spiritual",
+  "Identity",
+];
+
+type PoemType = (typeof POEMS)[number];
+
+function assignCategory(poem: PoemType): string {
+  if (poem.theme) {
+    const t = poem.theme.trim();
+    if (CATEGORIES.slice(1).some((c) => c.toLowerCase() === t.toLowerCase())) {
+      return (
+        CATEGORIES.slice(1).find((c) => c.toLowerCase() === t.toLowerCase()) ||
+        ""
+      );
+    }
+  }
+  const text = `${poem.title} ${poem.full}`.toLowerCase();
+  const check = (words: string[]) => words.some((w) => text.includes(w));
+  if (
+    check([
+      "dark",
+      "shadow",
+      "fear",
+      "death",
+      "night",
+      "black",
+      "cold",
+      "hollow",
+      "void",
+      "despair",
+      "abyss",
+      "bleed",
+      "scream",
+      "trapped",
+      "haunted",
+      "ghost",
+    ])
+  )
+    return "Dark";
+  if (
+    check([
+      "god",
+      "divine",
+      "universe",
+      "soul",
+      "spirit",
+      "prayer",
+      "sacred",
+      "eternal",
+      "faith",
+      "bless",
+      "heaven",
+      "celestial",
+      "peace",
+    ])
+  )
+    return "Spiritual";
+  if (
+    check([
+      "who am i",
+      "identity",
+      "mirror",
+      "mask",
+      "exist",
+      "belong",
+      "real",
+      "truth",
+      "hidden",
+      "understand",
+    ])
+  )
+    return "Identity";
+  if (
+    check([
+      "nature",
+      "rain",
+      "river",
+      "tree",
+      "flower",
+      "sky",
+      "wind",
+      "earth",
+      "ocean",
+      "moon",
+      "sun",
+      "storm",
+      "leaf",
+      "season",
+      "mountain",
+      "forest",
+      "bird",
+    ])
+  )
+    return "Nature";
+  if (
+    check([
+      "hope",
+      "light",
+      "dawn",
+      "rise",
+      "strength",
+      "future",
+      "believe",
+      "tomorrow",
+      "dream",
+      "courage",
+      "shine",
+      "heal",
+      "new",
+    ])
+  )
+    return "Hopeful";
+  if (
+    check([
+      "loss",
+      "lose",
+      "gone",
+      "farewell",
+      "goodbye",
+      "miss",
+      "memory",
+      "remember",
+      "forget",
+      "leave",
+      "left",
+      "fade",
+      "absent",
+    ])
+  )
+    return "Loss";
+  if (
+    check([
+      "romantic",
+      "rose",
+      "moonlight",
+      "whisper",
+      "lover",
+      "beloved",
+      "tender",
+      "desire",
+      "kiss",
+      "embrace",
+      "together",
+      "heart",
+      "longing",
+      "warmth",
+    ])
+  )
+    return "Romantic";
+  if (
+    check([
+      "love",
+      "adore",
+      "cherish",
+      "devotion",
+      "affection",
+      "care",
+      "hold",
+      "forever",
+      "precious",
+      "beautiful",
+      "soul",
+    ])
+  )
+    return "Love";
+  if (
+    check([
+      "sad",
+      "cry",
+      "tears",
+      "weep",
+      "grief",
+      "sorrow",
+      "pain",
+      "hurt",
+      "ache",
+      "broken",
+      "darkness",
+      "lonely",
+      "alone",
+      "empty",
+      "lost",
+      "numb",
+      "silent",
+      "silence",
+      "suffer",
+      "wound",
+    ])
+  )
+    return "Sad";
+  return "Sad";
+}
+
+interface PoemsSlideProps {
+  currentUser: { username: string; bio: string; createdAt: string } | null;
+  onLogin: (user: {
+    username: string;
+    bio?: string;
+    email?: string;
+    createdAt: string;
+  }) => void;
+}
+
+function CategoryFilterRow({
+  categories,
+  active,
+  onChange,
+  ocidPrefix,
+}: {
+  categories: string[];
+  active: string;
+  onChange: (c: string) => void;
+  ocidPrefix: string;
+}) {
+  return (
+    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+      {categories.map((cat) => (
+        <button
+          key={cat}
+          type="button"
+          onClick={() => onChange(cat)}
+          data-ocid={`${ocidPrefix}.tab`}
+          style={{
+            padding: "0.35rem 0.9rem",
+            borderRadius: 20,
+            border: `1px solid ${active === cat ? "rgba(200,169,106,0.7)" : "rgba(200,169,106,0.2)"}`,
+            background:
+              active === cat ? "rgba(200,169,106,0.2)" : "transparent",
+            color:
+              active === cat
+                ? "rgba(200,169,106,0.95)"
+                : "rgba(229,231,235,0.6)",
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontSize: "0.82rem",
+            cursor: "pointer",
+            transition: "all 0.2s",
+          }}
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function PoemGrid({
+  poems,
+  onSelect,
+  emptyOcid,
+  itemOcidPrefix,
+}: {
+  poems: PoemType[];
+  onSelect: (p: PoemType) => void;
+  emptyOcid: string;
+  itemOcidPrefix: string;
+}) {
+  if (poems.length === 0) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "3rem",
+          color: "rgba(229,231,235,0.4)",
+          fontFamily: "'Libre Baskerville', Georgia, serif",
+        }}
+        data-ocid={emptyOcid}
+      >
+        No poems found
+      </div>
+    );
+  }
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+        gap: "1rem",
+      }}
+    >
+      {poems.slice(0, 120).map((poem, idx) => {
+        const cat = assignCategory(poem);
+        return (
+          <motion.div
+            key={poem.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: Math.min(idx * 0.01, 0.4) }}
+            className="feed-card"
+            style={{ padding: "1.25rem", cursor: "pointer" }}
+            onClick={() => onSelect(poem)}
+            data-ocid={`${itemOcidPrefix}.item.${idx + 1}`}
+          >
+            <span
+              style={{
+                fontSize: "0.7rem",
+                padding: "2px 8px",
+                background: "rgba(200,169,106,0.12)",
+                borderRadius: 4,
+                color: "rgba(200,169,106,0.8)",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                marginBottom: "0.5rem",
+                display: "inline-block",
+              }}
+            >
+              {cat}
+            </span>
+            <h3
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "1rem",
+                fontWeight: 700,
+                color: "#F5E6D3",
+                marginBottom: "0.5rem",
+                lineHeight: 1.4,
+              }}
+            >
+              {poem.title}
+            </h3>
+            <p
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontStyle: "italic",
+                color: "rgba(229,231,235,0.55)",
+                fontSize: "0.85rem",
+                lineHeight: 1.7,
+                whiteSpace: "pre-line",
+              }}
+            >
+              {poem.full.split("\n").filter(Boolean).slice(0, 2).join("\n")}
+            </p>
+            <span
+              style={{
+                marginTop: "0.75rem",
+                display: "block",
+                fontSize: "0.78rem",
+                color: "rgba(200,169,106,0.8)",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+              }}
+            >
+              Read poem →
+            </span>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
+  const [search1, setSearch1] = useState("");
+  const [category1, setCategory1] = useState("All");
+  const [search2, setSearch2] = useState("");
+  const [category2, setCategory2] = useState("All");
+  const [selected, setSelected] = useState<PoemType | null>(null);
+
+  const mainPoems = POEMS.filter((p) => !p.collection);
+  const echoesPoems = POEMS.filter(
+    (p) => p.collection === "Echoes of My Heart",
+  );
+
+  function filterPoems(poems: PoemType[], search: string, category: string) {
+    return poems.filter((p) => {
+      const matchSearch =
+        p.title.toLowerCase().includes(search.toLowerCase()) ||
+        p.full.toLowerCase().includes(search.toLowerCase());
+      const cat = assignCategory(p);
+      const matchCat = category === "All" || cat === category;
+      return matchSearch && matchCat;
+    });
+  }
+
+  const filtered1 = filterPoems(mainPoems, search1, category1);
+  const filtered2 = filterPoems(echoesPoems, search2, category2);
+
+  return (
+    <div
+      className="slide-container"
+      style={{ overflowY: "auto", paddingBottom: "2rem" }}
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.4 }}
+        style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 1rem" }}
+      >
+        {/* === SECTION 1: Poetry Collection === */}
+        <h2
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: "1.6rem",
+            color: "#F5E6D3",
+            marginBottom: "1.25rem",
+            fontWeight: 700,
+          }}
+        >
+          Poetry Collection
+        </h2>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <Input
+            value={search1}
+            onChange={(e) => setSearch1(e.target.value)}
+            placeholder="Search poems..."
+            data-ocid="poems.search_input"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(200,169,106,0.2)",
+              color: "#F5E6D3",
+              maxWidth: 400,
+            }}
+          />
+          <CategoryFilterRow
+            categories={CATEGORIES}
+            active={category1}
+            onChange={setCategory1}
+            ocidPrefix="poems"
+          />
+        </div>
+        <PoemGrid
+          poems={filtered1}
+          onSelect={setSelected}
+          emptyOcid="poems.empty_state"
+          itemOcidPrefix="poems"
+        />
+
+        {/* === Gold Divider === */}
+        <div
+          style={{
+            margin: "3rem 0",
+            height: 1,
+            background:
+              "linear-gradient(to right, transparent, rgba(200,169,106,0.4), transparent)",
+          }}
+        />
+
+        {/* === SECTION 2: Echoes of My Heart === */}
+        <h2
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: "1.6rem",
+            color: "#F5E6D3",
+            marginBottom: "0.4rem",
+            fontWeight: 700,
+          }}
+        >
+          Echoes of My Heart
+        </h2>
+        <p
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontStyle: "italic",
+            color: "rgba(200,169,106,0.65)",
+            fontSize: "0.88rem",
+            marginBottom: "1.25rem",
+          }}
+        >
+          A special collection
+        </p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <Input
+            value={search2}
+            onChange={(e) => setSearch2(e.target.value)}
+            placeholder="Search Echoes of My Heart..."
+            data-ocid="echoes.search_input"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(200,169,106,0.2)",
+              color: "#F5E6D3",
+              maxWidth: 400,
+            }}
+          />
+          <CategoryFilterRow
+            categories={CATEGORIES}
+            active={category2}
+            onChange={setCategory2}
+            ocidPrefix="echoes"
+          />
+        </div>
+        <PoemGrid
+          poems={filtered2}
+          onSelect={setSelected}
+          emptyOcid="echoes.empty_state"
+          itemOcidPrefix="echoes"
+        />
+      </motion.div>
+
+      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
+        <DialogContent
+          style={{
+            background: "#1A1410",
+            border: "1px solid rgba(200,169,106,0.2)",
+            maxWidth: 600,
+            maxHeight: "80vh",
+            overflowY: "auto",
+          }}
+          data-ocid="poems.dialog"
+        >
+          <DialogHeader>
+            <DialogTitle
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                color: "#F5E6D3",
+                fontSize: "1.3rem",
+              }}
+            >
+              {selected?.title}
+            </DialogTitle>
+          </DialogHeader>
+          {selected && (
+            <span
+              style={{
+                fontSize: "0.75rem",
+                padding: "2px 8px",
+                background: "rgba(200,169,106,0.12)",
+                borderRadius: 4,
+                color: "rgba(200,169,106,0.8)",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+              }}
+            >
+              {assignCategory(selected)}
+            </span>
+          )}
+          {currentUser ? (
+            <pre
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontStyle: "italic",
+                color: "rgba(229,231,235,0.85)",
+                fontSize: "0.95rem",
+                lineHeight: 2,
+                whiteSpace: "pre-wrap",
+                marginTop: "1rem",
+              }}
+            >
+              {selected?.full}
+            </pre>
+          ) : (
+            <LoginGate
+              onLogin={(u) =>
+                onLogin({
+                  username: u.username,
+                  email: u.email,
+                  createdAt: u.createdAt,
+                })
+              }
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

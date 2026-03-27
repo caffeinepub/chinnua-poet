@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Parisienne&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Parisienne&display=swap");
 
 @font-face {
   font-family: "PlayfairDisplay";
@@ -14,46 +14,46 @@
 
 @layer base {
   :root {
-    --radius: 0.25rem;
-    --background: 0.065 0.005 50;
-    --foreground: 0.93 0.025 65;
-    --card: 0.095 0.008 55;
-    --card-foreground: 0.93 0.025 65;
-    --popover: 0.1 0.009 55;
-    --popover-foreground: 0.93 0.025 65;
+    --radius: 0.5rem;
+    --background: 0.095 0.006 55;
+    --foreground: 0.92 0.04 65;
+    --card: 0.115 0.01 55;
+    --card-foreground: 0.92 0.04 65;
+    --popover: 0.115 0.01 55;
+    --popover-foreground: 0.92 0.04 65;
     --primary: 0.72 0.09 75;
-    --primary-foreground: 0.065 0.005 50;
-    --secondary: 0.1 0.009 55;
-    --secondary-foreground: 0.93 0.025 65;
-    --muted: 0.12 0.008 55;
-    --muted-foreground: 0.55 0.04 65;
+    --primary-foreground: 0.095 0.006 55;
+    --secondary: 0.13 0.012 55;
+    --secondary-foreground: 0.92 0.04 65;
+    --muted: 0.15 0.012 55;
+    --muted-foreground: 0.52 0.04 65;
     --accent: 0.72 0.09 75;
-    --accent-foreground: 0.065 0.005 50;
+    --accent-foreground: 0.095 0.006 55;
     --destructive: 0.577 0.245 27.325;
     --destructive-foreground: 0.985 0 0;
-    --border: 0.22 0.02 60;
-    --input: 0.12 0.008 55;
+    --border: 0.22 0.025 65;
+    --input: 0.15 0.012 55;
     --ring: 0.72 0.09 75;
     --chart-1: 0.72 0.09 75;
     --chart-2: 0.6 0.08 70;
     --chart-3: 0.5 0.06 60;
     --chart-4: 0.75 0.1 80;
     --chart-5: 0.65 0.08 55;
-    --sidebar: 0.095 0.008 55;
-    --sidebar-foreground: 0.93 0.025 65;
+    --sidebar: 0.105 0.008 55;
+    --sidebar-foreground: 0.92 0.04 65;
     --sidebar-primary: 0.72 0.09 75;
-    --sidebar-primary-foreground: 0.065 0.005 50;
-    --sidebar-accent: 0.12 0.008 55;
-    --sidebar-accent-foreground: 0.93 0.025 65;
-    --sidebar-border: 0.22 0.02 60;
+    --sidebar-primary-foreground: 0.095 0.006 55;
+    --sidebar-accent: 0.15 0.012 55;
+    --sidebar-accent-foreground: 0.92 0.04 65;
+    --sidebar-border: 0.22 0.025 65;
     --sidebar-ring: 0.72 0.09 75;
-    --gold: oklch(0.72 0.09 75);
-    --gold-dim: oklch(0.55 0.06 70);
-    --gold-bright: oklch(0.78 0.11 78);
-    --surface: oklch(0.095 0.008 55);
-    --surface-raised: oklch(0.11 0.009 55);
-    --text-primary: oklch(0.93 0.025 65);
-    --text-muted: oklch(0.55 0.04 65);
+    --gold: #c8a96a;
+    --gold-dim: rgba(200, 169, 106, 0.6);
+    --gold-subtle: rgba(200, 169, 106, 0.15);
+    --surface: #0d0d0d;
+    --surface-raised: #1a1410;
+    --text-primary: #f5e6d3;
+    --text-muted: rgba(245, 230, 211, 0.5);
   }
   * {
     @apply border-border;
@@ -62,9 +62,9 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground;
-    font-family: "Lora", Georgia, serif;
-    background-color: oklch(0.065 0.005 50);
+    background-color: #0d0d0d;
+    color: #f5e6d3;
+    font-family: "Libre Baskerville", Georgia, serif;
   }
 }
 
@@ -72,49 +72,66 @@
   .font-cinzel {
     font-family: "PlayfairDisplay", Georgia, serif;
   }
+  .font-playfair {
+    font-family: "Playfair Display", Georgia, serif;
+  }
+  .font-cormorant {
+    font-family: "Cormorant Garamond", Georgia, serif;
+  }
+  .font-baskerville {
+    font-family: "Libre Baskerville", Georgia, serif;
+  }
   .font-lora {
-    font-family: "Lora", Georgia, serif;
+    font-family: "Cormorant Garamond", Georgia, serif;
   }
   .font-parisienne {
     font-family: "Parisienne", cursive;
   }
-  .font-playfair {
-    font-family: "PlayfairDisplay", Georgia, serif;
-  }
   .text-gold {
-    color: var(--gold);
+    color: #c8a96a;
   }
   .text-gold-dim {
-    color: var(--gold-dim);
+    color: rgba(200, 169, 106, 0.6);
   }
   .border-gold {
-    border-color: var(--gold-dim);
+    border-color: rgba(200, 169, 106, 0.3);
   }
   .bg-gold {
-    background-color: var(--gold);
+    background-color: #c8a96a;
   }
   .bg-surface {
-    background-color: var(--surface);
+    background-color: #0d0d0d;
   }
   .bg-surface-raised {
-    background-color: var(--surface-raised);
+    background-color: #1a1410;
   }
   .gold-gradient {
-    background: linear-gradient(
-      135deg,
-      oklch(0.72 0.09 75),
-      oklch(0.58 0.07 68)
-    );
+    background: linear-gradient(135deg, #c8a96a, rgba(200, 169, 106, 0.6));
   }
   .hero-vignette {
     background: radial-gradient(
       ellipse at center,
       transparent 30%,
-      oklch(0.065 0.005 50 / 0.7) 80%,
-      oklch(0.065 0.005 50) 100%
+      rgba(13, 13, 13, 0.7) 80%,
+      #0d0d0d 100%
     );
   }
   .section-divider {
-    border-color: oklch(0.22 0.02 60 / 0.4);
+    border-color: rgba(200, 169, 106, 0.2);
+  }
+
+  /* Slide layout */
+  .slide-container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Feed card style */
+  .feed-card {
+    background: #1a1410;
+    border: 1px solid rgba(200, 169, 106, 0.15);
+    border-radius: 12px;
   }
 }

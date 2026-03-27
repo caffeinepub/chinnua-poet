@@ -11,8 +11,10 @@ export default {
     extend: {
       fontFamily: {
         cinzel: ["'PlayfairDisplay'", "Georgia", "serif"],
-        playfair: ["'PlayfairDisplay'", "Georgia", "serif"],
-        lora: ["'Lora'", "Georgia", "serif"],
+        playfair: ["'Playfair Display'", "Georgia", "serif"],
+        cormorant: ["'Cormorant Garamond'", "Georgia", "serif"],
+        baskerville: ["'Libre Baskerville'", "Georgia", "serif"],
+        lora: ["'Cormorant Garamond'", "Georgia", "serif"],
         parisienne: ["'Parisienne'", "cursive"],
       },
       colors: {
@@ -43,8 +45,8 @@ export default {
       borderRadius: { lg: "var(--radius)", md: "calc(var(--radius) - 2px)", sm: "calc(var(--radius) - 4px)" },
       boxShadow: {
         xs: "0 1px 2px 0 rgba(0,0,0,0.05)",
-        gold: "0 0 20px oklch(0.72 0.09 75 / 0.15)",
-        "gold-lg": "0 0 40px oklch(0.72 0.09 75 / 0.2)",
+        gold: "0 0 20px rgba(200,169,106,0.15)",
+        "gold-lg": "0 0 40px rgba(200,169,106,0.2)",
       },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },

@@ -11322,5 +11322,1879 @@ is, in some way, made of you.`,
     theme: "",
     year: "2024",
   },
+  {
+    id: 361,
+    title: "Silent Echoes",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Whispers ride the winds of night
+Shadows dance in silver light. The heart remembers what eyes forget
+Moments linger
+a silent duet. Stars converse in hidden tongues
+Carrying tales of old and young. Time drifts softly
+a gentle stream
+Fading slowly
+a forgotten dream. Every tear holds a secret deep
+Every smile a memory to keep. The world moves in endless sway
+Yet echoes linger
+never stray. The night embraces the weary soul
+Binding fragments
+making whole. Through the silence
+the heart will speak
+Truths unseen
+yet hearts will seek.`,
+  },
+  {
+    id: 362,
+    title: "The Forgotten Garden",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Amidst the ruins
+the garden sleeps
+Beneath the earth
+where memory keeps. Petals whisper tales of past delight
+Softly fading into the night. Vines climb walls that once were strong
+Carrying echoes of laughter long. The fountain dry
+yet dreams persist
+Moments linger in morning mist. A lonely bench waits for the lost
+Time’s cruel hand
+the ultimate cost. Birds have flown
+their songs remain
+Floating softly like a gentle rain. Yet hope blooms in hidden space
+New life finds a secret place. Even in decay
+the heart can find
+Beauty eternal
+a peace of mind.`,
+  },
+  {
+    id: 363,
+    title: "Shadows of Memory",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Memories linger in the hallways of mind
+Fading images
+yet hard to leave behind. Every corner holds a silent plea
+A past that whispers eternally. Footsteps echo in forgotten rooms
+A gentle hum
+the scent of blooms. Time bends
+the walls remember all
+Every rise
+every fall. Faces appear in the dim-lit haze
+Ghosts of laughter
+lost in maze. Heartbeats sync with the rhythm of old
+Stories of love and courage untold. Yet in shadows
+a light will gleam
+Binding past and future in a seam. Even as the world forgets its own
+Memory sings in a muted tone.`,
+  },
+  {
+    id: 364,
+    title: "Moonlit Promises",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Under the silver moon we lie
+Promises whispered
+hearts fly. The night holds secrets we confide
+In its arms
+we cannot hide. Stars weave patterns of dreams untold
+Paths of love
+in threads of gold. Every glance a story
+every touch a flame
+Time may change
+but hearts stay the same. Wind hums softly through the trees
+Carrying wishes over the seas. Every shadow hides a tender vow
+Silent promises that we avow. Morning may break the spell of night
+Yet memories glow in fading light. Through years and miles
+our souls remain
+Bound by promises in the moonlight’s chain.`,
+  },
+  {
+    id: 365,
+    title: "River of Dreams",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A river flows beneath the sky
+Carrying whispers of dreams that fly. It winds through valleys
+deep and wide
+Holding secrets where shadows hide. Currents murmur in gentle tone
+Stories of lives
+of flesh and bone. Ripples shimmer in fading sun
+A journey endless
+never done. Along the banks
+flowers bloom
+Singing softly of love and gloom. Every leaf a memory
+every stone a tale
+The river whispers through the vale. Even when night descends like ink
+Stars above make the water think. Dreams float freely
+never confined
+In the river
+all souls intertwined.`,
+  },
+  {
+    id: 366,
+    title: "Twilight Whispers",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Twilight drapes the world in gold
+Stories of the day quietly told. Shadows stretch across the land
+Silent wishes held in hand. The wind hums a fading tune
+Carrying scents of night’s perfume. Every leaf whispers a secret true
+Every star shares a silver hue. Footsteps echo on empty streets
+Memories linger where time retreats. A gentle hush falls over trees
+As the world bows down to evening’s ease. Yet in this fading
+fleeting light
+Hearts awaken
+taking flight. Even as darkness claims its right
+Hope remains
+soft and bright.`,
+  },
+  {
+    id: 367,
+    title: "Echoes of the Heart",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Deep within
+the heart will speak
+In tones soft
+yet bold and meek. It holds the cries of yesterday
+And laughter that will never fade away. Every beat a story told
+Of dreams once bright
+of hands to hold. Moments lost and moments found
+Love that echoes without bound. The night listens
+the stars reply
+Softly glowing in the sky. Every sigh and every tear
+Carried on the winds
+so clear. In this symphony of life and pain
+The heart sings again and again. No words can capture what it feels
+Yet every soul its song reveals.`,
+  },
+  {
+    id: 368,
+    title: "The Wandering Soul",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Through forests deep and mountains high
+The wandering soul will always try. Searching for a place to rest
+A secret harbor
+a gentle nest. Rivers guide and stars conspire
+Fueling dreams and inner fire. Every path
+both dark and bright
+Leads the soul to endless light. The wind may howl
+the storms may roar
+Yet hearts will seek what lies in store. Even in despair
+hope may gleam
+Painting life with its quiet dream. Every journey
+every mile
+Carves the spirit
+shapes its style. The soul will wander
+yet it knows
+Beauty exists wherever it goes.`,
+  },
+  {
+    id: 369,
+    title: "Veil of Time",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Time drifts silently
+unseen
+Covering life in a silver sheen. Moments pass like fleeting rain
+Bringing joy
+yet also pain. Memories fade yet linger near
+A haunting melody only hearts hear. Faces
+voices
+whispers in the breeze
+All that remains are fragments of ease. The past and future intertwine
+Shaping destinies in hidden line. Every tear
+every smile
+Marks the journey
+mile by mile. Yet even as years quietly depart
+The veil of time touches the heart. It teaches patience
+love
+and grace
+And leaves its mark on every face.`,
+  },
+  {
+    id: 370,
+    title: "Wings of Freedom",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `I spread my wings against the sky
+Letting go of fears that bind and tie. The air is mine
+the clouds my guide
+Across the heavens
+I will glide. Mountains bow beneath my flight
+Rivers sparkle in morning light. Every breath a melody
+every glance a song
+The world around me feels so strong. Yet freedom is not without its cost
+Every gain demands what was lost. But still I soar
+above the fray
+Carving paths in skies of gray . For in the heart
+freedom resides
+A flame eternal that never hides. No chains can bind
+no cage can hold
+The spirit fearless
+bright and bold.`,
+  },
+  {
+    id: 371,
+    title: "Flames of Yesterday",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Ashes whisper of fires gone
+Shadows dance at the break of dawn. Memories burn in silent glow
+Moments lost
+yet hearts still know. The wind carries a smoky scent
+Of love and war
+of time misspent. Each ember tells a hidden tale
+Of dreams that tried but chose to fail. Through smoke and mirrors
+eyes still see
+Paths once taken
+what was to be. Yet in the fire
+hope can rise
+A phoenix born in burning skies. Every scar
+every charred stone
+Marks the courage we have known. Through yesterday’s relentless flame
+We find our strength
+we call our name.`,
+  },
+  {
+    id: 372,
+    title: "Ocean of Solitude",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Waves crash in endless rhythm
+The ocean hums a lonely hymn. Silent depths conceal the pain
+Of hearts that wander
+lost in vain. Currents pull at unseen strings
+Carrying whispers of forgotten things. Every drop a memory
+every tide a tear
+Echoes of laughter
+traces of fear. The horizon stretches
+far and wide
+A mirror of what we try to hide. Yet in this vast and endless sea
+The soul finds solace
+it learns to be free. Storms may rage
+winds may howl
+But peace returns like a gentle owl. In solitude
+the heart will mend
+The ocean’s song
+a faithful friend.`,
+  },
+  {
+    id: 373,
+    title: "Garden of Secrets",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Among the roses
+secrets bloom
+Whispering softly in the gloom. Petals hide what eyes cannot see
+Stories of love
+of mystery. Paths of stone wind through the trees
+Carrying scents of distant seas. Every flower a memory held tight
+Every shadow a hidden light. Birdsong echoes where sunlight falls
+Softening edges of ancient walls. Time may fade
+yet still remain
+The gentle joy
+the quiet pain. Within the garden
+hearts may find
+A place to rest
+a tranquil mind. Every secret
+every sigh
+Beneath the branches
+learns to fly.`,
+  },
+  {
+    id: 374,
+    title: "Veins of the Earth",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Rivers carve the soil and stone
+Veins of the earth
+deeply known. Mountains rise where secrets sleep
+Valleys cradle what waters keep. Every stone holds ancient tales
+Of storms and suns
+of mighty gales. The wind dances across the plains
+Bearing whispers of loss and gains. Roots dig deep
+unseen
+unknown
+Binding life in every bone. Through soil and rock
+life flows free
+A silent song of eternity. Even when the sky turns gray
+Nature moves in its own way. Veins of the earth
+silent and true
+Remind the heart of what we knew.`,
+  },
+  {
+    id: 375,
+    title: "Portraits of Silence",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Canvas blank
+yet stories lie
+In colors soft
+in shades that cry. Brushes dance with careful hand
+Painting echoes we cannot understand. Eyes may meet
+yet words are still
+Voices trapped in iron will. Every stroke a heartbeat lost
+Every frame a frozen cost. Silence speaks where sound cannot
+Revealing truths we have forgot. In quiet moments
+shadows gleam
+Life unfolds like a secret dream. Time may fade the painted hues
+But memory holds what we choose. Portraits of silence
+framed and true
+Carry whispers from me to you.`,
+  },
+  {
+    id: 376,
+    title: "Celestial Dance",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Stars in rhythm
+planets spin
+A cosmic dance where dreams begin. Galaxies twirl in silent grace
+Painting wonder in infinite space. Comets streak with blazing trail
+Through night’s deep and endless veil. Every orbit tells a story rare
+Of creation
+love
+and cosmic care. Planets whisper
+moons reply
+Secrets hidden in velvet sky. Time itself bows to this ballet
+Where night and light forever sway. Eyes that gaze may understand
+The vast embrace of nature’s hand. In every star
+a dream takes flight
+In celestial dance
+eternal light.`,
+  },
+  {
+    id: 377,
+    title: "Mirrors of the Soul",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Reflections glint in glassy eyes
+Secrets hidden
+veiled in lies. The soul peers where shadows fall
+Seeking truth behind the wall. Every glance a question posed
+Every heartbeat silently disclosed. What lies beneath the calm façade
+The inner world
+the secret god. Mirrors twist what we perceive
+Yet in their depth
+we can believe. A journey inward
+brave and deep
+Where silent promises quietly keep. The soul beholds
+and learns to see
+Life’s reflections
+endlessly. Every mirror a path to know
+The hidden self
+the inner glow.`,
+  },
+  {
+    id: 378,
+    title: "Whispering Woods",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Beneath the trees
+the whispers grow
+A symphony only wanderers know. Leaves murmur in gentle breeze
+Carrying secrets with quiet ease. The forest breathes a timeless song
+Guiding lost souls where they belong. Shadows flicker
+sunlight weaves
+Stories hidden in every leaves. Footsteps silent on earthen ground
+Every echo a haunting sound. The heart listens
+the mind obeys
+In whispering woods
+the soul stays. Even as night falls soft and deep
+The woods protect what hearts keep. A sacred rhythm
+wild and free
+Nature’s voice in harmony.`,
+  },
+  {
+    id: 379,
+    title: "Flames of Hope",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Amidst the darkness
+a spark remains
+Flickering softly
+yet breaks chains. Every challenge
+every tear
+Ignites the flame that conquers fear. The heart beats with quiet might
+Guided by an inner light. Even when storms rage fierce and high
+Hope ascends
+it cannot die. Through shattered dreams and broken roads
+The flame sustains and softly glows. A beacon shining through the night
+Leading lost souls to morning light. Every soul can fan the fire
+Transform despair into desire. Flames of hope
+eternal
+bright
+Turning shadows into light.`,
+  },
+  {
+    id: 380,
+    title: "Sands of Time",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Grains of sand slip through our hands
+Marking moments no one understands. Every hour a fleeting breath
+Life’s whispers echo through time and death. Footprints fade upon the shore
+Memories linger forevermore. The tides erase what we have known
+Yet seeds of life are deeply sown. Hours collide in endless chase
+Yet love persists in every space. Even when the sands run low
+The heart still beats
+the spirits grow. Time may pass
+yet lessons stay
+Guiding souls along the way. In every grain
+a story lies
+Waiting for hearts to realize.`,
+  },
+  {
+    id: 381,
+    title: "Twilight Reverie",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `The sun dips low
+the sky aflame
+Colors whisper each other’s name. Shadows lengthen
+the day’s soft sigh
+Moments linger as night draws nigh. A river reflects the evening light
+Ripples shimmer
+tender and bright. Every leaf hums a gentle tune
+Beneath the gaze of the rising moon. Birds return to their hidden nests
+The world prepares for evening rests. Stars peek through the fading glow
+Carrying secrets only dreamers know. In twilight’s hush
+the heart may find
+A peaceful space
+a tranquil mind. Time stands still in this golden hour
+Nature’s magic
+gentle and pure.`,
+  },
+  {
+    id: 382,
+    title: "Veins of the Sky",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Clouds stretch wide across the blue
+Painted streaks of pink and hue. Lightning dances in the distance far
+Night approaches with a silver star. The wind whispers in gentle song
+Carrying stories of right and wrong. Every gust a memory
+every rain a tear
+Every shadow a moment held dear. Birds glide along the cooling breeze
+Time drifts slow with gentle ease. Evening hums a silent rhyme
+Marking the passage of endless time. Yet above
+the sky remains
+Holding sunlight
+storms
+and rains. Veins of clouds in twilight glow
+Map the dreams we long to know.`,
+  },
+  {
+    id: 383,
+    title: "Forgotten Paths",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Paths wind through forests deep
+Holding memories shadows keep. Every step a choice once made
+Every turn a promise laid. Leaves whisper of journeys past
+Echoes of laughter meant to last. Stone and soil beneath the feet
+Mark the rhythm of time’s heartbeat. A breeze may stir the fallen leaves
+Carrying tales no one believes. Every trail a hidden song
+Leading hearts where they belong. Even when darkness cloaks the way
+The spirit guides
+it will not sway. Through forgotten paths
+the soul will roam
+Seeking always a place called home.`,
+  },
+  {
+    id: 384,
+    title: "Eternal Horizon",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Horizon stretches
+endless and wide
+Where earth and sky forever collide. Sun and moon in constant chase
+Mark the universe’s gentle pace. Clouds drift slowly
+shapes unknown
+Whispers carried by winds that have grown. Mountains stand with patient grace
+Guarding secrets of time and space. Every dawn brings new light
+Every dusk cloaks the fading sight. Yet beyond the eye can see
+Lies infinity
+bold and free. Hearts that wander toward the line
+Feel the pulse of the grand design. In every breath
+a story unfolds
+Of dreams eternal
+of courage bold.`,
+  },
+  {
+    id: 385,
+    title: "Whispers of the Rain",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Raindrops tap on windows bright
+Softly singing into the night. Every drop a note
+a song
+Telling tales that last so long. Puddles mirror the silver sky
+Reflecting dreams that never die. Leaves glisten with tender grace
+Nature smiles on every face. Thunder hums a distant tune
+Chasing shadows
+summoning moon. The world breathes in gentle rain
+Washing sorrow
+soothing pain. And when the storm has drifted by
+A rainbow arches across the sky. Hope returns on vibrant wings
+Carried softly by raindrops’ strings.`,
+  },
+  {
+    id: 386,
+    title: "Labyrinth of Dreams",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Paths twist in shadowed mind
+Dreams and fears are intertwined. Every turn a choice unknown
+Every step a seed once sown. Mirrors glint where shadows bend
+Whispering truths they cannot send. The heart may wander
+lost in maze
+Seeking light through endless haze. Time itself becomes a stream
+Flowing softly through every dream. Every wall hides a secret bright
+Every corner holds a spark of light. Yet through the labyrinth
+the soul will find
+Peace and courage intertwined. Every nightmare
+every scheme
+Leads the way to a waking dream.`,
+  },
+  {
+    id: 387,
+    title: "Lanterns of the Mind",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Thoughts ignite like lanterns bright
+Guiding paths through darkest night. Every flame a spark of soul
+Lighting pieces to make us whole. Shadows shift as lanterns glow
+Revealing what the heart may know. Dreams take flight on gentle flame
+Marking journeys without name. Wisdom hums in flickering light
+Chasing doubts into the night. Every spark a lesson learned
+Every candle brightly burned. Through corridors of mind we go
+Lanterns light the inner flow. Every heart can find its way
+With lanterns guiding night and day.`,
+  },
+  {
+    id: 388,
+    title: "Frosted Silence",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Winter spreads its frozen veil
+Chilling hearts in silent tale. Snowflakes whisper on the ground
+A quiet magic all around. Trees stand stark
+their branches bare
+Yet beauty lingers in the air. Breath condenses in the frosty light
+Marking moments pure and bright. Footsteps crunch upon the snow
+Echoes of the world below. Every flake a fleeting kiss
+A reminder of forgotten bliss. Though cold may pierce the outer skin
+Warmth remains alive within. Frosted silence
+calm and deep
+Cradles dreams while hearts still leap.`,
+  },
+  {
+    id: 389,
+    title: "Wings of Midnight",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `The clock strikes twelve
+the world asleep
+Secrets awaken
+shadows creep. Moonlight drapes the silver land
+Magic stirs with gentle hand. Owls whisper through the trees
+Carried softly by midnight breeze. Stars align in silent tune
+Guiding dreams beneath the moon. Every heartbeat quickens now
+Mysteries speak
+the mind must bow. Through darkness flies the soul’s desire
+Seeking flames
+a hidden fire. Even in the still of night
+Hearts take flight in quiet light. Wings of midnight
+free and wide
+Carry hopes the world may hide.`,
+  },
+  {
+    id: 390,
+    title: "River of Stars",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Across the sky
+a river flows
+Where starlight in quiet beauty glows. Galaxies drift in endless stream
+Carrying every lost dream. Planets turn with gentle grace
+Time itself keeps silent pace. Comets trace a fleeting line
+Marking destinies divine. Waves of light cascade and fall
+Answering the universe’s call. Every spark a memory bright
+Every glow a guiding light. Hearts afloat on stellar tide
+Finding peace where dreams reside. River of stars
+forever gleam
+Cradling souls within its beam.`,
+  },
+  {
+    id: 391,
+    title: "Moonlit Solitude",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Beneath the moon
+the world stands still
+Silver light casts shadows at will. Every leaf
+every blade of grass
+Whispers stories the night will amass. Crickets hum their soft refrain
+A gentle echo of quiet pain. The stars peer down with timeless eyes
+Reflecting dreams that never die. Footsteps wander on empty roads
+Carrying secrets
+untold odes. The heart listens
+the mind awakes
+In moonlit solitude
+silence speaks. Even as darkness folds the sky
+Peace resides where hearts lie. Every sigh
+every tear
+Finds a home in nights so clear.`,
+  },
+  {
+    id: 392,
+    title: "The Hidden Garden",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Behind the gates of ivy green
+Lies a garden rarely seen. Roses bloom in secret grace
+Petals hide the sun’s embrace. Paths meander through quiet trees
+Carrying whispers with the breeze. Every corner holds a tale untold
+Every shadow
+a heart of gold. Birds hum soft and subtle songs
+Echoing where serenity belongs. The water ripples in gentle dance
+Inviting all to a fleeting trance. Even if the world remains outside
+Peace resides where secrets hide. Every flower
+every vine
+Whispers softly
+“ You are mine. ”`,
+  },
+  {
+    id: 393,
+    title: "Echoes in the Mist",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Misty mornings veil the land
+Footprints fade where we once stand. Voices linger
+soft and low
+Whispers of what we used to know. The trees are cloaked in silver haze
+Carrying echoes of bygone days. Every shadow hides a tale
+Every gust a fleeting trail. Rivers glide beneath the mist
+Reflecting dreams that once exist. Every leaf a silent prayer
+Every stone a memory rare. Even when the sun ascends
+The mist refuses to fully end. It guards the echoes
+soft and true
+Of all we were
+and all we knew.`,
+  },
+  {
+    id: 394,
+    title: "The Silent Harbor",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Ships dock quietly in gentle bays
+Reflecting sunlight in golden rays. Waves hum a subtle tune
+Beneath the gaze of the silver moon. The harbor holds both hope and fear
+Stories linger year by year. Fishermen cast their nets in trust
+Balancing life with dawn’s soft dust. Seagulls cry and dance on high
+Tracing patterns across the sky. Every boat a journey begun
+Every sail touched by the sun. Even when storms rage above
+The harbor shelters with quiet love. A resting place for hearts that roam
+A quiet space
+a fleeting home.`,
+  },
+  {
+    id: 395,
+    title: "Veil of Rain",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Clouds gather
+heavy and low
+A silver curtain begins to flow. Raindrops tap in rhythmic song
+Washing the earth
+cleansing the wrong. Pavements glisten with mirrored skies
+Reflections of hopes in wandering eyes. Leaves glimmer
+petals bow
+Nature breathes in sacred vow. Thunder rumbles in distant halls
+Lightning dances and softly calls. The rain whispers to every heart
+A symphony that heals each part. Even as puddles form and streams arise
+The world smiles beneath rainy skies. Veil of rain
+serene and clear
+Carries love to all who hear.`,
+  },
+  {
+    id: 396,
+    title: "Silent Mountains",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Mountains rise in quiet pride
+Holding secrets the winds confide. Peaks touch clouds with icy hands
+Guarding dreams across the lands. Rivers spring from frozen heart
+Carving valleys
+creating art. Every stone a timeless tale
+Every path a winding trail. Birds soar high above the ridge
+Tracing arcs across the bridge. Even when storms descend in might
+The mountains stand in steadfast light. Silence echoes in rocky halls
+Every shadow a story calls. Mighty peaks and valleys deep
+Hold the wisdom the world will keep.`,
+  },
+  {
+    id: 397,
+    title: "Veins of the Forest",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Roots wind deep beneath the ground
+Binding life in silence profound. Leaves shimmer in soft-lit haze
+Marking time in endless ways. Streams flow with gentle grace
+Carving paths through nature’s space. Every stone holds stories old
+Every tree a secret told. Birdsong echoes in shaded halls
+Sunlight dances on mossy walls. Every breeze a fleeting sigh
+Every shadow a whispered cry. Even when the world stands still
+The forest breathes with timeless will. Veins of life in earth and air
+A sacred rhythm everywhere.`,
+  },
+  {
+    id: 398,
+    title: "Ocean’s Lullaby",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Waves caress the golden shore
+Singing songs of ancient lore. Every ripple tells a tale
+Of sailors lost and ships that sail. Seagulls cry and dip in flight
+Tracing arcs in fading light. Shells murmur secrets in the sand
+Echoes carried across the land. Moonlight dances on rolling tides
+Reflecting dreams where love resides. Storms may roar
+yet calm returns
+As every heart with hope still yearns. Even when the horizon bends
+The ocean’s song never ends. In every wave
+a story flows
+Of endless love the water knows.`,
+  },
+  {
+    id: 399,
+    title: "Lanterns of Hope",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Candles flicker in the night
+Guiding hearts with gentle light. Every flame a wish
+a dream
+Every shadow a silver gleam. Hope flows softly through the air
+Whispering promises everywhere. Even when the path is dim
+Lanterns shine on every whim. Steps may falter
+winds may roar
+Yet flames endure forevermore. Every heart can find its way
+Through lanterns bright
+night or day. Even as the darkness lingers long
+The fire within grows ever strong. Lanterns light the inner skies
+Bringing peace where sorrow lies.`,
+  },
+  {
+    id: 400,
+    title: "Shadows of Time",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `The clock ticks
+relentless and slow
+Marking paths where moments go. Shadows stretch with every hour
+Fading petals
+a wilting flower. Memories drift on winds unseen
+Floating softly in places between. Every laugh
+every tear
+Carves the path of yesteryear. Time whispers in silent ways
+Filling nights and hollow days. The sun may set
+the moon arise
+Yet shadows linger in our eyes. Even when the present fades away
+Time’s echo guides what hearts may say. Through every shadow
+light will gleam
+A reminder of every dream.`,
+  },
+  {
+    id: 401,
+    title: "Wings of Dawn",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Morning breaks with gentle fire
+Awakening hearts with sweet desire. Sunlight spreads across the land
+Touching seas
+mountains
+and sand. Birds take flight on warming breeze
+Tracing arcs above the trees. Every leaf glows
+every bloom
+Chasing off the night’s cold gloom. Hope is carried on the wind
+Every soul prepared to begin. Shadows vanish
+darkness flees
+Life awakens with morning’s ease. Even as the day unfolds its wings
+Magic whispers in hidden things. Every dawn
+a chance to rise
+And greet the world with open eyes.`,
+  },
+  {
+    id: 402,
+    title: "The Forgotten Well",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `An old well stands beneath the tree
+Silent witness to history. Ropes fray
+stones grow worn
+Echoes linger from the forlorn. Water glimmers in shadowed deep
+Holding secrets the world may keep. Reflections shimmer
+soft and true
+Of hearts that loved and passed through. Leaves fall
+covering the rim
+Nature sings a quiet hymn. Time may rust
+and years decay
+Yet the well’s spirit will always stay. Even when no hand pulls the rope
+Dreams remain
+and hearts will hope. The forgotten well
+silent and old
+Holds the stories never told.`,
+  },
+  {
+    id: 403,
+    title: "Symphony of Leaves",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Autumn whispers in crimson and gold
+Leaves cascade
+a story unfolds. Every breeze a note of song
+Nature’s orchestra plays along. Trees sway with rhythm and grace
+Painting colors across the space. Shadows mingle
+light bends low
+A dance of time in gentle flow. Footsteps crunch on carpeted ground
+A melody in every sound. Every leaf a fleeting beat
+Every rustle a memory sweet. Even as the season fades away
+Music lingers
+soft as day. Symphony of leaves
+wild and free
+Echoes of life’s great melody.`,
+  },
+  {
+    id: 404,
+    title: "Firefly Nights",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Darkness hums
+the night is deep
+Stars are scattered in quiet sleep. Fireflies dance with gentle glow
+Painting sparks where shadows flow. Every light a fleeting guide
+A secret path the night can hide. Whispers float on cooling air
+Every flicker a hope laid bare. Grasses shimmer
+trees breathe slow
+Mysteries awaken as breezes blow. Every heart may feel the spark
+Lighting warmth within the dark. Even as the night continues long
+Fireflies hum a soft
+sweet song. Guiding dreams in secret ways
+Through velvet nights and silvered haze.`,
+  },
+  {
+    id: 405,
+    title: "Valley of Whispers",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A valley sleeps beneath the hills
+Echoes float in gentle thrills. Rivers murmur
+winds softly sigh
+Secrets held where shadows lie. Trees bend low with whispered tales
+Of ancient storms and faded sails. Every stone remembers time
+Every leaf keeps rhythm and rhyme. Birdsong drifts with morning light
+Chasing remnants of the night. Evening brings a tranquil song
+Where hearts can rest and souls belong. The valley listens
+calm and wise
+Holding truth beneath open skies. Every whisper
+every breeze
+Carries hope across the trees.`,
+  },
+  {
+    id: 406,
+    title: "Candlelit Memories",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Flickering light in quiet rooms
+Shadows dance with forgotten blooms. Every candle hums a song
+Of love departed
+right and wrong. Photographs in dusty frames
+Carry whispers
+call old names. Memories drift through gentle flame
+Softly speaking what cannot claim. Every glow a heart remembers
+Every spark a time that lingers. Even when the world moves fast
+The candlelight holds moments past. In quiet hours
+hearts may see
+The past alive in memory. Candlelit nights
+both calm and bright
+Illuminate the soul’s deep light.`,
+  },
+  {
+    id: 407,
+    title: "The Wandering Star",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A lone star drifts across the sky
+Seeking places where dreams may lie. Its light a beacon in the dark
+A guide for hearts that lost their spark. Comets race and planets spin
+Yet the star’s journey will begin. Across the universe
+it flies
+Painting hope on endless skies. Every night it whispers low
+Stories of what we may know. Even if the path is dim and far
+Hearts can follow the wandering star. Its glow reminds of love and grace
+Of dreams that time cannot erase. Even when the world may fall asleep
+The wandering star its vigil keeps.`,
+  },
+  {
+    id: 408,
+    title: "Autumn’s Veil",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Leaves of amber float through air
+Crisp and fragrant
+everywhere. The trees release their final song
+A melody to the heart belongs. Every breeze a fleeting kiss
+Carrying scents of autumn bliss. Shadows dance in fading light
+Golden moments before night. Footsteps echo on leafy ground
+Every crackle a gentle sound. Evening hums a soft goodbye
+To summer’s warmth and sunny sky. Yet in the veil of autumn days
+Nature’s art forever stays. Every leaf a fleeting flame
+Every tree calls out our name.`,
+  },
+  {
+    id: 409,
+    title: "The Hidden Cove",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A secret cove beneath the cliffs
+Shadows play in rocky drifts. Waves hum soft upon the sand
+A quiet world
+untouched by hand. Seagulls circle
+wings spread wide
+Tracing arcs above the tide. Every stone holds history deep
+Every whisper the ocean keeps. Footsteps fade
+and echoes die
+Sunlight sparkles
+then waves reply. Even in solitude
+hearts find peace
+In hidden coves
+all troubles cease. Night descends with stars so bright
+Reflecting dreams in silver light. Every cove
+a secret place
+Where souls can rest in nature’s embrace.`,
+  },
+  {
+    id: 410,
+    title: "The Frosted Path",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Snowflakes dance on frozen ground
+Whispering secrets without a sound. Every step leaves a fleeting trace
+A frozen story time cannot erase. Trees bow under winter’s weight
+Branches glisten
+delicate and great. Frost etches patterns on every pane
+Memories linger like soft
+silent rain. Footsteps echo in hollow air
+Carrying tales beyond compare. Even as the cold wraps the earth
+Hearts ignite with warmth and mirth. The path may seem endless
+white and clear
+Yet each step brings the destination near. Snowbound roads and silvered skies
+Hold the beauty the heart belies.`,
+  },
+  {
+    id: 411,
+    title: "Twilight Reverie",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `The sky melts in hues of fire
+Evening whispers hearts’ desire. Shadows stretch
+the day bows low
+Night prepares its silver glow. Every breeze a gentle sigh
+Carrying dreams that cannot die. Birdsong fades as stars appear
+Twilight hums
+both soft and clear. Rivers glint in amber light
+Reflecting thoughts that roam at night. Every leaf a whispered prayer
+Every heart finds solace there. Even as darkness drapes the skies
+Hope persists
+and never dies. Twilight
+a bridge from day to night
+Where the soul feels pure delight.`,
+  },
+  {
+    id: 412,
+    title: "Garden of Forgotten Dreams",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Once a garden
+now untamed
+Holds the dreams we never claimed. Roses wilt
+yet beauty stays
+In the silence of bygone days. Paths are tangled
+grass grows high
+Yet memories wander and never die. Every petal a story untold
+Every stone a memory bold. Birds return to nests long bare
+Singing songs of vanished care. Wind flows gentle
+leaves do sway
+Carrying whispers of yesterday. Even as the world forgets this space
+Dreams persist with tender grace. The garden waits
+serene and deep
+Where the heart may safely keep.`,
+  },
+  {
+    id: 413,
+    title: "The Mirror Lake",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Still waters reflect the skies
+Mirroring clouds where silence lies. Every ripple a gentle wave
+A secret the lake longs to save. Mountains lean toward mirrored face
+Creating calm
+a sacred space. Birds skim low in fleeting arcs
+Lighting trails in nature’s parks. Evening falls with pink and blue
+Shadows stretch and stars peer through. Every heartbeat echoes near
+In the lake
+the world feels clear. Time pauses here
+the soul may see
+The truth of what is meant to be. Mirror lake
+both deep and wide
+Holds the universe inside.`,
+  },
+  {
+    id: 414,
+    title: "Desert of Silence",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Endless sands beneath the sun
+Whisper stories of the undone. Every dune a rising wave
+In a land both harsh and brave. Wind carves patterns on the ground
+Secrets in the grains are found. Evening brings a cooling shade
+Shadows stretch and colors fade. Night descends with stars so bright
+Guiding travelers through the night. Every step a careful pace
+Seeking refuge
+seeking grace. Though barren
+harsh
+and wide it seems
+The desert holds our quiet dreams. In silence
+life can still be found
+Where peace and endless space abound.`,
+  },
+  {
+    id: 415,
+    title: "The Rustling Pines",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Pine trees sway in whispered tune
+Beneath the sun
+beneath the moon. Every needle
+every bough
+Speaks in secrets we allow. Wind moves softly through the green
+Carrying tales of all it’s seen. Birdsong joins the gentle flow
+Nature’s music begins to grow. Footsteps trail the forest floor
+Echoes of lives that came before. Even in stillness
+hearts can hear
+The voice of pines
+both sharp and clear. Through every storm
+through every rain
+The forest sings its sweet refrain. The rustling pines
+a sacred choir
+Ignite in souls a gentle fire.`,
+  },
+  {
+    id: 416,
+    title: "Winter’s Embrace",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Snow blankets hills in purest white
+Morning awakens soft and bright. Frosted trees in crystal dress
+Nature holds a quiet caress. Every breath a cloud of smoke
+Every step a path we evoke. Icicles hang like frozen tears
+Reflecting light from distant spheres. Wolves roam silent
+shadows long
+Echoing the winter song. Even in the coldest
+harshest air
+Hearts find warmth beyond compare. As dusk descends with amber hue
+The world glows in frosty blue. Winter’s embrace
+both fierce and kind
+Leaves a magic in heart and mind.`,
+  },
+  {
+    id: 417,
+    title: "City of Echoes",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Neon lights on rain-soaked streets
+Footsteps hum in rhythmic beats. Buildings rise like silent guards
+Watching life in endless yards. Voices mix in twilight haze
+Stories drift in concrete maze. Every window hides a dream
+Every alley carries a gleam. Taxi horns and subway roars
+Merge with laughter behind closed doors. Even when chaos reigns supreme
+Hearts still hold an inner gleam. Night descends
+the city glows
+Reflecting all that life bestows. A city built of hopes and fears
+Holding countless silent tears.`,
+  },
+  {
+    id: 418,
+    title: "The Lantern Path",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Lanterns glow along the trail
+Guiding souls through darkened vale. Every flame a quiet spark
+Chasing shadows
+lighting dark. Footsteps echo on cobblestones
+Past and present softly moan. Every curve hides a secret lane
+Every light a gentle flame. Mist drifts low across the trees
+Carrying whispers on the breeze. Even when the night is long
+Lanterns hum a hopeful song. Journey ends where rivers gleam
+Reflecting stars in silver beam. The path may fade
+the light may dim
+But hope persists through every whim.`,
+  },
+  {
+    id: 419,
+    title: "The Silent River",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A river flows without a sound
+Through valleys deep and woods around. Mirroring skies of endless blue
+Carrying dreams the world once knew. Ripples touch the banks so soft
+Every wave a whispered thought. Fishermen hum a tune so mild
+As dawn awakens sleepy wild. Evening paints with amber hues
+Reflecting lives of varied views. Every stone and every tree
+Holds a part of memory. The silent river
+calm and clear
+Carries hope for those who hear. Every current
+every flow
+Speaks of life we yearn to know.`,
+  },
+  {
+    id: 420,
+    title: "The Crimson Horizon",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Sunset spills in crimson streams
+Painting skies with fiery dreams. Clouds ignite with gold and red
+Shadows stretch where daylight fled. Birds return to hidden nests
+Evening hums in tranquil rests. Every moment
+fleeting
+bright
+Marks the end of day to night. Mountains glow in amber light
+Reflecting life with gentle might. Rivers mirror fading skies
+Holding colors where beauty lies. Even as darkness takes its place
+Horizon holds a warm embrace. Every dusk a fleeting sigh
+A promise that the day won’t die.`,
+  },
+  {
+    id: 421,
+    title: "Moonlit Sonata",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Moonlight spills on silent streams
+Turning night to silver dreams. Shadows waltz in gentle sway
+Guiding hearts that lost their way. Every ripple hums a tune
+Echoes soft beneath the moon. Stars above in quiet gleam
+Whisper secrets of a dream. Evening winds in tender flight
+Carry whispers of the night. Every note
+a soft caress
+Soothing souls in gentle stress. Time stands still as night proceeds
+Nature’s song fulfills all needs. Moonlit sonata
+calm and deep
+Lulls the world in peaceful sleep.`,
+  },
+  {
+    id: 422,
+    title: "Veil of Mist",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Morning mist drapes hills and streams
+Softly hiding morning dreams. Every tree a shadowed frame
+Every path calls out a name. Leaves glisten with silver dew
+Birdsong drifts
+both bright and new. Footsteps fade in hazy air
+Time feels slower
+calm and fair. Rivers curl in veiled delight
+Reflecting misty morning light. Even as the world awakes
+The veil of mist a peace makes. Shadows linger
+secrets stay
+Holding dawn in soft display. Every breath a whispered song
+Every heart where dreams belong.`,
+  },
+  {
+    id: 423,
+    title: "The Crimson Rose",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A rose blooms in morning light
+Petals soft
+a bold delight. Thorns protect
+yet beauty shows
+A gentle strength the red rose knows. Dewdrops cling on tender leaf
+Symbol of both joy and grief. Every scent a fleeting tale
+Of passion
+love that will prevail. Even when the storm may rage
+Roses bloom upon the stage. Every heart may learn its grace
+Through crimson blooms in nature’s space. Night descends
+the rose still glows
+Petals whisper what love knows. Every thorn
+a story kept
+In the red rose where feelings slept.`,
+  },
+  {
+    id: 424,
+    title: "The Wandering Wind",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `The wind drifts across the plains
+Carrying whispers
+songs
+and pains. Every tree bends to its call
+Every leaf obeys
+each small. Mountains echo its gentle roar
+Rivers hum along the shore. Even in silence
+it is heard
+Speaking truth without a word. Fields sway
+and grasses bend
+Nature listens
+time may spend. Every gust a fleeting kiss
+Moments held in gentle bliss. Night descends
+the wind still plays
+Guiding hearts through shadowed ways. Every path the wind has known
+Leads the traveler safely home.`,
+  },
+  {
+    id: 425,
+    title: "The Forgotten Bridge",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `An old bridge spans the river wide
+Silent witness to time’s stride. Planks worn smooth by countless feet
+Echoes linger where past and present meet. Moss creeps slowly on each side
+Holding secrets it cannot hide. Every knot and every nail
+Tells a story
+soft and frail. Even when the water flows fast
+The bridge remains
+built to last. Every traveler who walks across
+Feels the weight of gain and loss. Night descends with stars above
+Shining down on tales of love. The forgotten bridge
+both still and true
+Holds the memories for me and you.`,
+  },
+  {
+    id: 426,
+    title: "Echoes of the Forest",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Whispers stir among the trees
+Carried softly on the breeze. Every branch and every leaf
+Holds a story
+joy or grief. Streams reflect the morning sun
+Shadows dance where waters run. Birdsong fills the quiet air
+Nature hums without a care. Evening falls with golden light
+Turning day to gentle night. Every sound a memory keeps
+Within the forest
+silence sleeps. Moon ascends and stars appear
+Guiding creatures far and near. The echoes of the forest deep
+Cradle hearts in peaceful sleep.`,
+  },
+  {
+    id: 427,
+    title: "The Sapphire Sea",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Waves of sapphire kiss the shore
+Telling tales of ancient lore. Every tide a secret kept
+Where the ocean softly wept. Seagulls soar and winds reply
+Painting arcs across the sky. Sunlight dances on the foam
+Guiding hearts that long for home. Evening drifts with rosy hues
+Reflecting skies in deeper blues. Every shell upon the sand
+Holds the story of this land. Night descends with silver gleam
+Moonlight traces every stream. The sapphire sea
+both vast and free
+Holds the soul’s infinity.`,
+  },
+  {
+    id: 428,
+    title: "The Forgotten Diary",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Pages yellowed
+ink turned faint
+Memories written
+a heartfelt complaint. Every word a silent scream
+Every line a broken dream. Dusty corners
+hidden room
+Stories trapped in quiet gloom. Every secret
+every pain
+Lives again in ink and stain. Even years cannot erase
+The tender heart that left its trace. Every diary
+a soul’s embrace
+A fleeting touch
+a timeless grace. Night descends and candles burn
+Lessons written we still learn. The forgotten diary holds it all
+Echoes of a life’s quiet call.`,
+  },
+  {
+    id: 429,
+    title: "The Starry Balcony",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Balcony opens to night’s delight
+Stars like lanterns in the quiet night. Every twinkle a distant song
+Guiding hearts where dreams belong. Breeze drifts gentle through the air
+Carrying scents beyond compare. Evening hums with hidden grace
+Painting skies with velvet space. Moonlight falls on railing stone
+Casting shadows
+soft and lone. Every gaze a quiet sigh
+Every thought a wishing sky. Night extends its tender hand
+Inviting souls to understand. The starry balcony
+calm and wide
+Holds the universe inside.`,
+  },
+  {
+    id: 430,
+    title: "The Lantern Festival",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Lanterns rise into the night
+Floating softly
+glowing bright. Every flame a whispered prayer
+Carried gently through the air. Crowds gather
+hearts in cheer
+Sharing stories
+love sincere. Music floats and dances blend
+Evening seems to never end. Lights reflect in river wide
+Mirroring hopes on every side. Every face a fleeting smile
+Moments captured
+hearts compile. As night deepens
+lanterns fall
+Yet their glow enchants us all. The festival of lights
+so grand
+Keeps its magic in every hand.`,
+  },
+  {
+    id: 431,
+    title: "Rain-Kissed Streets",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Raindrops dance on cobblestone
+A melody of streets alone. Every puddle mirrors skies
+Reflecting dreams in passerby eyes. Umbrellas bloom in vibrant hue
+Colors bright against the blue. Footsteps splash with gentle sound
+Where hidden stories can be found. Evening hums with misty grace
+Clouds embrace the city space. Every corner
+every lane
+Holds a whisper of joy or pain. Night descends with silver gleam
+Turning puddles into a dream. Rain-kissed streets
+alive and free
+Carry secrets of you and me.`,
+  },
+  {
+    id: 432,
+    title: "The Hidden Library",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Shelves stacked high with dusty tomes
+Stories of forgotten homes. Every book a window wide
+To places where old secrets hide. Candles flicker
+shadows play
+Lighting paths where minds may stray. Whispers echo through each hall
+Every word a gentle call. Evening settles with quiet grace
+Knowledge drifts through every space. Every spine
+every page
+Holds the wisdom of the age. The hidden library
+calm and deep
+Cradles dreams that we may keep. In its silence
+hearts explore
+Endless worlds forevermore.`,
+  },
+  {
+    id: 433,
+    title: "The Silver Orchard",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Orchard bathed in silver light
+Glistening under moon so bright. Apples hang with gentle grace
+Shadows dancing in every space. Breezes hum through leaves so fine
+Every branch a secret vine. Petals fall like whispered prayer
+Carried softly through the air. Evening spreads its velvet cloak
+Casting magic where hearts spoke. Every fruit a tale untold
+Every tree a memory old. Night ascends
+the orchard glows
+Reflecting all that nature knows. Silver orchard
+calm and wide
+Holds the dreams we keep inside.`,
+  },
+  {
+    id: 434,
+    title: "The Wandering Lantern",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A lantern drifts along the stream
+Casting light in twilight’s dream. Every glow a guiding hand
+Leading hearts to distant land. Shadows dance upon the wall
+Flickering echoes through the hall. Evening whispers soft and low
+Where hidden waters gently flow. Every step a careful trace
+Every spark a warm embrace. Even night cannot suppress
+The gentle flame that shines no less. Lantern wanders
+calm and free
+Lighting paths for you and me. Every journey
+every night
+Guided by this humble light.`,
+  },
+  {
+    id: 435,
+    title: "The Candle Shop",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Candles flicker on wooden shelves
+Softly lighting whispered spells. Every flame a story told
+Of love
+of grief
+of dreams of gold. Incense drifts in hazy air
+Carrying hopes beyond compare. Even in the quietest night
+The shop glows with gentle light. Every candle
+color bright
+Holds a secret
+pure delight. Footsteps fade and voices low
+Yet warmth remains
+a soft halo. When you leave
+the world feels near
+Guided by the shop’s bright cheer. The candle shop
+both calm and true
+Lights the soul inside of you.`,
+  },
+  {
+    id: 436,
+    title: "The Autumn Violin",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Leaves fall softly
+amber and gold
+Stories of autumn gently told. Violin hums a mellow tune
+Beneath the silver crescent moon. Every note a sigh of past
+Memories linger
+shadows cast. Wind joins in with gentle hands
+Playing music across the lands. Even as the evening fades
+Violin sings in quiet shades. Every chord a tender plea
+Echoing through each amber tree. Night arrives with starlit skies
+Melody in hearts never dies. Autumn violin
+soft and clear
+Leaves its song for all to hear.`,
+  },
+  {
+    id: 437,
+    title: "The Forgotten Lighthouse",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `On a cliff it stands alone
+Guiding ships with light once shone. Waves crash hard against the stone
+Yet the lighthouse guards its own. Fog drifts slowly
+sea winds moan
+Echoes of the lives once known. Every beam a steadfast ray
+Chasing darkest clouds away. Even when the storms arise
+It withstands with quiet ties. Every sailor who glimpses near
+Feels a hope that conquers fear. Night descends
+stars overhead
+Light persists where dreams are fed. The forgotten lighthouse
+tall and true
+Keeps its promise to guide you through.`,
+  },
+  {
+    id: 438,
+    title: "The Silent Meadow",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A meadow stretches
+wide and still
+Bathed in sunlight
+soft and chill. Every flower bends in prayer
+Every breeze moves through the air. Grass sways gently
+whispers low
+Secrets only nature knows. Bees hum tunes in golden light
+Carrying day into night. Evening drifts with lavender skies
+Shadows dance where silence lies. Every stone
+every stream
+Holds the pulse of a quiet dream. Night arrives with stars on high
+Crickets sing their lullaby. Silent meadow
+calm and deep
+Holds the world in peaceful sleep.`,
+  },
+  {
+    id: 439,
+    title: "The Clocktower",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `The clocktower stands in town’s heart
+Measuring moments
+each a part. Its hands sweep silently by
+Marking days that quickly fly. Bells chime softly
+echo wide
+Stories carried on every side. Every hour a fleeting breath
+Every strike defies the death. Evening paints its bricks in gold
+Shadows stretch
+both young and old. Every clocktower holds the past
+Whispers memories made to last. Night descends
+the town sleeps tight
+Time continues in quiet might. The clocktower
+steady and true
+Keeps the rhythm for me and you.`,
+  },
+  {
+    id: 440,
+    title: "The Golden Harvest",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Fields of gold beneath the sun
+Harvest time has just begun. Every stalk a story bright
+Every ear reflects the light. Farmers toil with steady hands
+Sweeping wheat across the lands. Songs of labor fill the air
+Gratitude and hope laid bare. Evening paints with amber hue
+Every shadow kissed with dew. Every basket
+every grain
+Holds the sweat and joy of gain. Night descends
+stars twinkle high
+Moonlight glows on fields nearby. The golden harvest
+rich and true
+Feeds the world with life anew.`,
+  },
+  {
+    id: 441,
+    title: "The Hidden Garden",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A garden hidden behind old walls
+Where sunlight through the ivy falls. Every flower blooms unseen
+Every leaf a shade of green. Birds sing songs in secret trees
+Whispers drift along the breeze. Even when the world looks away
+Life persists in gentle sway. Butterflies in colored flight
+Paint the garden with delight. Every petal
+soft and pure
+Holds a peace that will endure. Evening comes with amber skies
+Stars peek through as daylight dies. The hidden garden
+calm and still
+Holds a heart with magic will.`,
+  },
+  {
+    id: 442,
+    title: "The Midnight Train",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A train hums softly in the night
+Passing towns bathed in moonlight. Every window holds a story
+Every track a fleeting glory. Passengers dream in rocking sway
+Carried gently miles away. Evening hums with gentle sound
+Rhythms echo all around. The whistle blows through misty air
+Chasing shadows everywhere. Every stop a moment gone
+Yet the journey still rolls on. Midnight train
+serene and true
+Carries hearts both old and new. Every track a secret lane
+Every ride a fleeting gain.`,
+  },
+  {
+    id: 443,
+    title: "The Golden Pavilion",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A pavilion glows beneath the sun
+Its walls with history spun. Every pillar carved with care
+Every arch holds stories rare. Courtyards hum with laughter light
+Fountains sparkle in morning bright. Evening falls with golden hues
+Shadows dance in quiet muse. Every door and window frame
+Whispers softly history’s name. The golden pavilion
+calm and wide
+Holds the tales of time inside. Stars descend as night draws near
+Moonlight drifts on gold so clear. Every visitor feels the past
+In silent wonder meant to last.`,
+  },
+  {
+    id: 444,
+    title: "The Lost Key",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A key lies hidden in the sand
+Lost by time’s relentless hand. Every lock it once could turn
+Holds a lesson we must learn. Footsteps trace the shoreline near
+Searching hopes with anxious fear. Even when it cannot be found
+Faith persists upon the ground. Stories linger
+secrets keep
+Memories buried running deep. Every glint beneath the sun
+Hints a past that’s never done. Night descends with whispered plea
+The lost key waits for you and me. Every lock a path to see
+Every turn a mystery.`,
+  },
+  {
+    id: 445,
+    title: "The Frosted Window",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Frosted windows frame the night
+Turning darkness into light. Every swirl a frozen song
+Every pane where dreams belong. Inside
+the hearth glows warm and bright
+Chasing shadows of the night. Evening hums a gentle tune
+Silver gleams beneath the moon. Outside
+winds may howl and bite
+Yet the heart is safe inside. Every frost a fleeting art
+Every curve a tender part. Night descends with quiet cheer
+Windows glisten far and near. The frosted window
+calm and still
+Holds the world in gentle will.`,
+  },
+  {
+    id: 446,
+    title: "The Crimson Sky",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Sunset bleeds across the sky
+Colors blaze as day waves goodbye. Every cloud a painted dream
+Every ray a golden gleam. Mountains glow in amber light
+Rivers shimmer reflecting bright. Evening hums a silent tune
+Underneath the silver moon. Birds return to hidden nest
+Night descends in quiet rest. Every shade a fleeting kiss
+Every moment a gentle bliss. Crimson sky
+both bold and wide
+Holds the world in glowing pride. Every dusk a fleeting sigh
+Promising tomorrow’s sky.`,
+  },
+  {
+    id: 447,
+    title: "The Silent Bridge",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A bridge stands over quiet streams
+Silent witness to broken dreams. Every plank a whispered tale
+Every rope a memory frail. Evening falls with golden light
+Shadows stretch in calm delight. Footsteps echo on the stone
+Stories linger
+all alone. Night descends with silver hue
+Moonlight drifts across the view. Every traveler who walks the span
+Feels the pulse of time in hand. Silent bridge
+both old and true
+Holds the hearts of me and you. Every crossing
+gentle
+deep
+Marks the paths our souls will keep.`,
+  },
+  {
+    id: 448,
+    title: "The Whispering Pines",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Pines sway in gentle breeze
+Whispering secrets among the trees. Every needle hums a tune
+Dancing softly beneath the moon. Shadows stretch across the ground
+Nature sings without a sound. Evening drifts with amber glow
+Stars peek through in quiet show. Every branch a tender plea
+Every pine a memory. Night descends with silver mist
+Every heart cannot resist. The whispering pines
+calm and deep
+Hold the world in quiet sleep. Every gust
+every sigh
+Carries dreams across the sky.`,
+  },
+  {
+    id: 449,
+    title: "The Ocean’s Lullaby",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Waves drift softly on the shore
+Singing tales of ancient lore. Every ripple hums a tune
+Underneath the silver moon. Seagulls cry in distant flight
+Carrying whispers of the night. Evening falls with golden hue
+Reflecting skies in deeper blue. Every shell upon the sand
+Holds the story of the land. Night descends with gentle sway
+Cradling hearts in soft ballet. The ocean’s lullaby
+calm and deep
+Sings of dreams we wish to keep. Every tide
+every foam
+Carries whispers of home.`,
+  },
+  {
+    id: 450,
+    title: "The Mirror Lake",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A lake reflects the skies above
+Calm and quiet
+full of love. Every ripple holds a dream
+Every shimmer a silver gleam. Trees bend low
+their shadows rest
+Nature’s heart upon its chest. Evening paints in golden hue
+Ripples glow with fading blue. Moon ascends
+the stars appear
+Guiding hearts both far and near. Every wave a gentle kiss
+Every breeze a fleeting bliss. Mirror lake
+serene and wide
+Holds the world upon its tide. Every moment
+still and deep
+Cradles souls in peaceful sleep.`,
+  },
+  {
+    id: 451,
+    title: "The Desert’s Heart",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Sands stretch wide beneath the sun
+Golden waves that never run. Every dune a whispered tale
+Every wind a fleeting sail. Cacti stand with patient grace
+Shadows stretch across the space. Evening hums a crimson tune
+Guided by the silver moon. Every mirage a fleeting dream
+Every sparkle a gentle gleam. Night descends with velvet sky
+Stars emerge as deserts sigh. The desert’s heart
+both vast and free
+Holds the world in mystery. Every grain and every stone
+Carries secrets all its own.`,
+  },
+  {
+    id: 452,
+    title: "The Forgotten Path",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A path winds through forests deep
+Secrets old it longs to keep. Every stone and every tree
+Holds a memory silently. Footsteps fade
+the moss grows high
+Sunlight peeks through open sky. Evening drifts with silver haze
+Marking time in golden rays. Every turn a story untold
+Every step a hand to hold. Night descends with whispered breeze
+Guiding souls among the trees. The forgotten path
+both calm and wide
+Cradles dreams that hearts confide. Every journey
+long or small
+Leads the wanderer through it all.`,
+  },
+  {
+    id: 453,
+    title: "The Lantern River",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A river glows with lantern light
+Guiding boats into the night. Every ripple hums a tune
+Reflecting silver of the moon. Trees bend low
+their shadows fall
+Silent whispers over all. Evening drifts with amber hue
+Shadows dance in golden blue. Every lantern a wish so bright
+Floating softly into night. Every heart a secret told
+Every story gently holds. The lantern river
+calm and free
+Carries dreams to the waiting sea. Every light a guiding hand
+Every spark a promised land.`,
+  },
+  {
+    id: 454,
+    title: "The Painted Sky",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Sunrise spills its colors wide
+Painting hills in amber pride. Every cloud a fleeting brush
+Every light a golden hush. Birds awake in joyful song
+Welcoming day where hearts belong. Evening drifts to pastel dreams
+Softly blending gentle streams. Every dawn a promise made
+Every hue a memory laid. Night returns with violet veil
+Stars like candles softly pale. The painted sky
+both vast and true
+Holds the world in radiant hue. Every color
+every ray
+Guides the heart along its way.`,
+  },
+  {
+    id: 455,
+    title: "The Twilight Garden",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A garden glows in fading light
+Shadows stretch in soft twilight. Every flower bends to rest
+Evening hums at nature’s best. Birds retreat to hidden nest
+Hopes of day now laid to rest. Every leaf a gentle sigh
+Every breeze a lullaby. Night descends with silver gleam
+Moonlight drifts upon the stream. Every heart within the garden sleeps
+Cradling dreams that twilight keeps. The twilight garden
+calm and deep
+Holds the world in gentle sleep. Every flower
+every tree
+Whispers secrets silently.`,
+  },
+  {
+    id: 456,
+    title: "The Winter Cabin",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A cabin sits in snow so white
+Smoke curls gently in the night. Every window glows with cheer
+Inviting hearts to linger near. Inside
+the hearth warms the soul
+Stories told and tales unroll. Evening hums a gentle song
+Echoing all the night along. Outside
+winds may howl and bite
+Yet the cabin holds soft light. Every log
+every flame
+Holds the spirit’s cozy name. Winter cabin
+calm and true
+Holds a world for me and you. Every snowflake
+every pine
+Cradles hearts in warmth divine.`,
+  },
+  {
+    id: 457,
+    title: "The Secret Cove",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A cove hidden from the view
+Waters shimmer in secret blue. Every rock a silent guard
+Every wave a fleeting card. Seagulls glide and winds reply
+Painting arcs across the sky. Evening hums with gentle sound
+Where quiet wonders all abound. Every shell upon the shore
+Holds a tale of times before. Night descends with silver glow
+Guiding hearts where secrets flow. The secret cove
+calm and wide
+Cradles dreams on every tide. Every wave a gentle hand
+Every moment a promised land.`,
+  },
+  {
+    id: 458,
+    title: "The Moonlit Path",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `A path glows under silver moon
+Guiding hearts in gentle tune. Every step a whispered song
+Every shadow soft and long. Trees bend low
+their leaves whisper
+Telling tales of night’s soft mister. Evening drifts in glowing hue
+Shadows dance in silver blue. Every stone a memory holds
+Every breeze a tale unfolds. Night descends with tender hand
+Leading hearts to distant land. The moonlit path
+serene and true
+Lights the way for me and you. Every step
+every sigh
+Carries dreams across the sky.`,
+  },
+  {
+    id: 459,
+    title: "The Evening Market",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Stalls glow warm with lantern light
+Colors gleam beneath the night. Every spice a fragrant tale
+Every fabric a drifting sail. Voices hum in cheerful tone
+Stories shared
+laughter grown. Evening drifts in amber haze
+Shadows dance in golden rays. Every coin a fleeting wish
+Every hand a gentle swish. Night descends
+the market sleeps
+Dreams of day the darkness keeps. The evening market
+bright and free
+Holds the world in harmony. Every stall
+every song
+Carries joy the whole night long.`,
+  },
+  {
+    id: 460,
+    title: "The Final Horizon",
+    theme: "Echoes",
+    collection: "Echoes of My Heart",
+    full: `Horizon glows in fading light
+Promising dreams beyond the night. Every cloud a fleeting hue
+Every ray a golden view. Mountains stretch in silent grace
+Rivers gleam and stars embrace. Evening hums a gentle tune
+Bidding farewell to the moon. Every step a journey long
+Every heart a steadfast song. Night descends with velvet sky
+Guiding souls that wonder why. The final horizon
+calm and true
+Holds the world in brilliant view. Every ending
+every start
+Keeps the dreams within the heart.`,
+  },
 ];
 export { POEMS };

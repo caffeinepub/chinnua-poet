@@ -49,7 +49,7 @@ function getAIResponse(message: string): string {
     return "Only Chinnua can add poems to the main collection \u2014 via a secret admin panel. This keeps the collection curated and personal. However, you can share your own poetry in the Community section!";
   }
   if (/about|who is chinnua|poet behind|story/.test(m)) {
-    return "Chinnua is an 18-year-old poet and storyteller from India, active since 2025. Words became a refuge \u2014 a way to hold pain, longing, and quiet beauty that conversation couldn't carry. With 365+ poems, Chinnua's work speaks to anyone who has loved, lost, waited, or wondered. The face is hidden; the words are everything.";
+    return "Chinnua is an 18-year-old poet and storyteller from India, active since 2025. Words became a refuge \u2014 a way to hold pain, longing, and quiet beauty that conversation couldn't carry. Chinnua's work speaks to anyone who has loved, lost, waited, or wondered. The face is hidden; the words are everything.";
   }
 
   if (
@@ -294,7 +294,8 @@ export default function PoetryAssistant() {
                     <div
                       className="max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed"
                       style={{
-                        fontFamily: "'Cormorant Garamond', 'Lora', serif",
+                        fontFamily:
+                          "'Cormorant Garamond', 'Cormorant Garamond', serif",
                         fontSize: "0.875rem",
                         lineHeight: "1.6",
                         background:
