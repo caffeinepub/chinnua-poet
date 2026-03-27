@@ -517,6 +517,152 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
           emptyOcid="echoes.empty_state"
           itemOcidPrefix="echoes"
         />
+
+        {/* === Final Page Farewell Message === */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          style={{
+            marginTop: "4rem",
+            marginBottom: "2rem",
+            textAlign: "center",
+            padding: "3rem 2rem",
+            borderTop: "1px solid rgba(200,169,106,0.15)",
+            borderBottom: "1px solid rgba(200,169,106,0.15)",
+            position: "relative",
+          }}
+        >
+          {/* Decorative top ornament */}
+          <div
+            style={{
+              marginBottom: "2rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1rem",
+            }}
+          >
+            <div
+              style={{
+                height: 1,
+                width: 60,
+                background:
+                  "linear-gradient(to right, transparent, rgba(200,169,106,0.5))",
+              }}
+            />
+            <span
+              style={{
+                color: "rgba(200,169,106,0.6)",
+                fontSize: "1.1rem",
+                letterSpacing: "0.3em",
+              }}
+            >
+              ✦
+            </span>
+            <div
+              style={{
+                height: 1,
+                width: 60,
+                background:
+                  "linear-gradient(to left, transparent, rgba(200,169,106,0.5))",
+              }}
+            />
+          </div>
+
+          <p
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontStyle: "italic",
+              color: "rgba(245,230,211,0.55)",
+              fontSize: "0.72rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              marginBottom: "1.5rem",
+            }}
+          >
+            A Note from the Poet
+          </p>
+
+          <p
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontStyle: "italic",
+              color: "rgba(245,230,211,0.75)",
+              fontSize: "1.05rem",
+              lineHeight: 2,
+              maxWidth: 640,
+              margin: "0 auto 2rem",
+            }}
+          >
+            Dear Reader, As you reach the final page, may these poems linger in
+            your heart, like whispers of forgotten dreams and silent hopes. Each
+            verse is a window into a world of feelings—love, loss, wonder, and
+            discovery. Carry them with you, and let your soul wander in their
+            echoes.
+          </p>
+
+          <p
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              color: "rgba(200,169,106,0.7)",
+              fontSize: "1.4rem",
+              letterSpacing: "0.15em",
+              marginBottom: "1.5rem",
+            }}
+          >
+            Thank you
+          </p>
+
+          <p
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontStyle: "italic",
+              color: "rgba(200,169,106,0.45)",
+              fontSize: "0.88rem",
+              letterSpacing: "0.08em",
+            }}
+          >
+            — CHINNUA_POET
+          </p>
+
+          {/* Decorative bottom ornament */}
+          <div
+            style={{
+              marginTop: "2rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1rem",
+            }}
+          >
+            <div
+              style={{
+                height: 1,
+                width: 40,
+                background:
+                  "linear-gradient(to right, transparent, rgba(200,169,106,0.3))",
+              }}
+            />
+            <span
+              style={{
+                color: "rgba(200,169,106,0.35)",
+                fontSize: "0.6rem",
+                letterSpacing: "0.4em",
+              }}
+            >
+              ✦ ✦ ✦
+            </span>
+            <div
+              style={{
+                height: 1,
+                width: 40,
+                background:
+                  "linear-gradient(to left, transparent, rgba(200,169,106,0.3))",
+              }}
+            />
+          </div>
+        </motion.div>
       </motion.div>
 
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
