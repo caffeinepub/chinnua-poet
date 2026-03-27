@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Pencil, Trash2, X } from "lucide-react";
+import { Eye, EyeOff, Loader2, Pencil, Trash2, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { AdminPoem } from "../backend";
@@ -19,12 +19,212 @@ const ANNOUNCEMENT_KEY = "chinnua_announcement";
 
 const CATEGORIES = ["Sad", "Romantic", "Love", "Life", "Nature", "Other"];
 
-type Tab = "poems" | "settings" | "rules";
+type Tab = "poems" | "settings" | "rules" | "feed" | "users";
 
 interface AdminPanelProps {
   open: boolean;
   onClose: () => void;
   onPoemsChanged: () => void;
+}
+
+function PasswordInput({
+  value,
+  onChange,
+  onKeyDown,
+  placeholder,
+  className,
+  "data-ocid": dataOcid,
+}: {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  className?: string;
+  "data-ocid"?: string;
+}) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="relative">
+      <Input
+        type={show ? "text" : "password"}
+        value={value}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        placeholder={placeholder}
+        className={className ? `${className} pr-10` : "pr-10"}
+        data-ocid={dataOcid}
+      />
+      <button
+        type="button"
+        onClick={() => setShow((s) => !s)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C8A96A] hover:opacity-70 transition-opacity"
+        tabIndex={-1}
+        aria-label={show ? "Hide password" : "Show password"}
+      >
+        {show ? <EyeOff size={16} /> : <Eye size={16} />}
+      </button>
+    </div>
+  );
+}
+
+function AdminFeedTab() {
+  type FeedPost = {
+    id: string;
+    author: string;
+    authorPrincipal: string;
+    content: string;
+    timestamp: number;
+  };
+
+  const [posts, setPosts] = useState<FeedPost[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("chinnua_feed_v2") ?? "[]";
+      setPosts(JSON.parse(raw));
+    } catch {
+      setPosts([]);
+    }
+  }, []);
+
+  const handleDelete = (postId: string) => {
+    const updated = posts.filter((p) => p.id !== postId);
+    localStorage.setItem("chinnua_feed_v2", JSON.stringify(updated));
+    setPosts(updated);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h3 className="font-cinzel text-sm tracking-[0.2em] text-gold uppercase">
+        Feed Posts ({posts.length})
+      </h3>
+      {posts.length === 0 ? (
+        <p
+          className="font-lora text-sm text-muted-foreground italic"
+          data-ocid="admin.empty_state"
+        >
+          No posts in feed yet.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-2 max-h-96 overflow-y-auto">
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className="flex items-start justify-between gap-3 p-3 border border-[oklch(0.22_0.02_60/0.4)] bg-[oklch(0.07_0.005_50)]"
+              data-ocid="admin.row"
+            >
+              <div className="flex-1 min-w-0">
+                <p className="font-cinzel text-xs text-gold tracking-widest">
+                  {post.author}
+                </p>
+                <p className="font-lora text-sm text-muted-foreground mt-1 line-clamp-2">
+                  {post.content}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleDelete(post.id)}
+                className="p-1.5 text-muted-foreground hover:text-red-400 transition-colors flex-shrink-0"
+                aria-label="Delete post"
+                data-ocid="admin.delete_button"
+              >
+                <Trash2 size={14} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminUsersTab(_props: { actor: unknown }) {
+  const [principalInput, setPrincipalInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
+
+  const handleDelete = async () => {
+    if (!principalInput.trim()) {
+      setError("Enter a Principal ID.");
+      return;
+    }
+    setDeleting(true);
+    setMsg("");
+    setError("");
+    try {
+      // Remove any local data for this principal
+      const prefix = `chinnua_displayname_${principalInput.trim()}`;
+      localStorage.removeItem(prefix);
+      localStorage.removeItem(`chinnua_bio_${principalInput.trim()}`);
+      // Remove their posts from feed
+      try {
+        const raw = localStorage.getItem("chinnua_feed_v2") ?? "[]";
+        const allPosts = JSON.parse(raw);
+        const filtered = allPosts.filter(
+          (p: { authorPrincipal: string }) =>
+            p.authorPrincipal !== principalInput.trim(),
+        );
+        localStorage.setItem("chinnua_feed_v2", JSON.stringify(filtered));
+      } catch {}
+      setMsg(`User ${principalInput.trim().slice(0, 12)}… deleted from feed.`);
+      setPrincipalInput("");
+    } catch {
+      setError("Failed to delete user.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-5">
+      <h3 className="font-cinzel text-sm tracking-[0.2em] text-gold uppercase">
+        Delete User
+      </h3>
+      <p className="font-lora text-xs text-muted-foreground italic">
+        Enter a user's Principal ID to remove their account and posts from the
+        feed.
+      </p>
+      <div className="flex flex-col gap-3 max-w-sm">
+        <Input
+          value={principalInput}
+          onChange={(e) => setPrincipalInput(e.target.value)}
+          placeholder="Principal ID (e.g. xxxxx-xxxxx-…)"
+          className="rounded-none border-[oklch(0.22_0.02_60/0.5)] bg-[oklch(0.09_0.008_55)] font-lora text-sm"
+          data-ocid="admin.input"
+        />
+        {error && (
+          <p
+            className="font-lora text-xs text-red-400 italic"
+            data-ocid="admin.error_state"
+          >
+            {error}
+          </p>
+        )}
+        {msg && (
+          <p
+            className="font-lora text-xs text-green-400 italic"
+            data-ocid="admin.success_state"
+          >
+            {msg}
+          </p>
+        )}
+        <Button
+          type="button"
+          onClick={handleDelete}
+          disabled={deleting}
+          className="rounded-none bg-red-900/50 text-red-300 border border-red-800/50 hover:bg-red-900/70 font-cinzel text-xs tracking-[0.15em] uppercase self-start px-6 py-2"
+          data-ocid="admin.delete_button"
+        >
+          {deleting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            "Delete User"
+          )}
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
@@ -36,6 +236,11 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
   const [pwError, setPwError] = useState(false);
   const [checkingPw, setCheckingPw] = useState(false);
 
+  const [showForgot, setShowForgot] = useState(false);
+  const [resetToken, setResetToken] = useState("");
+  const [resetMsg, setResetMsg] = useState("");
+  const [resetError, setResetError] = useState("");
+  const [resetting, setResetting] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("poems");
 
   const [title, setTitle] = useState("");
@@ -109,6 +314,30 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
       setPwError(true);
     } finally {
       setCheckingPw(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!actor) return;
+    setResetting(true);
+    setResetError("");
+    setResetMsg("");
+    try {
+      const result = await actor.resetAdminPassword(resetToken);
+      if ("success" in result) {
+        setResetMsg("Password reset to chinnua2025");
+        setTimeout(() => {
+          setShowForgot(false);
+          setResetToken("");
+          setResetMsg("");
+        }, 2000);
+      } else {
+        setResetError("Invalid reset token.");
+      }
+    } catch {
+      setResetError("Failed. Try again.");
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -235,6 +464,8 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
     { id: "poems", label: "Poems" },
     { id: "settings", label: "Settings" },
     { id: "rules", label: "Rules" },
+    { id: "feed", label: "Feed Posts" },
+    { id: "users", label: "Users" },
   ];
 
   return (
@@ -397,12 +628,11 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
                   <p className="font-lora text-sm text-muted-foreground italic">
                     Enter your admin password to continue.
                   </p>
-                  <Input
-                    type="password"
-                    placeholder="Password"
+                  <PasswordInput
                     value={pwInput}
                     onChange={(e) => setPwInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                    placeholder="Password"
                     className="rounded-none border-[oklch(0.22_0.02_60/0.5)] bg-[oklch(0.07_0.005_50)] font-lora text-sm"
                     data-ocid="admin.input"
                   />
@@ -426,6 +656,61 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
                       "Unlock"
                     )}
                   </Button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForgot(!showForgot);
+                      setResetError("");
+                      setResetMsg("");
+                    }}
+                    className="font-lora text-xs text-[oklch(0.72_0.09_75)] hover:underline self-start mt-1"
+                    data-ocid="admin.link"
+                  >
+                    {showForgot ? "Back to login" : "Forgot password?"}
+                  </button>
+                  {showForgot && (
+                    <div className="flex flex-col gap-3 mt-2 p-3 border border-[oklch(0.22_0.02_60/0.5)] bg-[oklch(0.09_0.005_50)]">
+                      <p className="font-lora text-xs text-muted-foreground italic">
+                        Enter the reset token to restore the default password.
+                      </p>
+                      <p className="font-lora text-xs text-[oklch(0.72_0.09_75)]">
+                        Reset token: CHINNUA_RESET_2026
+                      </p>
+                      <Input
+                        type="text"
+                        placeholder="Reset Token"
+                        value={resetToken}
+                        onChange={(e) => setResetToken(e.target.value)}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && handleResetPassword()
+                        }
+                        className="rounded-none border-[oklch(0.22_0.02_60/0.5)] bg-[oklch(0.07_0.005_50)] font-lora text-sm"
+                        data-ocid="admin.input"
+                      />
+                      {resetError && (
+                        <p className="font-lora text-xs text-red-400">
+                          {resetError}
+                        </p>
+                      )}
+                      {resetMsg && (
+                        <p className="font-lora text-xs text-green-400">
+                          {resetMsg}
+                        </p>
+                      )}
+                      <Button
+                        onClick={handleResetPassword}
+                        disabled={resetting || !actor || !resetToken.trim()}
+                        className="rounded-none bg-[oklch(0.72_0.09_75)] text-[oklch(0.065_0.005_50)] hover:bg-[oklch(0.78_0.11_78)] font-cinzel text-xs tracking-[0.15em] uppercase"
+                        data-ocid="admin.submit_button"
+                      >
+                        {resetting ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Reset Password"
+                        )}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col gap-0">
@@ -666,28 +951,25 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
                               Your new password will save to every browser and
                               device.
                             </p>
-                            <Input
-                              type="password"
-                              placeholder="Current password"
+                            <PasswordInput
                               value={currentPw}
                               onChange={(e) => setCurrentPw(e.target.value)}
+                              placeholder="Current password"
                               className="rounded-none border-[oklch(0.22_0.02_60/0.5)] bg-[oklch(0.09_0.008_55)] font-lora text-sm"
                             />
-                            <Input
-                              type="password"
-                              placeholder="New password (min 6 chars)"
+                            <PasswordInput
                               value={newPw}
                               onChange={(e) => setNewPw(e.target.value)}
+                              placeholder="New password (min 6 chars)"
                               className="rounded-none border-[oklch(0.22_0.02_60/0.5)] bg-[oklch(0.09_0.008_55)] font-lora text-sm"
                             />
-                            <Input
-                              type="password"
-                              placeholder="Confirm new password"
+                            <PasswordInput
                               value={confirmPw}
                               onChange={(e) => setConfirmPw(e.target.value)}
                               onKeyDown={(e) =>
                                 e.key === "Enter" && handleChangePassword()
                               }
+                              placeholder="Confirm new password"
                               className="rounded-none border-[oklch(0.22_0.02_60/0.5)] bg-[oklch(0.09_0.008_55)] font-lora text-sm"
                             />
                             {changePwError && (
@@ -769,6 +1051,12 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
                       </div>
                     </div>
                   )}
+
+                  {/* Feed Posts Tab */}
+                  {activeTab === "feed" && <AdminFeedTab />}
+
+                  {/* Users Tab */}
+                  {activeTab === "users" && <AdminUsersTab actor={actor} />}
                 </div>
               )}
             </div>

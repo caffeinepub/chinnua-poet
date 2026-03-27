@@ -136,6 +136,12 @@ actor {
     #success;
   };
 
+  public shared func resetAdminPassword(resetToken : Text) : async ChangePasswordResult {
+    if (resetToken != "CHINNUA_RESET_2026") { return #incorrectPassword };
+    adminPassword := "chinnua2025";
+    #success;
+  };
+
   // User Profile Management (required by frontend)
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {

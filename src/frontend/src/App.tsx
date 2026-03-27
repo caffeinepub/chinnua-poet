@@ -23,13 +23,16 @@ import { useEffect, useRef, useState } from "react";
 import type { AdminPoem } from "./backend";
 import { AdminPanel } from "./components/AdminPanel";
 import { CommunitySection } from "./components/CommunitySection";
+import { FeedSection } from "./components/FeedSection";
 import MusicPlayer from "./components/MusicPlayer";
 import PoetryAssistant from "./components/PoetryAssistant";
+import { ProfileModal } from "./components/ProfileModal";
+import { UserSetupModal } from "./components/UserSetupModal";
 import { useActor } from "./hooks/useActor";
 import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import { POEMS } from "./poems-data";
 
-const NAV_LINKS = ["Home", "Poems", "Community", "About", "Contact"];
+const NAV_LINKS = ["Home", "Feed", "Poems", "Community", "About", "Contact"];
 type Poem = (typeof POEMS)[0];
 type Category =
   | "All"
@@ -355,7 +358,7 @@ function Hero({ onExplore }: { onExplore: () => void }) {
             <div className="absolute -inset-3 border border-[oklch(0.72_0.09_75/0.2)] -rotate-1" />
             <div className="absolute -inset-6 border border-[oklch(0.72_0.09_75/0.1)] rotate-1" />
             <img
-              src="/assets/uploads/chatgpt_image_mar_27_2026_05_29_47_pm-019d2f2b-2091-74b7-8703-13bfa733d8e4-1.png"
+              src="/assets/uploads/chatgpt_image_mar_27_2026_05_29_47_pm-019d3017-bf42-731e-8619-ad60704720f8-1.png"
               alt="Chinnua"
               className="w-full h-full object-cover"
             />
@@ -902,7 +905,7 @@ function About() {
             <div className="relative mx-auto max-w-[420px]">
               <div className="absolute -top-4 -left-4 w-full h-full border border-[oklch(0.72_0.09_75/0.2)]" />
               <img
-                src="/assets/uploads/chatgpt_image_mar_27_2026_05_29_47_pm-019d2f2b-2091-74b7-8703-13bfa733d8e4-1.png"
+                src="/assets/uploads/chatgpt_image_mar_27_2026_05_29_47_pm-019d3017-bf42-731e-8619-ad60704720f8-1.png"
                 alt="Chinnua"
                 className="w-full h-[480px] object-cover relative z-10"
               />
@@ -1500,6 +1503,25 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [adminPoems, setAdminPoems] = useState<AdminPoem[]>([]);
+  const [profileView, setProfileView] = useState<{
+    author: string;
+    principal: string;
+  } | null>(null);
+  const [showUserSetup, setShowUserSetup] = useState(false);
+  const { identity } = useInternetIdentity();
+  const principalStr = identity?.getPrincipal().toString() ?? "";
+
+  // Check if logged-in user needs to set up username
+  useEffect(() => {
+    if (identity && principalStr) {
+      const stored = localStorage.getItem(
+        `chinnua_displayname_${principalStr}`,
+      );
+      if (!stored) {
+        setShowUserSetup(true);
+      }
+    }
+  }, [identity, principalStr]);
 
   // Check for ?admin=true in URL on mount
   useEffect(() => {
@@ -1550,11 +1572,28 @@ export default function App() {
           onSelectPoem={(p) => setSelectedPoem(p as Poem)}
           allPoems={allPoems}
         />
+        <FeedSection
+          onViewProfile={(author, principal) =>
+            setProfileView({ author, principal })
+          }
+        />
         <CommunitySection />
         <About />
       </main>
       <Footer />
       <PoemModal poem={selectedPoem} onClose={() => setSelectedPoem(null)} />
+      <UserSetupModal
+        open={showUserSetup}
+        onClose={() => {
+          setShowUserSetup(false);
+        }}
+      />
+      <ProfileModal
+        open={!!profileView}
+        onClose={() => setProfileView(null)}
+        author={profileView?.author ?? ""}
+        authorPrincipal={profileView?.principal ?? ""}
+      />
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       <AdminPanel
         open={adminOpen}

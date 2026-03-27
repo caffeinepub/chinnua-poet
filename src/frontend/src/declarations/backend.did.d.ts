@@ -57,6 +57,7 @@ export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addAdminPoem' : ActorMethod<[string, string, string], AdminPoemResult>,
   'changeAdminPassword' : ActorMethod<[string, string], ChangePasswordResult>,
+  'resetAdminPassword' : ActorMethod<[string], ChangePasswordResult>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteAdminPoem' : ActorMethod<[PoemId], DeleteResult>,
   'deleteMyPoem' : ActorMethod<[PoemId], PoemDeleteResult>,

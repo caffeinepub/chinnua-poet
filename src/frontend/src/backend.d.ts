@@ -117,5 +117,6 @@ export interface backendInterface {
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setDisplayName(name: string): Promise<void>;
     submitPoem(title: string, content: string, authorName: string): Promise<PoemResult>;
+    resetAdminPassword(resetToken: string): Promise<ChangePasswordResult>;
     updateAdminPoem(id: PoemId, title: string, content: string, category: string): Promise<AdminPoemResult>;
 }
