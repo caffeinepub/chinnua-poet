@@ -36,6 +36,7 @@ const NAV_ITEMS: { slide: Slide; label: string }[] = [
   { slide: "music", label: "Music" },
   { slide: "messages", label: "Messages" },
   { slide: "about", label: "About" },
+  { slide: "admin", label: "Admin" },
 ];
 
 export default function App() {
