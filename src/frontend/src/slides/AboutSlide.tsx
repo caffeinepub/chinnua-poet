@@ -591,7 +591,7 @@ export default function AboutSlide() {
               }}
             >
               <img
-                src="/assets/uploads/chatgpt_image_mar_27_2026_05_29_47_pm-019d3017-bf42-731e-8619-ad60704720f8-1.png"
+                src="/assets/uploads/chatgpt_image_mar_27_2026_05_29_47_pm-019d334d-3cb3-70a1-9f7f-ccdf89ed6a6d-1.png"
                 alt="Chinnua"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
