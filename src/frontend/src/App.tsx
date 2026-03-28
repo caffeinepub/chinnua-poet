@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import LanguageTranslator from "./components/LanguageTranslator";
 import { LoginGate } from "./components/LoginGate";
 import PoetryAssistant from "./components/PoetryAssistant";
 import { UserSetupModal } from "./components/UserSetupModal";
@@ -11,7 +12,9 @@ import GallerySlide from "./slides/GallerySlide";
 import HomeSlide from "./slides/HomeSlide";
 import MessagesSlide from "./slides/MessagesSlide";
 import MusicSlide from "./slides/MusicSlide";
+import NotesSlide from "./slides/NotesSlide";
 import PoemsSlide from "./slides/PoemsSlide";
+import UserProfileSlide from "./slides/UserProfileSlide";
 
 type Slide =
   | "home"
@@ -21,7 +24,9 @@ type Slide =
   | "music"
   | "messages"
   | "about"
-  | "admin";
+  | "notes"
+  | "admin"
+  | "profile";
 
 interface User {
   username: string;
@@ -29,7 +34,7 @@ interface User {
   createdAt: string;
 }
 
-const NAV_ITEMS: { slide: Slide; label: string }[] = [
+const BASE_NAV_ITEMS: { slide: Slide; label: string }[] = [
   { slide: "home", label: "Home" },
   { slide: "feed", label: "Feed" },
   { slide: "poems", label: "Poems" },
@@ -38,6 +43,11 @@ const NAV_ITEMS: { slide: Slide; label: string }[] = [
   { slide: "messages", label: "Messages" },
   { slide: "about", label: "About" },
 ];
+
+const NOTES_NAV_ITEM: { slide: Slide; label: string } = {
+  slide: "notes",
+  label: "My Notes",
+};
 
 function UserIcon({ color }: { color: string }) {
   return (
@@ -66,6 +76,7 @@ export default function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [profileUsername, setProfileUsername] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -80,6 +91,10 @@ export default function App() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  const navItems = currentUser
+    ? [...BASE_NAV_ITEMS, NOTES_NAV_ITEM]
+    : BASE_NAV_ITEMS;
+
   const handleLogoClick = () => {
     const count = adminClickCount + 1;
     setAdminClickCount(count);
@@ -87,6 +102,11 @@ export default function App() {
       setActiveSlide("admin");
       setAdminClickCount(0);
     }
+  };
+
+  const handleViewProfile = (username: string) => {
+    setProfileUsername(username);
+    setActiveSlide("profile");
   };
 
   const handleUserSetupClose = (username: string) => {
@@ -129,6 +149,13 @@ export default function App() {
   const handleLogout = () => {
     localStorage.removeItem("chinnua_user");
     setCurrentUser(null);
+    if (activeSlide === "notes" || activeSlide === "profile")
+      setActiveSlide("home");
+  };
+
+  const handleNavClick = (slide: Slide) => {
+    setActiveSlide(slide);
+    if (slide !== "profile") setProfileUsername(null);
   };
 
   const renderSlide = () => {
@@ -141,6 +168,7 @@ export default function App() {
             currentUser={currentUser}
             onJoin={() => setShowUserSetup(true)}
             onLogin={handleLogin}
+            onViewProfile={handleViewProfile}
           />
         );
       case "poems":
@@ -158,8 +186,30 @@ export default function App() {
         );
       case "about":
         return <AboutSlide />;
+      case "notes":
+        return (
+          <NotesSlide
+            currentUser={currentUser}
+            onLogin={() => setShowLoginModal(true)}
+          />
+        );
       case "admin":
         return <AdminSlide />;
+      case "profile":
+        return profileUsername ? (
+          <UserProfileSlide
+            viewUsername={profileUsername}
+            currentUser={currentUser}
+            onBack={() => {
+              setActiveSlide("feed");
+              setProfileUsername(null);
+            }}
+            onGoToMessages={() => setActiveSlide("messages")}
+            onLogin={() => setShowLoginModal(true)}
+          />
+        ) : (
+          <HomeSlide goToFeed={() => setActiveSlide("feed")} />
+        );
       default:
         return <HomeSlide goToFeed={() => setActiveSlide("feed")} />;
     }
@@ -205,7 +255,7 @@ export default function App() {
               border: "none",
               cursor: "pointer",
               padding: "0 1.5rem",
-              marginBottom: "2.5rem",
+              marginBottom: "1.5rem",
               textAlign: "left",
             }}
             data-ocid="nav.button"
@@ -227,6 +277,11 @@ export default function App() {
             </span>
           </button>
 
+          {/* Translator */}
+          <div style={{ padding: "0 1.5rem", marginBottom: "1.25rem" }}>
+            <LanguageTranslator />
+          </div>
+
           {/* Divider */}
           <div
             style={{
@@ -245,11 +300,11 @@ export default function App() {
               flex: 1,
             }}
           >
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <button
                 key={item.slide}
                 type="button"
-                onClick={() => setActiveSlide(item.slide)}
+                onClick={() => handleNavClick(item.slide)}
                 data-ocid="nav.link"
                 style={{
                   background:
@@ -321,19 +376,41 @@ export default function App() {
                   gap: "0.4rem",
                 }}
               >
-                <span
+                <button
+                  type="button"
+                  onClick={() => handleViewProfile(currentUser.username)}
                   style={{
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
-                    fontSize: "0.68rem",
-                    color: "#C8A96A",
-                    letterSpacing: "0.05em",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "opacity 0.2s",
                   }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.opacity =
+                      "0.7";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.opacity = "1";
+                  }}
+                  title="View your profile"
                 >
-                  {currentUser.username}
-                </span>
+                  <span
+                    style={{
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: "0.68rem",
+                      color: "#C8A96A",
+                      letterSpacing: "0.05em",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      display: "block",
+                    }}
+                  >
+                    {currentUser.username}
+                  </span>
+                </button>
                 <button
                   type="button"
                   onClick={handleLogout}
@@ -410,7 +487,11 @@ export default function App() {
       >
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeSlide}
+            key={
+              activeSlide === "profile"
+                ? `profile_${profileUsername}`
+                : activeSlide
+            }
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -468,11 +549,11 @@ export default function App() {
             </span>
           </button>
 
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <button
               key={item.slide}
               type="button"
-              onClick={() => setActiveSlide(item.slide)}
+              onClick={() => handleNavClick(item.slide)}
               data-ocid="nav.link"
               style={{
                 flex: 1,
@@ -513,12 +594,32 @@ export default function App() {
             </button>
           ))}
 
+          {/* Mobile: translator + user */}
+          <div
+            style={{
+              flexShrink: 0,
+              padding: "0 0.4rem",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <div
+              style={{
+                transform: "scale(0.85)",
+                transformOrigin: "right center",
+              }}
+            >
+              <LanguageTranslator />
+            </div>
+          </div>
+
           {/* Mobile user indicator */}
           <button
             type="button"
             onClick={() => {
               if (currentUser) {
-                handleLogout();
+                handleViewProfile(currentUser.username);
               } else {
                 setShowLoginModal(true);
               }

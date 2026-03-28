@@ -6,9 +6,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import CommentThread, {
+  type Comment,
+  type CommentReply,
+} from "../components/CommentThread";
 import { LoginGate } from "../components/LoginGate";
 import { POEMS } from "../poems-data";
 
@@ -41,6 +44,7 @@ interface FeedSlideProps {
   currentUser: User | null;
   onJoin: () => void;
   onLogin: (user: User) => void;
+  onViewProfile?: (username: string) => void;
 }
 
 function timeAgo(dateStr: string): string {
@@ -67,7 +71,6 @@ function buildFeedPosts(): Post[] {
   }));
 }
 
-/** Returns a Poet's Note feed post if it's 24h+ old and not yet posted */
 function getPoetsNotePost(): Post | null {
   const note = localStorage.getItem("chinnua_poets_note") || "";
   const savedAtStr = localStorage.getItem("chinnua_poets_note_saved_at");
@@ -78,7 +81,6 @@ function getPoetsNotePost(): Post | null {
   const elapsed = Date.now() - savedAt;
   const twentyFourHours = 24 * 60 * 60 * 1000;
   if (elapsed < twentyFourHours) return null;
-  // Mark as posted so it only appears once
   localStorage.setItem("chinnua_poets_note_feed_posted", "true");
   return {
     id: `poets_note_${savedAt}`,
@@ -93,12 +95,25 @@ function getPoetsNotePost(): Post | null {
   };
 }
 
+// Module-level comment store (session-only)
+const commentStore: Record<string, Comment[]> = {};
+
+function getComments(postId: string): Comment[] {
+  return commentStore[postId] ?? [];
+}
+
+function setComments(postId: string, comments: Comment[]) {
+  commentStore[postId] = comments;
+}
+
 function PostCard({
   post,
   liked,
   onLike,
   onExpand,
   onReply,
+  currentUser,
+  onViewProfile,
   idx,
 }: {
   post: Post;
@@ -106,22 +121,75 @@ function PostCard({
   onLike: (id: string) => void;
   onExpand: (post: Post) => void;
   onReply: (post: Post) => void;
+  currentUser: User | null;
+  onViewProfile?: (username: string) => void;
   idx: number;
 }) {
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setCommentsState] = useState<Comment[]>(
+    getComments(post.id),
+  );
+
+  const handleAddComment = (postId: string, text: string) => {
+    if (!currentUser) return;
+    const newComment: Comment = {
+      id: `c_${Date.now()}`,
+      postId,
+      userId: currentUser.username,
+      username: currentUser.username,
+      text,
+      timestamp: Date.now(),
+      replies: [],
+    };
+    const updated = [...comments, newComment];
+    setComments(postId, updated);
+    setCommentsState(updated);
+  };
+
+  const handleAddReply = (postId: string, commentId: string, text: string) => {
+    if (!currentUser) return;
+    const reply: CommentReply = {
+      id: `r_${Date.now()}`,
+      userId: currentUser.username,
+      username: currentUser.username,
+      text,
+      timestamp: Date.now(),
+    };
+    const updated = comments.map((c) =>
+      c.id === commentId ? { ...c, replies: [...c.replies, reply] } : c,
+    );
+    setComments(postId, updated);
+    setCommentsState(updated);
+  };
+
+  const handleDeleteComment = (postId: string, commentId: string) => {
+    const updated = comments.filter((c) => c.id !== commentId);
+    setComments(postId, updated);
+    setCommentsState(updated);
+  };
+
+  const handleDeleteReply = (
+    postId: string,
+    commentId: string,
+    replyId: string,
+  ) => {
+    const updated = comments.map((c) =>
+      c.id === commentId
+        ? { ...c, replies: c.replies.filter((r) => r.id !== replyId) }
+        : c,
+    );
+    setComments(postId, updated);
+    setCommentsState(updated);
+  };
+
   return (
-    <motion.button
-      type="button"
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(idx * 0.03, 0.5), duration: 0.5 }}
       data-ocid={`feed.item.${idx + 1}`}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") onExpand(post);
-      }}
       style={{
-        flexShrink: 0,
-        width: "clamp(280px, 33vw, 360px)",
-        height: 400,
+        width: "100%",
         background:
           post.category === "Poet's Note"
             ? "rgba(200,169,106,0.07)"
@@ -134,25 +202,23 @@ function PostCard({
         padding: "1.4rem",
         display: "flex",
         flexDirection: "column",
-        cursor: "pointer",
         transition: "border-color 0.25s, box-shadow 0.25s",
         boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.borderColor =
+        (e.currentTarget as HTMLDivElement).style.borderColor =
           "rgba(200,169,106,0.4)";
-        (e.currentTarget as HTMLButtonElement).style.boxShadow =
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
           "0 4px 30px rgba(0,0,0,0.5), 0 0 20px rgba(200,169,106,0.1)";
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.borderColor =
+        (e.currentTarget as HTMLDivElement).style.borderColor =
           post.category === "Poet's Note"
             ? "rgba(200,169,106,0.35)"
             : "rgba(200,169,106,0.15)";
-        (e.currentTarget as HTMLButtonElement).style.boxShadow =
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
           "0 4px 20px rgba(0,0,0,0.35)";
       }}
-      onClick={() => onExpand(post)}
     >
       {/* Header */}
       <div
@@ -163,50 +229,83 @@ function PostCard({
           marginBottom: "1rem",
         }}
       >
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            background:
-              post.username === "CHINNUA_POET"
-                ? "rgba(200,169,106,0.3)"
-                : "rgba(255,255,255,0.1)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "0.7rem",
-            fontWeight: 700,
-            color: "#F5E6D3",
-            border:
-              post.username === "CHINNUA_POET"
-                ? "1px solid rgba(200,169,106,0.5)"
-                : "1px solid rgba(255,255,255,0.15)",
-            flexShrink: 0,
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewProfile?.(post.username);
           }}
+          title={`View ${post.username}'s profile`}
+          style={
+            {
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              background:
+                post.username === "CHINNUA_POET"
+                  ? "rgba(200,169,106,0.3)"
+                  : "rgba(255,255,255,0.1)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.7rem",
+              fontWeight: 700,
+              color: "#F5E6D3",
+              border:
+                post.username === "CHINNUA_POET"
+                  ? "1px solid rgba(200,169,106,0.5)"
+                  : "1px solid rgba(255,255,255,0.15)",
+              flexShrink: 0,
+              cursor: "pointer",
+              background2: "none",
+              transition: "opacity 0.15s",
+            } as React.CSSProperties
+          }
         >
           {post.username.charAt(0).toUpperCase()}
-        </div>
+        </button>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onViewProfile?.(post.username);
+            }}
             style={{
-              color:
-                post.username === "CHINNUA_POET"
-                  ? "rgba(200,169,106,0.9)"
-                  : "#F5E6D3",
-              fontWeight: 600,
-              fontSize: "0.8rem",
-              fontFamily: "'Libre Baskerville', Georgia, serif",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              margin: 0,
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              textAlign: "left",
             }}
           >
-            {post.username === "CHINNUA_POET"
-              ? "\u2746 CHINNUA_POET"
-              : post.username}
-          </p>
+            <p
+              style={{
+                color:
+                  post.username === "CHINNUA_POET"
+                    ? "rgba(200,169,106,0.9)"
+                    : "#F5E6D3",
+                fontWeight: 600,
+                fontSize: "0.8rem",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                margin: 0,
+                transition: "opacity 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLParagraphElement).style.opacity = "0.7";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLParagraphElement).style.opacity = "1";
+              }}
+            >
+              {post.username === "CHINNUA_POET"
+                ? "\u2746 CHINNUA_POET"
+                : post.username}
+            </p>
+          </button>
           <p
             style={{
               color: "rgba(229,231,235,0.4)",
@@ -238,8 +337,19 @@ function PostCard({
         )}
       </div>
 
-      {/* Content */}
-      <div style={{ flex: 1, overflow: "hidden" }}>
+      {/* Content (clickable area) */}
+      <button
+        type="button"
+        onClick={() => onExpand(post)}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          cursor: "pointer",
+          textAlign: "left",
+          flex: 1,
+        }}
+      >
         {post.title && (
           <h3
             style={{
@@ -275,9 +385,9 @@ function PostCard({
         >
           {post.preview}
         </p>
-      </div>
+      </button>
 
-      {/* Footer */}
+      {/* Footer actions */}
       <div
         style={{
           display: "flex",
@@ -288,16 +398,22 @@ function PostCard({
           borderTop: "1px solid rgba(200,169,106,0.1)",
         }}
       >
-        <span
+        <button
+          type="button"
           style={{
+            background: "none",
+            border: "none",
             fontSize: "0.72rem",
             color: "rgba(200,169,106,0.7)",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             flex: 1,
+            cursor: "pointer",
+            padding: 0,
           }}
+          onClick={() => onExpand(post)}
         >
           Click to read
-        </span>
+        </button>
         <button
           type="button"
           onClick={(e) => {
@@ -318,7 +434,7 @@ function PostCard({
             transition: "color 0.2s",
           }}
         >
-          \u2764\uFE0F {post.likes}
+          ❤️ {post.likes}
         </button>
         <button
           type="button"
@@ -339,10 +455,58 @@ function PostCard({
             gap: 3,
           }}
         >
-          \uD83D\uDCAC {post.replies.length}
+          💬 {post.replies.length}
+        </button>
+        {/* Comments toggle */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowComments((v) => !v);
+          }}
+          data-ocid="feed.toggle"
+          style={{
+            background: showComments ? "rgba(200,169,106,0.1)" : "none",
+            border: "none",
+            cursor: "pointer",
+            color: showComments ? "#C8A96A" : "rgba(229,231,235,0.4)",
+            fontSize: "0.75rem",
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            display: "flex",
+            alignItems: "center",
+            gap: 3,
+            borderRadius: 4,
+            padding: "2px 6px",
+            transition: "all 0.2s",
+          }}
+        >
+          🗨 {comments.length}
         </button>
       </div>
-    </motion.button>
+
+      {/* Inline comment thread */}
+      <AnimatePresence>
+        {showComments && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ overflow: "hidden" }}
+          >
+            <CommentThread
+              postId={post.id}
+              currentUser={currentUser}
+              comments={comments}
+              onAddComment={handleAddComment}
+              onAddReply={handleAddReply}
+              onDeleteComment={handleDeleteComment}
+              onDeleteReply={handleDeleteReply}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -350,6 +514,7 @@ export default function FeedSlide({
   currentUser,
   onJoin,
   onLogin,
+  onViewProfile,
 }: FeedSlideProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState("");
@@ -357,7 +522,6 @@ export default function FeedSlide({
   const [replyPost, setReplyPost] = useState<Post | null>(null);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [replyText, setReplyText] = useState("");
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const poemPosts = buildFeedPosts();
@@ -378,7 +542,6 @@ export default function FeedSlide({
     );
     setLikedPosts(new Set(liked));
 
-    // Inject Poet's Note if 24h+ old
     const notePost = getPoetsNotePost();
     const extraPosts = notePost ? [notePost] : [];
 
@@ -462,14 +625,6 @@ export default function FeedSlide({
     setReplyPost(null);
   };
 
-  const scrollFeed = (dir: "left" | "right") => {
-    if (!scrollRef.current) return;
-    scrollRef.current.scrollBy({
-      left: dir === "left" ? -380 : 380,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <div
       className="slide-container"
@@ -491,6 +646,7 @@ export default function FeedSlide({
           flexDirection: "column",
           padding: "1.5rem 1rem 0",
           maxWidth: "100%",
+          overflow: "hidden",
         }}
       >
         {/* Header row */}
@@ -515,48 +671,56 @@ export default function FeedSlide({
           >
             Poetry Feed
           </h2>
-          <div style={{ display: "flex", gap: "0.5rem" }}>
+          {currentUser && onViewProfile && (
             <button
               type="button"
-              onClick={() => scrollFeed("left")}
-              data-ocid="feed.pagination_prev"
+              onClick={() => onViewProfile(currentUser.username)}
+              data-ocid="feed.primary_button"
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: "rgba(200,169,106,0.1)",
-                border: "1px solid rgba(200,169,106,0.25)",
-                color: "rgba(229,231,235,0.7)",
+                background: "rgba(200,169,106,0.08)",
+                border: "1px solid rgba(200,169,106,0.22)",
+                borderRadius: 20,
+                padding: "0.3rem 0.8rem",
+                color: "rgba(200,169,106,0.75)",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: "0.68rem",
+                letterSpacing: "0.05em",
                 cursor: "pointer",
+                transition: "all 0.2s",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s",
+                gap: 5,
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor =
+                  "rgba(200,169,106,0.45)";
+                (e.currentTarget as HTMLButtonElement).style.color = "#C8A96A";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor =
+                  "rgba(200,169,106,0.22)";
+                (e.currentTarget as HTMLButtonElement).style.color =
+                  "rgba(200,169,106,0.75)";
               }}
             >
-              <ChevronLeft size={18} />
+              <span
+                style={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  background: "rgba(200,169,106,0.2)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "0.6rem",
+                  fontWeight: 700,
+                }}
+              >
+                {currentUser.username[0]?.toUpperCase()}
+              </span>
+              {currentUser.username}
             </button>
-            <button
-              type="button"
-              onClick={() => scrollFeed("right")}
-              data-ocid="feed.pagination_next"
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: "rgba(200,169,106,0.1)",
-                border: "1px solid rgba(200,169,106,0.25)",
-                color: "rgba(229,231,235,0.7)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s",
-              }}
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
+          )}
         </div>
 
         {/* Create post card */}
@@ -635,35 +799,36 @@ export default function FeedSlide({
           )}
         </div>
 
-        {/* Horizontal scroll feed */}
-        <div style={{ position: "relative", flex: 1 }}>
-          <div
-            ref={scrollRef}
-            style={{
-              display: "flex",
-              gap: "1rem",
-              overflowX: "auto",
-              overflowY: "hidden",
-              paddingBottom: "1.5rem",
-              paddingLeft: "0.5rem",
-              paddingRight: "0.5rem",
-              scrollbarWidth: "thin",
-              scrollbarColor: "rgba(200,169,106,0.25) transparent",
-              WebkitOverflowScrolling: "touch",
-            }}
-          >
-            {posts.map((post, idx) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                liked={likedPosts.has(post.id)}
-                onLike={handleLike}
-                onExpand={setExpandedPost}
-                onReply={setReplyPost}
-                idx={idx}
-              />
-            ))}
-          </div>
+        {/* Vertical scroll feed */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            overflowY: "auto",
+            overflowX: "hidden",
+            paddingBottom: "1.5rem",
+            paddingLeft: "0.5rem",
+            paddingRight: "0.5rem",
+            scrollbarWidth: "thin",
+            scrollbarColor: "rgba(200,169,106,0.25) transparent",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          {posts.map((post, idx) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              liked={likedPosts.has(post.id)}
+              onLike={handleLike}
+              onExpand={setExpandedPost}
+              onReply={setReplyPost}
+              currentUser={currentUser}
+              onViewProfile={onViewProfile}
+              idx={idx}
+            />
+          ))}
         </div>
       </motion.div>
 

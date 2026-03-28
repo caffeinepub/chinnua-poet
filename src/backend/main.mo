@@ -22,6 +22,8 @@ actor {
 
   // Data Types
   public type PoemId = Nat;
+  public type NoteId = Nat;
+
   public type Theme = {
     name : Text;
     description : Text;
@@ -37,19 +39,27 @@ actor {
     suggestedTheme : Theme;
   };
 
-  // Stored type (no id - stable variable compatibility)
   public type AdminPoem = {
     title : Text;
     content : Text;
     category : Text;
   };
 
-  // Return type (includes id for frontend use)
   public type AdminPoemEntry = {
     id : PoemId;
     title : Text;
     content : Text;
     category : Text;
+  };
+
+  public type UserNote = {
+    id : NoteId;
+    title : Text;
+    content : Text;
+    author : Principal;
+    createdAt : Time.Time;
+    updatedAt : Time.Time;
+    isPublic : Bool;
   };
 
   public type PoemResult = {
@@ -97,6 +107,20 @@ actor {
     #passwordTooShort;
   };
 
+  public type NoteResult = {
+    #success : UserNote;
+    #titleTooShort;
+    #contentTooShort;
+    #notFound;
+    #unauthorized;
+  };
+
+  public type NoteDeleteResult = {
+    #success;
+    #notFound;
+    #unauthorized;
+  };
+
   public type UserProfile = {
     name : Text;
   };
@@ -106,13 +130,25 @@ actor {
   let adminPoems = Map.empty<PoemId, AdminPoem>();
   let displayNames = Map.empty<Principal, Text>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+  let userNotes = Map.empty<NoteId, UserNote>();
   var nextPoemId = 1;
+  var nextNoteId = 1;
 
   // Helper Functions
   func comparePoemsByTimestamp(a : CommunityPoem, b : CommunityPoem) : Order.Order {
     if (a.timestamp > b.timestamp) {
       #less;
     } else if (a.timestamp < b.timestamp) {
+      #greater;
+    } else {
+      #equal;
+    };
+  };
+
+  func compareNotesByCreatedAt(a : UserNote, b : UserNote) : Order.Order {
+    if (a.createdAt > b.createdAt) {
+      #less;
+    } else if (a.createdAt < b.createdAt) {
       #greater;
     } else {
       #equal;
@@ -142,7 +178,7 @@ actor {
     #success;
   };
 
-  // User Profile Management (required by frontend)
+  // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");
@@ -278,6 +314,81 @@ actor {
 
     communityPoems.remove(id);
     #success;
+  };
+
+  // User Notes
+  public shared ({ caller }) func createNote(title : Text, content : Text, isPublic : Bool) : async NoteResult {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can create notes");
+    };
+    if (not minTextLength(title, 1)) { return #titleTooShort };
+    if (not minTextLength(content, 1)) { return #contentTooShort };
+
+    let noteId = nextNoteId;
+    let now = Time.now();
+    let note : UserNote = {
+      id = noteId;
+      title;
+      content;
+      author = caller;
+      createdAt = now;
+      updatedAt = now;
+      isPublic;
+    };
+
+    userNotes.add(noteId, note);
+    nextNoteId += 1;
+    #success(note);
+  };
+
+  public shared ({ caller }) func updateNote(id : NoteId, title : Text, content : Text, isPublic : Bool) : async NoteResult {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can update notes");
+    };
+    let existing = switch (userNotes.get(id)) {
+      case (null) { return #notFound };
+      case (?n) { n };
+    };
+    if (existing.author != caller) { return #unauthorized };
+    if (not minTextLength(title, 1)) { return #titleTooShort };
+    if (not minTextLength(content, 1)) { return #contentTooShort };
+
+    let updated : UserNote = {
+      id;
+      title;
+      content;
+      author = caller;
+      createdAt = existing.createdAt;
+      updatedAt = Time.now();
+      isPublic;
+    };
+    userNotes.add(id, updated);
+    #success(updated);
+  };
+
+  public shared ({ caller }) func deleteNote(id : NoteId) : async NoteDeleteResult {
+    let note = switch (userNotes.get(id)) {
+      case (null) { return #notFound };
+      case (?n) { n };
+    };
+    if (note.author != caller and not AccessControl.isAdmin(accessControlState, caller)) {
+      return #unauthorized;
+    };
+    userNotes.remove(id);
+    #success;
+  };
+
+  public query ({ caller }) func getMyNotes() : async [UserNote] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can view their notes");
+    };
+    let notes = userNotes.values().filter(func(n) { n.author == caller }).toArray();
+    notes.sort(compareNotesByCreatedAt);
+  };
+
+  public query func getPublicNotesForUser(user : Principal) : async [UserNote] {
+    let notes = userNotes.values().filter(func(n) { n.author == user and n.isPublic }).toArray();
+    notes.sort(compareNotesByCreatedAt);
   };
 
   // Theme Suggestion

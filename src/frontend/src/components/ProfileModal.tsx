@@ -12,6 +12,14 @@ import { useActor } from "../hooks/useActor";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import type { FeedPost } from "./FeedSection";
 
+interface Note {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+  isPublic: boolean;
+}
+
 function loadPosts(): FeedPost[] {
   try {
     return JSON.parse(localStorage.getItem("chinnua_feed_v2") ?? "[]");
@@ -74,6 +82,17 @@ export function ProfileModal({
   const userPosts = loadPosts().filter(
     (p) => p.authorPrincipal === authorPrincipal,
   );
+
+  const publicNotes: Note[] = (() => {
+    try {
+      const raw = localStorage.getItem(`chinnua_notes_${author}`);
+      if (!raw) return [];
+      const all: Note[] = JSON.parse(raw);
+      return all.filter((n) => n.isPublic);
+    } catch {
+      return [];
+    }
+  })();
 
   const handleSave = async () => {
     if (!editName.trim()) return;
@@ -227,6 +246,33 @@ export function ProfileModal({
               </div>
             )}
           </div>
+
+          {publicNotes.length > 0 && (
+            <div className="border-t border-[oklch(0.22_0.02_60/0.4)] pt-5 mt-5">
+              <p className="font-cinzel text-[10px] tracking-[0.2em] text-gold uppercase mb-4">
+                Notes
+              </p>
+              <div className="flex flex-col gap-4 max-h-80 overflow-y-auto pr-1">
+                {publicNotes.map((note, idx) => (
+                  <div
+                    key={note.id}
+                    className="border-b border-[oklch(0.22_0.02_60/0.3)] pb-4"
+                    data-ocid={`profile.item.${idx + 1}`}
+                  >
+                    <p className="font-lora text-sm text-gold/80 font-semibold mb-1">
+                      {note.title}
+                    </p>
+                    <p className="font-cinzel text-[10px] text-muted-foreground mb-2">
+                      {note.date}
+                    </p>
+                    <p className="font-lora text-sm text-foreground/85 leading-relaxed line-clamp-4">
+                      {note.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
