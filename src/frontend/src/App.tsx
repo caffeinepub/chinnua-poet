@@ -91,8 +91,12 @@ export default function App() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  const PROFILE_NAV_ITEM: { slide: Slide; label: string } = {
+    slide: "profile",
+    label: "Profile",
+  };
   const navItems = currentUser
-    ? [...BASE_NAV_ITEMS, NOTES_NAV_ITEM]
+    ? [...BASE_NAV_ITEMS, NOTES_NAV_ITEM, PROFILE_NAV_ITEM]
     : BASE_NAV_ITEMS;
 
   const handleLogoClick = () => {
@@ -154,8 +158,12 @@ export default function App() {
   };
 
   const handleNavClick = (slide: Slide) => {
+    if (slide === "profile" && currentUser) {
+      setProfileUsername(currentUser.username);
+    } else if (slide !== "profile") {
+      setProfileUsername(null);
+    }
     setActiveSlide(slide);
-    if (slide !== "profile") setProfileUsername(null);
   };
 
   const renderSlide = () => {

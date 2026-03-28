@@ -111,7 +111,24 @@ export type PoemResult = {
     __kind__: "unauthorized";
     unauthorized: null;
 };
+export type NoteId = bigint;
 export type Time = bigint;
+export type NoteResult = {
+    __kind__: "contentTooShort";
+    contentTooShort: null;
+} | {
+    __kind__: "titleTooShort";
+    titleTooShort: null;
+} | {
+    __kind__: "notFound";
+    notFound: null;
+} | {
+    __kind__: "success";
+    success: UserNote;
+} | {
+    __kind__: "unauthorized";
+    unauthorized: null;
+};
 export interface CommunityPoem {
     id: PoemId;
     title: string;
@@ -121,20 +138,19 @@ export interface CommunityPoem {
     author: Principal;
     timestamp: Time;
 }
-export interface AdminPoem {
-    id: PoemId;
-    title: string;
-    content: string;
-    category: string;
-}
+export type CommentResult = {
+    __kind__: "textTooShort";
+    textTooShort: null;
+} | {
+    __kind__: "success";
+    success: PostComment;
+} | {
+    __kind__: "unauthorized";
+    unauthorized: null;
+};
+export type ReplyId = bigint;
 export type PoemId = bigint;
-export interface Theme {
-    name: string;
-    description: string;
-}
-export interface UserProfile {
-    name: string;
-}
+export type CommentId = bigint;
 export type AdminPoemResult = {
     __kind__: "contentTooShort";
     contentTooShort: null;
@@ -152,8 +168,65 @@ export type AdminPoemResult = {
     notAdmin: null;
 } | {
     __kind__: "success";
-    success: AdminPoem;
+    success: AdminPoemEntry;
 };
+export interface UserNote {
+    id: NoteId;
+    title: string;
+    content: string;
+    createdAt: Time;
+    author: Principal;
+    updatedAt: Time;
+    isPublic: boolean;
+}
+export interface CommentReply {
+    id: ReplyId;
+    commentId: CommentId;
+    text: string;
+    authorName: string;
+    author: Principal;
+    timestamp: Time;
+    postId: string;
+}
+export type ReplyResult = {
+    __kind__: "commentNotFound";
+    commentNotFound: null;
+} | {
+    __kind__: "textTooShort";
+    textTooShort: null;
+} | {
+    __kind__: "success";
+    success: CommentReply;
+} | {
+    __kind__: "unauthorized";
+    unauthorized: null;
+};
+export interface PostComment {
+    id: CommentId;
+    text: string;
+    authorName: string;
+    author: Principal;
+    timestamp: Time;
+    postId: string;
+}
+export interface AdminPoemEntry {
+    id: PoemId;
+    title: string;
+    content: string;
+    category: string;
+}
+export interface Theme {
+    name: string;
+    description: string;
+}
+export interface UserProfile {
+    name: string;
+}
+export enum ChangePasswordResult {
+    passwordTooShort = "passwordTooShort",
+    incorrectPassword = "incorrectPassword",
+    success = "success"
+}
 export enum DeleteResult {
     notFoundInAdminCollection = "notFoundInAdminCollection",
     notFoundInCommunityCollection = "notFoundInCommunityCollection",
@@ -171,39 +244,40 @@ export enum UserRole {
     user = "user",
     guest = "guest"
 }
-export type ChangePasswordResult = {
-    __kind__: "success";
-    success: null;
-} | {
-    __kind__: "incorrectPassword";
-    incorrectPassword: null;
-} | {
-    __kind__: "passwordTooShort";
-    passwordTooShort: null;
-};
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addAdminPoem(title: string, content: string, category: string): Promise<AdminPoemResult>;
+    addComment(postId: string, text: string, authorName: string): Promise<CommentResult>;
+    addReply(commentId: CommentId, postId: string, text: string, authorName: string): Promise<ReplyResult>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    deleteAdminPoem(id: PoemId): Promise<DeleteResult>;
-    deleteMyPoem(id: PoemId): Promise<PoemDeleteResult>;
     changeAdminPassword(currentPw: string, newPw: string): Promise<ChangePasswordResult>;
+    createNote(title: string, content: string, isPublic: boolean): Promise<NoteResult>;
+    deleteAdminPoem(id: PoemId): Promise<DeleteResult>;
+    deleteComment(commentId: CommentId): Promise<CommentDeleteResult>;
+    deleteMyPoem(id: PoemId): Promise<PoemDeleteResult>;
+    deleteNote(id: NoteId): Promise<NoteDeleteResult>;
+    deleteReply(replyId: ReplyId): Promise<CommentDeleteResult>;
     getAdminPassword(): Promise<string>;
-    getAdminPoems(): Promise<Array<AdminPoem>>;
+    getAdminPoems(): Promise<Array<AdminPoemEntry>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getCommentsForPost(postId: string): Promise<Array<PostComment>>;
     getCommunityPoems(): Promise<Array<CommunityPoem>>;
     getDisplayName(user: Principal): Promise<string | null>;
+    getMyNotes(): Promise<Array<UserNote>>;
     getMyPoems(): Promise<Array<CommunityPoem>>;
+    getPublicNotesForUser(user: Principal): Promise<Array<UserNote>>;
+    getRepliesForComment(commentId: CommentId): Promise<Array<CommentReply>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    resetAdminPassword(resetToken: string): Promise<ChangePasswordResult>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setDisplayName(name: string): Promise<void>;
     submitPoem(title: string, content: string, authorName: string): Promise<PoemResult>;
-    resetAdminPassword(resetToken: string): Promise<ChangePasswordResult>;
     updateAdminPoem(id: PoemId, title: string, content: string, category: string): Promise<AdminPoemResult>;
+    updateNote(id: NoteId, title: string, content: string, isPublic: boolean): Promise<NoteResult>;
 }
-import type { AdminPoem as _AdminPoem, AdminPoemResult as _AdminPoemResult, CommunityPoem as _CommunityPoem, DeleteResult as _DeleteResult, PoemDeleteResult as _PoemDeleteResult, PoemResult as _PoemResult, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { AdminPoemEntry as _AdminPoemEntry, AdminPoemResult as _AdminPoemResult, ChangePasswordResult as _ChangePasswordResult, CommentDeleteResult as _CommentDeleteResult, CommentReply as _CommentReply, CommentResult as _CommentResult, CommunityPoem as _CommunityPoem, DeleteResult as _DeleteResult, NoteDeleteResult as _NoteDeleteResult, NoteResult as _NoteResult, PoemDeleteResult as _PoemDeleteResult, PoemResult as _PoemResult, PostComment as _PostComment, ReplyResult as _ReplyResult, UserNote as _UserNote, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -234,60 +308,144 @@ export class Backend implements backendInterface {
             return from_candid_AdminPoemResult_n1(this._uploadFile, this._downloadFile, result);
         }
     }
+    async addComment(arg0: string, arg1: string, arg2: string): Promise<CommentResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addComment(arg0, arg1, arg2);
+                return from_candid_CommentResult_n3(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addComment(arg0, arg1, arg2);
+            return from_candid_CommentResult_n3(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async addReply(arg0: CommentId, arg1: string, arg2: string, arg3: string): Promise<ReplyResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addReply(arg0, arg1, arg2, arg3);
+                return from_candid_ReplyResult_n5(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addReply(arg0, arg1, arg2, arg3);
+            return from_candid_ReplyResult_n5(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async assignCallerUserRole(arg0: Principal, arg1: UserRole): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n3(this._uploadFile, this._downloadFile, arg1));
+                const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n7(this._uploadFile, this._downloadFile, arg1));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n3(this._uploadFile, this._downloadFile, arg1));
+            const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n7(this._uploadFile, this._downloadFile, arg1));
             return result;
+        }
+    }
+    async changeAdminPassword(arg0: string, arg1: string): Promise<ChangePasswordResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.changeAdminPassword(arg0, arg1);
+                return from_candid_ChangePasswordResult_n9(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.changeAdminPassword(arg0, arg1);
+            return from_candid_ChangePasswordResult_n9(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async createNote(arg0: string, arg1: string, arg2: boolean): Promise<NoteResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.createNote(arg0, arg1, arg2);
+                return from_candid_NoteResult_n11(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.createNote(arg0, arg1, arg2);
+            return from_candid_NoteResult_n11(this._uploadFile, this._downloadFile, result);
         }
     }
     async deleteAdminPoem(arg0: PoemId): Promise<DeleteResult> {
         if (this.processError) {
             try {
                 const result = await this.actor.deleteAdminPoem(arg0);
-                return from_candid_DeleteResult_n5(this._uploadFile, this._downloadFile, result);
+                return from_candid_DeleteResult_n13(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.deleteAdminPoem(arg0);
-            return from_candid_DeleteResult_n5(this._uploadFile, this._downloadFile, result);
+            return from_candid_DeleteResult_n13(this._uploadFile, this._downloadFile, result);
         }
     }
-    async updateAdminPoem(arg0: PoemId, arg1: string, arg2: string, arg3: string): Promise<AdminPoemResult> {
+    async deleteComment(arg0: CommentId): Promise<CommentDeleteResult> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateAdminPoem(arg0, arg1, arg2, arg3);
-                return from_candid_AdminPoemResult_n1(this._uploadFile, this._downloadFile, result);
+                const result = await this.actor.deleteComment(arg0);
+                return from_candid_CommentDeleteResult_n15(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateAdminPoem(arg0, arg1, arg2, arg3);
-            return from_candid_AdminPoemResult_n1(this._uploadFile, this._downloadFile, result);
+            const result = await this.actor.deleteComment(arg0);
+            return from_candid_CommentDeleteResult_n15(this._uploadFile, this._downloadFile, result);
         }
     }
     async deleteMyPoem(arg0: PoemId): Promise<PoemDeleteResult> {
         if (this.processError) {
             try {
                 const result = await this.actor.deleteMyPoem(arg0);
-                return from_candid_PoemDeleteResult_n7(this._uploadFile, this._downloadFile, result);
+                return from_candid_PoemDeleteResult_n17(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.deleteMyPoem(arg0);
-            return from_candid_PoemDeleteResult_n7(this._uploadFile, this._downloadFile, result);
+            return from_candid_PoemDeleteResult_n17(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async deleteNote(arg0: NoteId): Promise<NoteDeleteResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteNote(arg0);
+                return from_candid_NoteDeleteResult_n18(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteNote(arg0);
+            return from_candid_NoteDeleteResult_n18(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async deleteReply(arg0: ReplyId): Promise<CommentDeleteResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteReply(arg0);
+                return from_candid_CommentDeleteResult_n15(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteReply(arg0);
+            return from_candid_CommentDeleteResult_n15(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAdminPassword(): Promise<string> {
@@ -304,35 +462,7 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async changeAdminPassword(arg0: string, arg1: string): Promise<ChangePasswordResult> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.changeAdminPassword(arg0, arg1);
-                return from_candid_ChangePasswordResult(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.changeAdminPassword(arg0, arg1);
-            return from_candid_ChangePasswordResult(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async resetAdminPassword(arg0: string): Promise<ChangePasswordResult> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.resetAdminPassword(arg0);
-                return from_candid_ChangePasswordResult(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.resetAdminPassword(arg0);
-            return from_candid_ChangePasswordResult(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getAdminPoems(): Promise<Array<AdminPoem>> {
+    async getAdminPoems(): Promise<Array<AdminPoemEntry>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAdminPoems();
@@ -350,28 +480,42 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserProfile();
-                return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n19(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserProfile();
-            return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n19(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCallerUserRole(): Promise<UserRole> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserRole();
-                return from_candid_UserRole_n10(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserRole_n20(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserRole();
-            return from_candid_UserRole_n10(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserRole_n20(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getCommentsForPost(arg0: string): Promise<Array<PostComment>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCommentsForPost(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCommentsForPost(arg0);
+            return result;
         }
     }
     async getCommunityPoems(): Promise<Array<CommunityPoem>> {
@@ -392,14 +536,28 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getDisplayName(arg0);
-                return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getDisplayName(arg0);
-            return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getMyNotes(): Promise<Array<UserNote>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getMyNotes();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getMyNotes();
+            return result;
         }
     }
     async getMyPoems(): Promise<Array<CommunityPoem>> {
@@ -416,18 +574,46 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getPublicNotesForUser(arg0: Principal): Promise<Array<UserNote>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getPublicNotesForUser(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getPublicNotesForUser(arg0);
+            return result;
+        }
+    }
+    async getRepliesForComment(arg0: CommentId): Promise<Array<CommentReply>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRepliesForComment(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRepliesForComment(arg0);
+            return result;
+        }
+    }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserProfile(arg0);
-                return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n19(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserProfile(arg0);
-            return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n19(this._uploadFile, this._downloadFile, result);
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -442,6 +628,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.isCallerAdmin();
             return result;
+        }
+    }
+    async resetAdminPassword(arg0: string): Promise<ChangePasswordResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.resetAdminPassword(arg0);
+                return from_candid_ChangePasswordResult_n9(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.resetAdminPassword(arg0);
+            return from_candid_ChangePasswordResult_n9(this._uploadFile, this._downloadFile, result);
         }
     }
     async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
@@ -476,44 +676,210 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.submitPoem(arg0, arg1, arg2);
-                return from_candid_PoemResult_n13(this._uploadFile, this._downloadFile, result);
+                return from_candid_PoemResult_n23(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.submitPoem(arg0, arg1, arg2);
-            return from_candid_PoemResult_n13(this._uploadFile, this._downloadFile, result);
+            return from_candid_PoemResult_n23(this._uploadFile, this._downloadFile, result);
         }
     }
-}
-function from_candid_ChangePasswordResult(_uploadFile: any, _downloadFile: any, value: any): ChangePasswordResult {
-    return "success" in value ? { __kind__: "success", success: null }
-        : "incorrectPassword" in value ? { __kind__: "incorrectPassword", incorrectPassword: null }
-        : { __kind__: "passwordTooShort", passwordTooShort: null };
+    async updateAdminPoem(arg0: PoemId, arg1: string, arg2: string, arg3: string): Promise<AdminPoemResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateAdminPoem(arg0, arg1, arg2, arg3);
+                return from_candid_AdminPoemResult_n1(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateAdminPoem(arg0, arg1, arg2, arg3);
+            return from_candid_AdminPoemResult_n1(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async updateNote(arg0: NoteId, arg1: string, arg2: string, arg3: boolean): Promise<NoteResult> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateNote(arg0, arg1, arg2, arg3);
+                return from_candid_NoteResult_n11(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateNote(arg0, arg1, arg2, arg3);
+            return from_candid_NoteResult_n11(this._uploadFile, this._downloadFile, result);
+        }
+    }
 }
 function from_candid_AdminPoemResult_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _AdminPoemResult): AdminPoemResult {
     return from_candid_variant_n2(_uploadFile, _downloadFile, value);
 }
-function from_candid_DeleteResult_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DeleteResult): DeleteResult {
-    return from_candid_variant_n6(_uploadFile, _downloadFile, value);
+function from_candid_ChangePasswordResult_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ChangePasswordResult): ChangePasswordResult {
+    return from_candid_variant_n10(_uploadFile, _downloadFile, value);
 }
-function from_candid_PoemDeleteResult_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PoemDeleteResult): PoemDeleteResult {
-    return from_candid_variant_n8(_uploadFile, _downloadFile, value);
+function from_candid_CommentDeleteResult_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CommentDeleteResult): CommentDeleteResult {
+    return from_candid_variant_n16(_uploadFile, _downloadFile, value);
 }
-function from_candid_PoemResult_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PoemResult): PoemResult {
+function from_candid_CommentResult_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CommentResult): CommentResult {
+    return from_candid_variant_n4(_uploadFile, _downloadFile, value);
+}
+function from_candid_DeleteResult_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DeleteResult): DeleteResult {
     return from_candid_variant_n14(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
-    return from_candid_variant_n11(_uploadFile, _downloadFile, value);
+function from_candid_NoteDeleteResult_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _NoteDeleteResult): NoteDeleteResult {
+    return from_candid_variant_n16(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+function from_candid_NoteResult_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _NoteResult): NoteResult {
+    return from_candid_variant_n12(_uploadFile, _downloadFile, value);
+}
+function from_candid_PoemDeleteResult_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PoemDeleteResult): PoemDeleteResult {
+    return from_candid_variant_n16(_uploadFile, _downloadFile, value);
+}
+function from_candid_PoemResult_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PoemResult): PoemResult {
+    return from_candid_variant_n24(_uploadFile, _downloadFile, value);
+}
+function from_candid_ReplyResult_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ReplyResult): ReplyResult {
+    return from_candid_variant_n6(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserRole_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n21(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
+function from_candid_opt_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    passwordTooShort: null;
+} | {
+    incorrectPassword: null;
+} | {
+    success: null;
+}): ChangePasswordResult {
+    return "passwordTooShort" in value ? ChangePasswordResult.passwordTooShort : "incorrectPassword" in value ? ChangePasswordResult.incorrectPassword : "success" in value ? ChangePasswordResult.success : value;
+}
+function from_candid_variant_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    contentTooShort: null;
+} | {
+    titleTooShort: null;
+} | {
+    notFound: null;
+} | {
+    success: _UserNote;
+} | {
+    unauthorized: null;
+}): {
+    __kind__: "contentTooShort";
+    contentTooShort: null;
+} | {
+    __kind__: "titleTooShort";
+    titleTooShort: null;
+} | {
+    __kind__: "notFound";
+    notFound: null;
+} | {
+    __kind__: "success";
+    success: UserNote;
+} | {
+    __kind__: "unauthorized";
+    unauthorized: null;
+} {
+    return "contentTooShort" in value ? {
+        __kind__: "contentTooShort",
+        contentTooShort: value.contentTooShort
+    } : "titleTooShort" in value ? {
+        __kind__: "titleTooShort",
+        titleTooShort: value.titleTooShort
+    } : "notFound" in value ? {
+        __kind__: "notFound",
+        notFound: value.notFound
+    } : "success" in value ? {
+        __kind__: "success",
+        success: value.success
+    } : "unauthorized" in value ? {
+        __kind__: "unauthorized",
+        unauthorized: value.unauthorized
+    } : value;
+}
+function from_candid_variant_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    notFoundInAdminCollection: null;
+} | {
+    notFoundInCommunityCollection: null;
+} | {
+    notFound: null;
+} | {
+    notAdmin: null;
+} | {
+    success: null;
+}): DeleteResult {
+    return "notFoundInAdminCollection" in value ? DeleteResult.notFoundInAdminCollection : "notFoundInCommunityCollection" in value ? DeleteResult.notFoundInCommunityCollection : "notFound" in value ? DeleteResult.notFound : "notAdmin" in value ? DeleteResult.notAdmin : "success" in value ? DeleteResult.success : value;
+}
+function from_candid_variant_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    notFound: null;
+} | {
+    success: null;
+} | {
+    unauthorized: null;
+}): PoemDeleteResult {
+    return "notFound" in value ? PoemDeleteResult.notFound : "success" in value ? PoemDeleteResult.success : "unauthorized" in value ? PoemDeleteResult.unauthorized : value;
+}
+function from_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    contentTooShort: null;
+} | {
+    categoryTooShort: null;
+} | {
+    titleTooShort: null;
+} | {
+    notFound: null;
+} | {
+    notAdmin: null;
+} | {
+    success: _AdminPoemEntry;
+}): {
+    __kind__: "contentTooShort";
+    contentTooShort: null;
+} | {
+    __kind__: "categoryTooShort";
+    categoryTooShort: null;
+} | {
+    __kind__: "titleTooShort";
+    titleTooShort: null;
+} | {
+    __kind__: "notFound";
+    notFound: null;
+} | {
+    __kind__: "notAdmin";
+    notAdmin: null;
+} | {
+    __kind__: "success";
+    success: AdminPoemEntry;
+} {
+    return "contentTooShort" in value ? {
+        __kind__: "contentTooShort",
+        contentTooShort: value.contentTooShort
+    } : "categoryTooShort" in value ? {
+        __kind__: "categoryTooShort",
+        categoryTooShort: value.categoryTooShort
+    } : "titleTooShort" in value ? {
+        __kind__: "titleTooShort",
+        titleTooShort: value.titleTooShort
+    } : "notFound" in value ? {
+        __kind__: "notFound",
+        notFound: value.notFound
+    } : "notAdmin" in value ? {
+        __kind__: "notAdmin",
+        notAdmin: value.notAdmin
+    } : "success" in value ? {
+        __kind__: "success",
+        success: value.success
+    } : value;
+}
+function from_candid_variant_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
 } | {
     user: null;
@@ -522,7 +888,7 @@ function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function from_candid_variant_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     contentTooShort: null;
 } | {
     authorNameTooShort: null;
@@ -581,83 +947,72 @@ function from_candid_variant_n14(_uploadFile: (file: ExternalBlob) => Promise<Ui
         unauthorized: value.unauthorized
     } : value;
 }
-function from_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    contentTooShort: null;
+function from_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    textTooShort: null;
 } | {
-    categoryTooShort: null;
+    success: _PostComment;
 } | {
-    titleTooShort: null;
-} | {
-    notFound: null;
-} | {
-    notAdmin: null;
-} | {
-    success: _AdminPoem;
+    unauthorized: null;
 }): {
-    __kind__: "contentTooShort";
-    contentTooShort: null;
-} | {
-    __kind__: "categoryTooShort";
-    categoryTooShort: null;
-} | {
-    __kind__: "titleTooShort";
-    titleTooShort: null;
-} | {
-    __kind__: "notFound";
-    notFound: null;
-} | {
-    __kind__: "notAdmin";
-    notAdmin: null;
+    __kind__: "textTooShort";
+    textTooShort: null;
 } | {
     __kind__: "success";
-    success: AdminPoem;
+    success: PostComment;
+} | {
+    __kind__: "unauthorized";
+    unauthorized: null;
 } {
-    return "contentTooShort" in value ? {
-        __kind__: "contentTooShort",
-        contentTooShort: value.contentTooShort
-    } : "categoryTooShort" in value ? {
-        __kind__: "categoryTooShort",
-        categoryTooShort: value.categoryTooShort
-    } : "titleTooShort" in value ? {
-        __kind__: "titleTooShort",
-        titleTooShort: value.titleTooShort
-    } : "notFound" in value ? {
-        __kind__: "notFound",
-        notFound: value.notFound
-    } : "notAdmin" in value ? {
-        __kind__: "notAdmin",
-        notAdmin: value.notAdmin
+    return "textTooShort" in value ? {
+        __kind__: "textTooShort",
+        textTooShort: value.textTooShort
     } : "success" in value ? {
         __kind__: "success",
         success: value.success
+    } : "unauthorized" in value ? {
+        __kind__: "unauthorized",
+        unauthorized: value.unauthorized
     } : value;
 }
 function from_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    notFoundInAdminCollection: null;
+    commentNotFound: null;
 } | {
-    notFoundInCommunityCollection: null;
+    textTooShort: null;
 } | {
-    notFound: null;
-} | {
-    notAdmin: null;
-} | {
-    success: null;
-}): DeleteResult {
-    return "notFoundInAdminCollection" in value ? DeleteResult.notFoundInAdminCollection : "notFoundInCommunityCollection" in value ? DeleteResult.notFoundInCommunityCollection : "notFound" in value ? DeleteResult.notFound : "notAdmin" in value ? DeleteResult.notAdmin : "success" in value ? DeleteResult.success : value;
-}
-function from_candid_variant_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    notFound: null;
-} | {
-    success: null;
+    success: _CommentReply;
 } | {
     unauthorized: null;
-}): PoemDeleteResult {
-    return "notFound" in value ? PoemDeleteResult.notFound : "success" in value ? PoemDeleteResult.success : "unauthorized" in value ? PoemDeleteResult.unauthorized : value;
+}): {
+    __kind__: "commentNotFound";
+    commentNotFound: null;
+} | {
+    __kind__: "textTooShort";
+    textTooShort: null;
+} | {
+    __kind__: "success";
+    success: CommentReply;
+} | {
+    __kind__: "unauthorized";
+    unauthorized: null;
+} {
+    return "commentNotFound" in value ? {
+        __kind__: "commentNotFound",
+        commentNotFound: value.commentNotFound
+    } : "textTooShort" in value ? {
+        __kind__: "textTooShort",
+        textTooShort: value.textTooShort
+    } : "success" in value ? {
+        __kind__: "success",
+        success: value.success
+    } : "unauthorized" in value ? {
+        __kind__: "unauthorized",
+        unauthorized: value.unauthorized
+    } : value;
 }
-function to_candid_UserRole_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
-    return to_candid_variant_n4(_uploadFile, _downloadFile, value);
+function to_candid_UserRole_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
+    return to_candid_variant_n8(_uploadFile, _downloadFile, value);
 }
-function to_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {
+function to_candid_variant_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {
     admin: null;
 } | {
     user: null;

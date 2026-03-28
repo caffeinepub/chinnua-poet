@@ -23,6 +23,8 @@ actor {
   // Data Types
   public type PoemId = Nat;
   public type NoteId = Nat;
+  public type CommentId = Nat;
+  public type ReplyId = Nat;
 
   public type Theme = {
     name : Text;
@@ -60,6 +62,25 @@ actor {
     createdAt : Time.Time;
     updatedAt : Time.Time;
     isPublic : Bool;
+  };
+
+  public type PostComment = {
+    id : CommentId;
+    postId : Text;
+    author : Principal;
+    authorName : Text;
+    text : Text;
+    timestamp : Time.Time;
+  };
+
+  public type CommentReply = {
+    id : ReplyId;
+    commentId : CommentId;
+    postId : Text;
+    author : Principal;
+    authorName : Text;
+    text : Text;
+    timestamp : Time.Time;
   };
 
   public type PoemResult = {
@@ -121,6 +142,25 @@ actor {
     #unauthorized;
   };
 
+  public type CommentResult = {
+    #success : PostComment;
+    #textTooShort;
+    #unauthorized;
+  };
+
+  public type ReplyResult = {
+    #success : CommentReply;
+    #textTooShort;
+    #commentNotFound;
+    #unauthorized;
+  };
+
+  public type CommentDeleteResult = {
+    #success;
+    #notFound;
+    #unauthorized;
+  };
+
   public type UserProfile = {
     name : Text;
   };
@@ -131,8 +171,12 @@ actor {
   let displayNames = Map.empty<Principal, Text>();
   let userProfiles = Map.empty<Principal, UserProfile>();
   let userNotes = Map.empty<NoteId, UserNote>();
+  let postComments = Map.empty<CommentId, PostComment>();
+  let commentReplies = Map.empty<ReplyId, CommentReply>();
   var nextPoemId = 1;
   var nextNoteId = 1;
+  var nextCommentId = 1;
+  var nextReplyId = 1;
 
   // Helper Functions
   func comparePoemsByTimestamp(a : CommunityPoem, b : CommunityPoem) : Order.Order {
@@ -155,24 +199,53 @@ actor {
     };
   };
 
+  func compareCommentsByTimestamp(a : PostComment, b : PostComment) : Order.Order {
+    if (a.timestamp < b.timestamp) {
+      #less;
+    } else if (a.timestamp > b.timestamp) {
+      #greater;
+    } else {
+      #equal;
+    };
+  };
+
+  func compareRepliesByTimestamp(a : CommentReply, b : CommentReply) : Order.Order {
+    if (a.timestamp < b.timestamp) {
+      #less;
+    } else if (a.timestamp > b.timestamp) {
+      #greater;
+    } else {
+      #equal;
+    };
+  };
+
   func minTextLength(text : Text, minLength : Nat) : Bool {
     if (text.size() < minLength) { return false };
     true;
   };
 
   // Admin Password Management
-  public query func getAdminPassword() : async Text {
+  public query ({ caller }) func getAdminPassword() : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can access the admin password");
+    };
     adminPassword;
   };
 
-  public shared func changeAdminPassword(currentPw : Text, newPw : Text) : async ChangePasswordResult {
+  public shared ({ caller }) func changeAdminPassword(currentPw : Text, newPw : Text) : async ChangePasswordResult {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can change the admin password");
+    };
     if (currentPw != adminPassword) { return #incorrectPassword };
     if (newPw.size() < 6) { return #passwordTooShort };
     adminPassword := newPw;
     #success;
   };
 
-  public shared func resetAdminPassword(resetToken : Text) : async ChangePasswordResult {
+  public shared ({ caller }) func resetAdminPassword(resetToken : Text) : async ChangePasswordResult {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can reset the admin password");
+    };
     if (resetToken != "CHINNUA_RESET_2026") { return #incorrectPassword };
     adminPassword := "chinnua2025";
     #success;
@@ -389,6 +462,95 @@ actor {
   public query func getPublicNotesForUser(user : Principal) : async [UserNote] {
     let notes = userNotes.values().filter(func(n) { n.author == user and n.isPublic }).toArray();
     notes.sort(compareNotesByCreatedAt);
+  };
+
+  // Comments
+  public shared ({ caller }) func addComment(postId : Text, text : Text, authorName : Text) : async CommentResult {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can comment");
+    };
+    if (not minTextLength(text, 1)) { return #textTooShort };
+
+    let commentId = nextCommentId;
+    let comment : PostComment = {
+      id = commentId;
+      postId;
+      author = caller;
+      authorName;
+      text;
+      timestamp = Time.now();
+    };
+
+    postComments.add(commentId, comment);
+    nextCommentId += 1;
+    #success(comment);
+  };
+
+  public shared ({ caller }) func addReply(commentId : CommentId, postId : Text, text : Text, authorName : Text) : async ReplyResult {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can reply");
+    };
+    if (not postComments.containsKey(commentId)) { return #commentNotFound };
+    if (not minTextLength(text, 1)) { return #textTooShort };
+
+    let replyId = nextReplyId;
+    let reply : CommentReply = {
+      id = replyId;
+      commentId;
+      postId;
+      author = caller;
+      authorName;
+      text;
+      timestamp = Time.now();
+    };
+
+    commentReplies.add(replyId, reply);
+    nextReplyId += 1;
+    #success(reply);
+  };
+
+  public query func getCommentsForPost(postId : Text) : async [PostComment] {
+    let comments = postComments.values().filter(func(c) { c.postId == postId }).toArray();
+    comments.sort(compareCommentsByTimestamp);
+  };
+
+  public query func getRepliesForComment(commentId : CommentId) : async [CommentReply] {
+    let replies = commentReplies.values().filter(func(r) { r.commentId == commentId }).toArray();
+    replies.sort(compareRepliesByTimestamp);
+  };
+
+  public shared ({ caller }) func deleteComment(commentId : CommentId) : async CommentDeleteResult {
+    let comment = switch (postComments.get(commentId)) {
+      case (null) { return #notFound };
+      case (?c) { c };
+    };
+    if (comment.author != caller and not AccessControl.isAdmin(accessControlState, caller)) {
+      return #unauthorized;
+    };
+    // Also delete all replies to this comment
+    let replyIds = commentReplies.keys().filter(func(rId) {
+      switch (commentReplies.get(rId)) {
+        case (?r) { r.commentId == commentId };
+        case (null) { false };
+      }
+    }).toArray();
+    for (rId in replyIds.vals()) {
+      commentReplies.remove(rId);
+    };
+    postComments.remove(commentId);
+    #success;
+  };
+
+  public shared ({ caller }) func deleteReply(replyId : ReplyId) : async CommentDeleteResult {
+    let reply = switch (commentReplies.get(replyId)) {
+      case (null) { return #notFound };
+      case (?r) { r };
+    };
+    if (reply.author != caller and not AccessControl.isAdmin(accessControlState, caller)) {
+      return #unauthorized;
+    };
+    commentReplies.remove(replyId);
+    #success;
   };
 
   // Theme Suggestion

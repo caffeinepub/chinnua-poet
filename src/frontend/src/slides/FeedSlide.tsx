@@ -13,6 +13,7 @@ import CommentThread, {
   type CommentReply,
 } from "../components/CommentThread";
 import { LoginGate } from "../components/LoginGate";
+import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
 
 interface User {
@@ -95,17 +96,6 @@ function getPoetsNotePost(): Post | null {
   };
 }
 
-// Module-level comment store (session-only)
-const commentStore: Record<string, Comment[]> = {};
-
-function getComments(postId: string): Comment[] {
-  return commentStore[postId] ?? [];
-}
-
-function setComments(postId: string, comments: Comment[]) {
-  commentStore[postId] = comments;
-}
-
 function PostCard({
   post,
   liked,
@@ -126,60 +116,118 @@ function PostCard({
   idx: number;
 }) {
   const [showComments, setShowComments] = useState(false);
-  const [comments, setCommentsState] = useState<Comment[]>(
-    getComments(post.id),
-  );
+  const [comments, setCommentsState] = useState<Comment[]>([]);
+  const [commentsLoaded, setCommentsLoaded] = useState(false);
+  const { actor } = useActor();
 
-  const handleAddComment = (postId: string, text: string) => {
-    if (!currentUser) return;
-    const newComment: Comment = {
-      id: `c_${Date.now()}`,
-      postId,
-      userId: currentUser.username,
-      username: currentUser.username,
-      text,
-      timestamp: Date.now(),
-      replies: [],
-    };
-    const updated = [...comments, newComment];
-    setComments(postId, updated);
-    setCommentsState(updated);
+  const loadComments = async (postId: string) => {
+    if (!actor || commentsLoaded) return;
+    try {
+      const backendComments = await actor.getCommentsForPost(postId);
+      const mapped: Comment[] = await Promise.all(
+        backendComments.map(async (bc) => {
+          let replies: CommentReply[] = [];
+          try {
+            const backendReplies = await actor.getRepliesForComment(bc.id);
+            replies = backendReplies.map((br) => ({
+              id: br.id.toString(),
+              userId: br.author.toText(),
+              username: br.authorName,
+              text: br.text,
+              timestamp: Number(br.timestamp / 1_000_000n),
+            }));
+          } catch {}
+          return {
+            id: bc.id.toString(),
+            postId: bc.postId,
+            userId: bc.author.toText(),
+            username: bc.authorName,
+            text: bc.text,
+            timestamp: Number(bc.timestamp / 1_000_000n),
+            replies,
+          };
+        }),
+      );
+      setCommentsState(mapped);
+      setCommentsLoaded(true);
+    } catch {}
   };
 
-  const handleAddReply = (postId: string, commentId: string, text: string) => {
-    if (!currentUser) return;
-    const reply: CommentReply = {
-      id: `r_${Date.now()}`,
-      userId: currentUser.username,
-      username: currentUser.username,
-      text,
-      timestamp: Date.now(),
-    };
-    const updated = comments.map((c) =>
-      c.id === commentId ? { ...c, replies: [...c.replies, reply] } : c,
-    );
-    setComments(postId, updated);
-    setCommentsState(updated);
+  const handleAddComment = async (postId: string, text: string) => {
+    if (!currentUser || !actor) return;
+    try {
+      const result = await actor.addComment(postId, text, currentUser.username);
+      if (result.__kind__ === "success") {
+        const bc = result.success;
+        const newComment: Comment = {
+          id: bc.id.toString(),
+          postId: bc.postId,
+          userId: bc.author.toText(),
+          username: bc.authorName,
+          text: bc.text,
+          timestamp: Number(bc.timestamp / 1_000_000n),
+          replies: [],
+        };
+        setCommentsState((prev) => [...prev, newComment]);
+      }
+    } catch {}
   };
 
-  const handleDeleteComment = (postId: string, commentId: string) => {
-    const updated = comments.filter((c) => c.id !== commentId);
-    setComments(postId, updated);
-    setCommentsState(updated);
-  };
-
-  const handleDeleteReply = (
+  const handleAddReply = async (
     postId: string,
+    commentId: string,
+    text: string,
+  ) => {
+    if (!currentUser || !actor) return;
+    try {
+      const result = await actor.addReply(
+        BigInt(commentId),
+        postId,
+        text,
+        currentUser.username,
+      );
+      if (result.__kind__ === "success") {
+        const br = result.success;
+        const reply: CommentReply = {
+          id: br.id.toString(),
+          userId: br.author.toText(),
+          username: br.authorName,
+          text: br.text,
+          timestamp: Number(br.timestamp / 1_000_000n),
+        };
+        setCommentsState((prev) =>
+          prev.map((c) =>
+            c.id === commentId ? { ...c, replies: [...c.replies, reply] } : c,
+          ),
+        );
+      }
+    } catch {}
+  };
+
+  const handleDeleteComment = async (_postId: string, commentId: string) => {
+    if (!actor) return;
+    try {
+      await actor.deleteComment(BigInt(commentId));
+    } catch {}
+    setCommentsState((prev) => prev.filter((c) => c.id !== commentId));
+  };
+
+  const handleDeleteReply = async (
+    _postId: string,
     commentId: string,
     replyId: string,
   ) => {
-    const updated = comments.map((c) =>
-      c.id === commentId
-        ? { ...c, replies: c.replies.filter((r) => r.id !== replyId) }
-        : c,
+    if (!actor) return;
+    try {
+      await actor.deleteReply(BigInt(replyId));
+    } catch {}
+    setCommentsState((prev) =>
+      prev.map((c) =>
+        c.id === commentId
+          ? { ...c, replies: c.replies.filter((r) => r.id !== replyId) }
+          : c,
+      ),
     );
-    setComments(postId, updated);
-    setCommentsState(updated);
   };
 
   return (
@@ -462,7 +510,10 @@ function PostCard({
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            setShowComments((v) => !v);
+            setShowComments((v) => {
+              if (!v) loadComments(post.id);
+              return !v;
+            });
           }}
           data-ocid="feed.toggle"
           style={{

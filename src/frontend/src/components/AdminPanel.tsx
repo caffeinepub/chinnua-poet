@@ -11,7 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Eye, EyeOff, Loader2, Pencil, Trash2, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import type { AdminPoem } from "../backend";
+import type { AdminPoemEntry } from "../backend";
+import { ChangePasswordResult } from "../backend";
 import { useActor } from "../hooks/useActor";
 
 const SESSION_KEY = "chinnua_admin_authed";
@@ -249,11 +250,11 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
   const [submitting, setSubmitting] = useState(false);
   const [submitMsg, setSubmitMsg] = useState("");
 
-  const [poems, setPoems] = useState<AdminPoem[]>([]);
+  const [poems, setPoems] = useState<AdminPoemEntry[]>([]);
   const [loadingPoems, setLoadingPoems] = useState(false);
 
   // Edit state
-  const [editingPoem, setEditingPoem] = useState<AdminPoem | null>(null);
+  const [editingPoem, setEditingPoem] = useState<AdminPoemEntry | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editCategory, setEditCategory] = useState("Sad");
   const [editContent, setEditContent] = useState("");
@@ -324,7 +325,7 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
     setResetMsg("");
     try {
       const result = await actor.resetAdminPassword(resetToken);
-      if ("success" in result) {
+      if (result === ChangePasswordResult.success) {
         setResetMsg("Password reset to chinnua2025");
         setTimeout(() => {
           setShowForgot(false);
@@ -356,13 +357,13 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
     setSavingPw(true);
     try {
       const result = await actor.changeAdminPassword(currentPw, newPw);
-      if (result.__kind__ === "success") {
+      if (result === ChangePasswordResult.success) {
         setChangePwMsg("Password changed! It now works on every browser.");
         setCurrentPw("");
         setNewPw("");
         setConfirmPw("");
         setTimeout(() => setShowChangePw(false), 2000);
-      } else if (result.__kind__ === "incorrectPassword") {
+      } else if (result === ChangePasswordResult.incorrectPassword) {
         setChangePwError("Current password is incorrect.");
       } else {
         setChangePwError("New password must be at least 6 characters.");
@@ -408,7 +409,7 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
     }
   };
 
-  const handleEditOpen = (poem: AdminPoem) => {
+  const handleEditOpen = (poem: AdminPoemEntry) => {
     setEditingPoem(poem);
     setEditTitle(poem.title);
     setEditCategory(poem.category);

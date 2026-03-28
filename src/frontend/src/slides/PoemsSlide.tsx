@@ -6,8 +6,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { Comment, CommentReply } from "../components/CommentThread";
+import CommentThread from "../components/CommentThread";
 import { LoginGate } from "../components/LoginGate";
+import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
 
 const CATEGORIES = [
@@ -373,6 +376,140 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
   const [search2, setSearch2] = useState("");
   const [category2, setCategory2] = useState("All");
   const [selected, setSelected] = useState<PoemType | null>(null);
+  const [poemComments, setPoemComments] = useState<Comment[]>([]);
+  const [poemCommentsLoaded, setPoemCommentsLoaded] = useState(false);
+  const { actor } = useActor();
+
+  useEffect(() => {
+    if (!selected || !actor) {
+      setPoemComments([]);
+      setPoemCommentsLoaded(false);
+      return;
+    }
+    const load = async () => {
+      try {
+        const backendComments = await actor.getCommentsForPost(
+          String(selected.id),
+        );
+        const mapped: Comment[] = await Promise.all(
+          backendComments.map(async (bc) => {
+            let replies: CommentReply[] = [];
+            try {
+              const backendReplies = await actor.getRepliesForComment(bc.id);
+              replies = backendReplies.map((br) => ({
+                id: br.id.toString(),
+                userId: br.author.toText(),
+                username: br.authorName,
+                text: br.text,
+                timestamp: Number(br.timestamp / 1_000_000n),
+              }));
+            } catch {}
+            return {
+              id: bc.id.toString(),
+              postId: bc.postId,
+              userId: bc.author.toText(),
+              username: bc.authorName,
+              text: bc.text,
+              timestamp: Number(bc.timestamp / 1_000_000n),
+              replies,
+            };
+          }),
+        );
+        setPoemComments(mapped);
+        setPoemCommentsLoaded(true);
+      } catch {}
+    };
+    load();
+  }, [selected, actor]);
+
+  const handlePoemAddComment = async (postId: string, text: string) => {
+    if (!currentUser || !actor) return;
+    try {
+      const result = await actor.addComment(postId, text, currentUser.username);
+      if (result.__kind__ === "success") {
+        const bc = result.success;
+        setPoemComments((prev) => [
+          ...prev,
+          {
+            id: bc.id.toString(),
+            postId: bc.postId,
+            userId: bc.author.toText(),
+            username: bc.authorName,
+            text: bc.text,
+            timestamp: Number(bc.timestamp / 1_000_000n),
+            replies: [],
+          },
+        ]);
+      }
+    } catch {}
+  };
+
+  const handlePoemAddReply = async (
+    postId: string,
+    commentId: string,
+    text: string,
+  ) => {
+    if (!currentUser || !actor) return;
+    try {
+      const result = await actor.addReply(
+        BigInt(commentId),
+        postId,
+        text,
+        currentUser.username,
+      );
+      if (result.__kind__ === "success") {
+        const br = result.success;
+        setPoemComments((prev) =>
+          prev.map((c) =>
+            c.id === commentId
+              ? {
+                  ...c,
+                  replies: [
+                    ...c.replies,
+                    {
+                      id: br.id.toString(),
+                      userId: br.author.toText(),
+                      username: br.authorName,
+                      text: br.text,
+                      timestamp: Number(br.timestamp / 1_000_000n),
+                    },
+                  ],
+                }
+              : c,
+          ),
+        );
+      }
+    } catch {}
+  };
+
+  const handlePoemDeleteComment = async (
+    _postId: string,
+    commentId: string,
+  ) => {
+    if (!actor) return;
+    try {
+      await actor.deleteComment(BigInt(commentId));
+    } catch {}
+    setPoemComments((prev) => prev.filter((c) => c.id !== commentId));
+  };
+
+  const handlePoemDeleteReply = async (
+    _postId: string,
+    commentId: string,
+    replyId: string,
+  ) => {
+    if (!actor) return;
+    try {
+      await actor.deleteReply(BigInt(replyId));
+    } catch {}
+    setPoemComments((prev) =>
+      prev.map((c) =>
+        c.id === commentId
+          ? { ...c, replies: c.replies.filter((r) => r.id !== replyId) }
+          : c,
+      ),
+    );
+  };
 
   const mainPoems = POEMS.filter((p) => !p.collection);
   const echoesPoems = POEMS.filter(
@@ -725,6 +862,53 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                 })
               }
             />
+          )}
+          {selected && poemCommentsLoaded && (
+            <div style={{ marginTop: "1.5rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                    height: 1,
+                    background: "rgba(200,169,106,0.18)",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "0.7rem",
+                    color: "rgba(200,169,106,0.7)",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Reflections
+                </span>
+                <div
+                  style={{
+                    flex: 1,
+                    height: 1,
+                    background: "rgba(200,169,106,0.18)",
+                  }}
+                />
+              </div>
+              <CommentThread
+                postId={String(selected.id)}
+                currentUser={currentUser}
+                comments={poemComments}
+                onAddComment={handlePoemAddComment}
+                onAddReply={handlePoemAddReply}
+                onDeleteComment={handlePoemDeleteComment}
+                onDeleteReply={handlePoemDeleteReply}
+              />
+            </div>
           )}
         </DialogContent>
       </Dialog>

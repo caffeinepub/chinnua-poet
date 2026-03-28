@@ -10,7 +10,7 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface AdminPoem {
+export interface AdminPoemEntry {
   'id' : PoemId,
   'title' : string,
   'content' : string,
@@ -21,7 +21,26 @@ export type AdminPoemResult = { 'contentTooShort' : null } |
   { 'titleTooShort' : null } |
   { 'notFound' : null } |
   { 'notAdmin' : null } |
-  { 'success' : AdminPoem };
+  { 'success' : AdminPoemEntry };
+export type ChangePasswordResult = { 'passwordTooShort' : null } |
+  { 'incorrectPassword' : null } |
+  { 'success' : null };
+export type CommentDeleteResult = { 'notFound' : null } |
+  { 'success' : null } |
+  { 'unauthorized' : null };
+export type CommentId = bigint;
+export interface CommentReply {
+  'id' : ReplyId,
+  'commentId' : CommentId,
+  'text' : string,
+  'authorName' : string,
+  'author' : Principal,
+  'timestamp' : Time,
+  'postId' : string,
+}
+export type CommentResult = { 'textTooShort' : null } |
+  { 'success' : PostComment } |
+  { 'unauthorized' : null };
 export interface CommunityPoem {
   'id' : PoemId,
   'title' : string,
@@ -36,6 +55,15 @@ export type DeleteResult = { 'notFoundInAdminCollection' : null } |
   { 'notFound' : null } |
   { 'notAdmin' : null } |
   { 'success' : null };
+export type NoteDeleteResult = { 'notFound' : null } |
+  { 'success' : null } |
+  { 'unauthorized' : null };
+export type NoteId = bigint;
+export type NoteResult = { 'contentTooShort' : null } |
+  { 'titleTooShort' : null } |
+  { 'notFound' : null } |
+  { 'success' : UserNote } |
+  { 'unauthorized' : null };
 export type PoemDeleteResult = { 'notFound' : null } |
   { 'success' : null } |
   { 'unauthorized' : null };
@@ -47,8 +75,30 @@ export type PoemResult = { 'contentTooShort' : null } |
   { 'themeNameTooShort' : null } |
   { 'success' : CommunityPoem } |
   { 'unauthorized' : null };
+export interface PostComment {
+  'id' : CommentId,
+  'text' : string,
+  'authorName' : string,
+  'author' : Principal,
+  'timestamp' : Time,
+  'postId' : string,
+}
+export type ReplyId = bigint;
+export type ReplyResult = { 'commentNotFound' : null } |
+  { 'textTooShort' : null } |
+  { 'success' : CommentReply } |
+  { 'unauthorized' : null };
 export interface Theme { 'name' : string, 'description' : string }
 export type Time = bigint;
+export interface UserNote {
+  'id' : NoteId,
+  'title' : string,
+  'content' : string,
+  'createdAt' : Time,
+  'author' : Principal,
+  'updatedAt' : Time,
+  'isPublic' : boolean,
+}
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
@@ -56,23 +106,38 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addAdminPoem' : ActorMethod<[string, string, string], AdminPoemResult>,
-  'changeAdminPassword' : ActorMethod<[string, string], ChangePasswordResult>,
-  'resetAdminPassword' : ActorMethod<[string], ChangePasswordResult>,
+  'addComment' : ActorMethod<[string, string, string], CommentResult>,
+  'addReply' : ActorMethod<[CommentId, string, string, string], ReplyResult>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'changeAdminPassword' : ActorMethod<[string, string], ChangePasswordResult>,
+  'createNote' : ActorMethod<[string, string, boolean], NoteResult>,
   'deleteAdminPoem' : ActorMethod<[PoemId], DeleteResult>,
+  'deleteComment' : ActorMethod<[CommentId], CommentDeleteResult>,
   'deleteMyPoem' : ActorMethod<[PoemId], PoemDeleteResult>,
-  'getAdminPoems' : ActorMethod<[], Array<AdminPoem>>,
+  'deleteNote' : ActorMethod<[NoteId], NoteDeleteResult>,
+  'deleteReply' : ActorMethod<[ReplyId], CommentDeleteResult>,
+  'getAdminPassword' : ActorMethod<[], string>,
+  'getAdminPoems' : ActorMethod<[], Array<AdminPoemEntry>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getCommentsForPost' : ActorMethod<[string], Array<PostComment>>,
   'getCommunityPoems' : ActorMethod<[], Array<CommunityPoem>>,
   'getDisplayName' : ActorMethod<[Principal], [] | [string]>,
+  'getMyNotes' : ActorMethod<[], Array<UserNote>>,
   'getMyPoems' : ActorMethod<[], Array<CommunityPoem>>,
+  'getPublicNotesForUser' : ActorMethod<[Principal], Array<UserNote>>,
+  'getRepliesForComment' : ActorMethod<[CommentId], Array<CommentReply>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'resetAdminPassword' : ActorMethod<[string], ChangePasswordResult>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'setDisplayName' : ActorMethod<[string], undefined>,
   'submitPoem' : ActorMethod<[string, string, string], PoemResult>,
-  'updateAdminPoem' : ActorMethod<[PoemId, string, string, string], AdminPoemResult>,
+  'updateAdminPoem' : ActorMethod<
+    [PoemId, string, string, string],
+    AdminPoemResult
+  >,
+  'updateNote' : ActorMethod<[NoteId, string, string, boolean], NoteResult>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
