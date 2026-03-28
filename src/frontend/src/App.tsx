@@ -14,6 +14,9 @@ import MessagesSlide from "./slides/MessagesSlide";
 import MusicSlide from "./slides/MusicSlide";
 import NotesSlide from "./slides/NotesSlide";
 import PoemsSlide from "./slides/PoemsSlide";
+import PrivacySlide from "./slides/PrivacySlide";
+import SettingsSlide from "./slides/SettingsSlide";
+import TermsSlide from "./slides/TermsSlide";
 import UserProfileSlide from "./slides/UserProfileSlide";
 
 type Slide =
@@ -26,7 +29,10 @@ type Slide =
   | "about"
   | "notes"
   | "admin"
-  | "profile";
+  | "profile"
+  | "settings"
+  | "terms"
+  | "privacy";
 
 interface User {
   username: string;
@@ -95,8 +101,12 @@ export default function App() {
     slide: "profile",
     label: "Profile",
   };
+  const SETTINGS_NAV_ITEM: { slide: Slide; label: string } = {
+    slide: "settings",
+    label: "Settings",
+  };
   const navItems = currentUser
-    ? [...BASE_NAV_ITEMS, NOTES_NAV_ITEM, PROFILE_NAV_ITEM]
+    ? [...BASE_NAV_ITEMS, NOTES_NAV_ITEM, PROFILE_NAV_ITEM, SETTINGS_NAV_ITEM]
     : BASE_NAV_ITEMS;
 
   const handleLogoClick = () => {
@@ -203,6 +213,18 @@ export default function App() {
         );
       case "admin":
         return <AdminSlide />;
+      case "settings":
+        return (
+          <SettingsSlide
+            currentUser={currentUser}
+            onLogout={handleLogout}
+            onNavigate={(slide: string) => setActiveSlide(slide as Slide)}
+          />
+        );
+      case "terms":
+        return <TermsSlide onBack={() => setActiveSlide("settings")} />;
+      case "privacy":
+        return <PrivacySlide onBack={() => setActiveSlide("settings")} />;
       case "profile":
         return profileUsername ? (
           <UserProfileSlide

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -5,6 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
 
 interface UserEntry {
@@ -40,6 +42,72 @@ export default function AdminSlide() {
     "1. Be respectful to all community members.\n2. No hate speech or harassment.\n3. Share only original content or give proper credit.\n4. Keep discussions poetry-related.\n5. No spam or promotional content.\n6. Respect privacy of others.",
   );
 
+  // Guardian moderation
+  const { actor } = useActor();
+  interface ModerationEntry {
+    id: bigint;
+    contentType: string;
+    content: string;
+    authorName: string;
+    status: { __kind__: string };
+    reason: string;
+    riskLevel: string;
+    timestamp: bigint;
+  }
+  interface ModerationStats {
+    pendingCount: bigint;
+    approvedCount: bigint;
+    rejectedCount: bigint;
+  }
+  const [moderationQueue, setModerationQueue] = useState<ModerationEntry[]>([]);
+  const [moderationStats, setModerationStats] =
+    useState<ModerationStats | null>(null);
+  const [rejectReason, setRejectReason] = useState<Record<string, string>>({});
+  const [showRejectInput, setShowRejectInput] = useState<
+    Record<string, boolean>
+  >({});
+  const [guardianLoading, setGuardianLoading] = useState(false);
+
+  const loadGuardianData = async () => {
+    if (!actor) return;
+    setGuardianLoading(true);
+    try {
+      const [queue, stats] = await Promise.all([
+        (actor as any).getModerationQueue(),
+        (actor as any).getModerationStats(),
+      ]);
+      setModerationQueue(queue as ModerationEntry[]);
+      setModerationStats(stats as ModerationStats);
+    } catch {}
+    setGuardianLoading(false);
+  };
+
+  const handleApprove = async (id: bigint) => {
+    if (!actor) return;
+    try {
+      await (actor as any).approveModeratedContent(id);
+      toast.success("Content approved");
+      loadGuardianData();
+    } catch {
+      toast.error("Failed");
+    }
+  };
+
+  const handleReject = async (id: bigint, idStr: string) => {
+    if (!actor) return;
+    try {
+      await (actor as any).rejectModeratedContent(
+        id,
+        rejectReason[idStr] || "Violates community guidelines",
+      );
+      toast.success("Content rejected");
+      setShowRejectInput((p) => ({ ...p, [idStr]: false }));
+      loadGuardianData();
+    } catch {
+      toast.error("Failed");
+    }
+  };
+
   useEffect(() => {
     setDeletedPoems(
       new Set(
@@ -54,15 +122,31 @@ export default function AdminSlide() {
     if (storedRules) setRules(storedRules);
   }, []);
 
-  const checkPassword = () => {
-    const adminPw =
-      localStorage.getItem("chinnua_admin_password") || "chinnua2025";
-    if (password === adminPw) {
+  const checkPassword = async () => {
+    try {
+      if (actor) {
+        const ok = await (actor as any).checkAdminPassword(password);
+        if (ok) {
+          setAuthed(true);
+          localStorage.setItem("chinnua_admin_authed", "true");
+        } else {
+          toast.error("Incorrect password");
+        }
+        return;
+      }
+    } catch {}
+    // Fallback: always use default password, never stale localStorage
+    if (password === "chinnua2025") {
       setAuthed(true);
       localStorage.setItem("chinnua_admin_authed", "true");
     } else {
       toast.error("Incorrect password");
     }
+  };
+
+  const emergencyReset = () => {
+    localStorage.removeItem("chinnua_admin_password");
+    toast.success("Password reset to chinnua2025 — try logging in now");
   };
 
   const lockAdmin = () => {
@@ -224,6 +308,22 @@ export default function AdminSlide() {
           >
             Enter
           </Button>
+          <button
+            type="button"
+            onClick={emergencyReset}
+            style={{
+              marginTop: "0.5rem",
+              background: "none",
+              border: "none",
+              color: "rgba(200,169,106,0.6)",
+              fontSize: "0.75rem",
+              cursor: "pointer",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              textDecoration: "underline",
+            }}
+          >
+            Forgot password? Reset to default
+          </button>
         </motion.div>
       </div>
     );
@@ -282,22 +382,28 @@ export default function AdminSlide() {
               gap: "0.25rem",
             }}
           >
-            {["poems", "feed", "users", "gallery", "settings", "rules"].map(
-              (tab) => (
-                <TabsTrigger
-                  key={tab}
-                  value={tab}
-                  data-ocid="admin.tab"
-                  style={{
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
-                    fontSize: "0.82rem",
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {tab}
-                </TabsTrigger>
-              ),
-            )}
+            {[
+              "poems",
+              "feed",
+              "users",
+              "gallery",
+              "settings",
+              "rules",
+              "guardian",
+            ].map((tab) => (
+              <TabsTrigger
+                key={tab}
+                value={tab}
+                data-ocid="admin.tab"
+                style={{
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.82rem",
+                  textTransform: "capitalize",
+                }}
+              >
+                {tab}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="poems">
@@ -695,6 +801,371 @@ export default function AdminSlide() {
               >
                 Save Rules
               </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="guardian">
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  marginBottom: "1.5rem",
+                }}
+              >
+                <span style={{ fontSize: "1.3rem" }}>🛡️</span>
+                <div>
+                  <h3
+                    style={{
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      color: "#C8A96A",
+                      margin: 0,
+                      fontSize: "1.1rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    The Silent Guardian
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      color: "rgba(229,231,235,0.45)",
+                      fontSize: "0.78rem",
+                      margin: 0,
+                      fontStyle: "italic",
+                    }}
+                  >
+                    Watching quietly. Protecting the space.
+                  </p>
+                </div>
+                <Button
+                  onClick={loadGuardianData}
+                  data-ocid="admin.secondary_button"
+                  style={{
+                    marginLeft: "auto",
+                    background: "rgba(200,169,106,0.12)",
+                    border: "1px solid rgba(200,169,106,0.25)",
+                    color: "#C8A96A",
+                    fontSize: "0.78rem",
+                  }}
+                >
+                  {guardianLoading ? "Loading…" : "Refresh"}
+                </Button>
+              </div>
+
+              {/* Stats */}
+              {moderationStats && (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "1rem",
+                    marginBottom: "1.5rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {[
+                    {
+                      label: "Pending",
+                      count: moderationStats.pendingCount,
+                      color: "rgba(200,169,106,0.8)",
+                    },
+                    {
+                      label: "Approved",
+                      count: moderationStats.approvedCount,
+                      color: "rgba(74,222,128,0.8)",
+                    },
+                    {
+                      label: "Rejected",
+                      count: moderationStats.rejectedCount,
+                      color: "rgba(248,113,113,0.8)",
+                    },
+                  ].map((s) => (
+                    <div
+                      key={s.label}
+                      style={{
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(200,169,106,0.1)",
+                        borderRadius: 10,
+                        padding: "0.75rem 1.25rem",
+                        minWidth: 90,
+                        textAlign: "center",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontFamily: "'Playfair Display', Georgia, serif",
+                          fontSize: "1.5rem",
+                          color: s.color,
+                          margin: 0,
+                          fontWeight: 700,
+                        }}
+                      >
+                        {s.count.toString()}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: "'Libre Baskerville', Georgia, serif",
+                          fontSize: "0.72rem",
+                          color: "rgba(229,231,235,0.4)",
+                          margin: 0,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                        }}
+                      >
+                        {s.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Queue */}
+              {moderationQueue.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "3rem 1rem" }}>
+                  <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>
+                    🛡️
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontStyle: "italic",
+                      color: "rgba(200,169,106,0.6)",
+                      fontSize: "0.95rem",
+                    }}
+                  >
+                    The Guardian is watching silently.
+                    <br />
+                    No content needs review.
+                  </p>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
+                  {moderationQueue.map((entry) => {
+                    const idStr = entry.id.toString();
+                    const riskColor =
+                      entry.riskLevel === "high"
+                        ? "rgba(248,113,113,0.85)"
+                        : entry.riskLevel === "medium"
+                          ? "rgba(251,191,36,0.85)"
+                          : "rgba(74,222,128,0.85)";
+                    return (
+                      <div
+                        key={idStr}
+                        style={{
+                          background: "rgba(26,20,16,0.7)",
+                          border: "1px solid rgba(200,169,106,0.12)",
+                          borderRadius: 10,
+                          padding: "1rem 1.25rem",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                            marginBottom: "0.5rem",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.78rem",
+                              color: "rgba(200,169,106,0.7)",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {entry.contentType}
+                          </span>
+                          <span style={{ color: "rgba(245,230,211,0.3)" }}>
+                            ·
+                          </span>
+                          <span
+                            style={{
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.78rem",
+                              color: "rgba(245,230,211,0.5)",
+                            }}
+                          >
+                            by {entry.authorName}
+                          </span>
+                          <span
+                            style={{
+                              marginLeft: "auto",
+                              background: `${riskColor.replace("0.85", "0.12")}`,
+                              border: `1px solid ${riskColor.replace("0.85", "0.3")}`,
+                              borderRadius: 6,
+                              padding: "0.1rem 0.5rem",
+                              color: riskColor,
+                              fontSize: "0.72rem",
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {entry.riskLevel} risk
+                          </span>
+                        </div>
+                        <p
+                          style={{
+                            fontFamily: "'Playfair Display', Georgia, serif",
+                            fontStyle: "italic",
+                            color: "rgba(229,231,235,0.7)",
+                            fontSize: "0.88rem",
+                            lineHeight: 1.6,
+                            margin: "0 0 0.5rem",
+                            overflow: "hidden",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: "vertical",
+                          }}
+                        >
+                          "{entry.content.slice(0, 200)}
+                          {entry.content.length > 200 ? "…" : ""}"
+                        </p>
+                        {entry.reason && (
+                          <p
+                            style={{
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.75rem",
+                              color: "rgba(200,169,106,0.5)",
+                              margin: "0 0 0.75rem",
+                              fontStyle: "italic",
+                            }}
+                          >
+                            Flagged: {entry.reason}
+                          </p>
+                        )}
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "0.5rem",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => handleApprove(entry.id)}
+                            data-ocid="admin.confirm_button"
+                            style={{
+                              background: "rgba(74,222,128,0.1)",
+                              border: "1px solid rgba(74,222,128,0.3)",
+                              borderRadius: 6,
+                              padding: "0.3rem 0.8rem",
+                              color: "rgba(74,222,128,0.9)",
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.78rem",
+                              cursor: "pointer",
+                            }}
+                          >
+                            ✅ Approve
+                          </button>
+                          {showRejectInput[idStr] ? (
+                            <>
+                              <input
+                                value={rejectReason[idStr] || ""}
+                                onChange={(e) =>
+                                  setRejectReason((p) => ({
+                                    ...p,
+                                    [idStr]: e.target.value,
+                                  }))
+                                }
+                                placeholder="Reason for rejection…"
+                                data-ocid="admin.input"
+                                style={{
+                                  flex: 1,
+                                  minWidth: 140,
+                                  background: "rgba(255,255,255,0.05)",
+                                  border: "1px solid rgba(200,169,106,0.2)",
+                                  borderRadius: 6,
+                                  padding: "0.3rem 0.6rem",
+                                  color: "#F5E6D3",
+                                  fontFamily:
+                                    "'Libre Baskerville', Georgia, serif",
+                                  fontSize: "0.78rem",
+                                  outline: "none",
+                                }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleReject(entry.id, idStr)}
+                                data-ocid="admin.delete_button"
+                                style={{
+                                  background: "rgba(248,113,113,0.1)",
+                                  border: "1px solid rgba(248,113,113,0.3)",
+                                  borderRadius: 6,
+                                  padding: "0.3rem 0.8rem",
+                                  color: "rgba(248,113,113,0.9)",
+                                  fontFamily:
+                                    "'Libre Baskerville', Georgia, serif",
+                                  fontSize: "0.78rem",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Confirm Reject
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setShowRejectInput((p) => ({
+                                    ...p,
+                                    [idStr]: false,
+                                  }))
+                                }
+                                data-ocid="admin.cancel_button"
+                                style={{
+                                  background: "transparent",
+                                  border: "1px solid rgba(245,230,211,0.1)",
+                                  borderRadius: 6,
+                                  padding: "0.3rem 0.7rem",
+                                  color: "rgba(245,230,211,0.4)",
+                                  fontFamily:
+                                    "'Libre Baskerville', Georgia, serif",
+                                  fontSize: "0.78rem",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setShowRejectInput((p) => ({
+                                  ...p,
+                                  [idStr]: true,
+                                }))
+                              }
+                              data-ocid="admin.delete_button"
+                              style={{
+                                background: "rgba(248,113,113,0.08)",
+                                border: "1px solid rgba(248,113,113,0.2)",
+                                borderRadius: 6,
+                                padding: "0.3rem 0.8rem",
+                                color: "rgba(248,113,113,0.7)",
+                                fontFamily:
+                                  "'Libre Baskerville', Georgia, serif",
+                                fontSize: "0.78rem",
+                                cursor: "pointer",
+                              }}
+                            >
+                              ❌ Reject
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>

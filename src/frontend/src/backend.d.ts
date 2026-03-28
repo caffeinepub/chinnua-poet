@@ -69,6 +69,7 @@ export type CommentResult = {
 export type ReplyId = bigint;
 export type PoemId = bigint;
 export type CommentId = bigint;
+export type SignalId = bigint;
 export type AdminPoemResult = {
     __kind__: "contentTooShort";
     contentTooShort: null;
@@ -140,6 +141,27 @@ export interface Theme {
 export interface UserProfile {
     name: string;
 }
+export type CallSignalType = {
+    __kind__: "offer";
+} | {
+    __kind__: "answer";
+} | {
+    __kind__: "iceCandidate";
+} | {
+    __kind__: "hangup";
+};
+export interface CallSignal {
+    id: SignalId;
+    fromUser: Principal;
+    toUser: Principal;
+    signalType: CallSignalType;
+    data: string;
+    timestamp: Time;
+    consumed: boolean;
+}
+export interface CallSettings {
+    allowCalls: boolean;
+}
 export enum ChangePasswordResult {
     passwordTooShort = "passwordTooShort",
     incorrectPassword = "incorrectPassword",
@@ -161,6 +183,16 @@ export enum UserRole {
     admin = "admin",
     user = "user",
     guest = "guest"
+}
+export enum CommentDeleteResult {
+    notFound = "notFound",
+    success = "success",
+    unauthorized = "unauthorized"
+}
+export enum NoteDeleteResult {
+    notFound = "notFound",
+    success = "success",
+    unauthorized = "unauthorized"
 }
 export interface backendInterface {
     addAdminPoem(title: string, content: string, category: string): Promise<AdminPoemResult>;
@@ -189,8 +221,55 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     resetAdminPassword(resetToken: string): Promise<ChangePasswordResult>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    setUserPhotoUrl(url: string): Promise<void>;
+    getUserPhotoUrl(user: Principal): Promise<string | null>;
     setDisplayName(name: string): Promise<void>;
     submitPoem(title: string, content: string, authorName: string): Promise<PoemResult>;
     updateAdminPoem(id: PoemId, title: string, content: string, category: string): Promise<AdminPoemResult>;
     updateNote(id: NoteId, title: string, content: string, isPublic: boolean): Promise<NoteResult>;
+    sendCallSignal(toUser: Principal, signalType: CallSignalType, data: string): Promise<SignalId>;
+    getMyPendingSignals(): Promise<Array<CallSignal>>;
+    markSignalConsumed(signalId: SignalId): Promise<void>;
+    setCallSettings(allowCalls: boolean): Promise<void>;
+    getCallSettings(user: Principal): Promise<CallSettings>;
+    getAboutContent(): Promise<AboutContent | null>;
+    saveAboutContent(poetName: string, bio: string, story: string, poetryFragments: string): Promise<void>;
+    getModerationQueue(): Promise<Array<ModerationEntry>>;
+    approveModeratedContent(id: bigint): Promise<void>;
+    rejectModeratedContent(id: bigint, reason: string): Promise<void>;
+    getModerationStats(): Promise<ModerationStats>;
+}
+
+// About Content
+export interface AboutContent {
+  poetName: string;
+  bio: string;
+  story: string;
+  poetryFragments: string;
+  lastUpdated: bigint;
+}
+
+// Moderation
+export type ModerationStatus =
+  | { __kind__: "pending" }
+  | { __kind__: "approved" }
+  | { __kind__: "rejected" }
+  | { __kind__: "needsReview" };
+
+export interface ModerationEntry {
+  id: bigint;
+  contentType: string;
+  content: string;
+  author: Principal;
+  authorName: string;
+  status: ModerationStatus;
+  reason: string;
+  riskLevel: string;
+  timestamp: bigint;
+}
+
+export interface ModerationStats {
+  pendingCount: bigint;
+  approvedCount: bigint;
+  rejectedCount: bigint;
 }

@@ -1,8 +1,9 @@
-import { Check, Mail, Pencil, X } from "lucide-react";
+import { Check, Edit2, Mail, Pencil, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { SiInstagram, SiX, SiYoutube } from "react-icons/si";
 import { toast } from "sonner";
+import { useActor } from "../hooks/useActor";
 
 const PERSONAL_STORY = `I was born with a cleft lip and palate. As the years passed, surgeries became a part of my childhood—four operations before I even turned five. My body healed in time, but my voice became something people noticed in ways that hurt. School life was never easy. Many people humiliated me because of how I sounded, and sometimes that pain came even from within my own family. I think that is where my shyness began—or maybe it only deepened what already existed within me.
 
@@ -202,6 +203,50 @@ export default function AboutSlide() {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState("");
 
+  // About section editing
+  const { actor } = useActor();
+  const [aboutEditing, setAboutEditing] = useState(false);
+  const [aboutFields, setAboutFields] = useState({
+    poetName: "CHINNUA_POET",
+    bio: "Chinnua is a poet and storyteller whose words dance between worlds.",
+    story:
+      "With a gift for transforming ordinary moments into extraordinary verse, Chinnua's poetry explores the depth of human emotion, the beauty of nature, and the quiet power of silence.",
+    poetryFragments: "",
+  });
+
+  useEffect(() => {
+    if (!actor) return;
+    (actor as any)
+      .getAboutContent()
+      .then((data) => {
+        if (data) {
+          setAboutFields((prev) => ({
+            poetName: data.poetName || "CHINNUA_POET",
+            bio: data.bio || prev.bio,
+            story: data.story || prev.story,
+            poetryFragments: data.poetryFragments || "",
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [actor]);
+
+  const saveAboutContent = async () => {
+    if (!actor) return;
+    try {
+      await (actor as any).saveAboutContent(
+        aboutFields.poetName,
+        aboutFields.bio,
+        aboutFields.story,
+        aboutFields.poetryFragments,
+      );
+      setAboutEditing(false);
+      toast.success("About section updated");
+    } catch {
+      toast.error("Failed to save");
+    }
+  };
+
   useEffect(() => {
     // Check if admin is currently authenticated
     const adminAuthed = localStorage.getItem("chinnua_admin_authed") === "true";
@@ -257,17 +302,270 @@ export default function AboutSlide() {
         transition={{ duration: 0.4 }}
         style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }}
       >
-        <h2
+        <div
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "1.6rem",
-            color: "#F5E6D3",
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
             marginBottom: "2rem",
-            fontWeight: 700,
           }}
         >
-          About the Poet
-        </h2>
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "1.6rem",
+              color: "#F5E6D3",
+              fontWeight: 700,
+              margin: 0,
+            }}
+          >
+            About the Poet
+          </h2>
+          {isAdmin && !aboutEditing && (
+            <button
+              type="button"
+              onClick={() => setAboutEditing(true)}
+              data-ocid="about.edit_button"
+              title="Edit About Section"
+              style={{
+                background: "rgba(200,169,106,0.1)",
+                border: "1px solid rgba(200,169,106,0.3)",
+                borderRadius: 7,
+                padding: "0.3rem 0.7rem",
+                color: "rgba(200,169,106,0.8)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.3rem",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: "0.75rem",
+                transition: "all 0.2s",
+              }}
+            >
+              <Edit2 size={12} /> Edit About
+            </button>
+          )}
+        </div>
+
+        {/* ── About Edit Modal ── */}
+        {aboutEditing && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              background: "rgba(26,20,16,0.95)",
+              border: "1px solid rgba(200,169,106,0.25)",
+              borderRadius: 12,
+              padding: "1.5rem",
+              marginBottom: "2rem",
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                color: "#C8A96A",
+                margin: "0 0 1rem",
+                fontSize: "1rem",
+              }}
+            >
+              ✍️ Edit About Section
+            </h3>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            >
+              <div>
+                <label
+                  htmlFor="about-poet-name"
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.75rem",
+                    color: "rgba(200,169,106,0.6)",
+                    display: "block",
+                    marginBottom: "0.3rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Poet Name
+                </label>
+                <input
+                  id="about-poet-name"
+                  value={aboutFields.poetName}
+                  onChange={(e) =>
+                    setAboutFields((p) => ({ ...p, poetName: e.target.value }))
+                  }
+                  data-ocid="about.input"
+                  style={{
+                    width: "100%",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(200,169,106,0.2)",
+                    borderRadius: 7,
+                    padding: "0.6rem 0.8rem",
+                    color: "#F5E6D3",
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="about-bio"
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.75rem",
+                    color: "rgba(200,169,106,0.6)",
+                    display: "block",
+                    marginBottom: "0.3rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Bio / Short Description
+                </label>
+                <textarea
+                  id="about-bio"
+                  value={aboutFields.bio}
+                  onChange={(e) =>
+                    setAboutFields((p) => ({ ...p, bio: e.target.value }))
+                  }
+                  rows={3}
+                  data-ocid="about.textarea"
+                  style={{
+                    width: "100%",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(200,169,106,0.2)",
+                    borderRadius: 7,
+                    padding: "0.6rem 0.8rem",
+                    color: "#F5E6D3",
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                    resize: "vertical",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="about-story"
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.75rem",
+                    color: "rgba(200,169,106,0.6)",
+                    display: "block",
+                    marginBottom: "0.3rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Personal Story
+                </label>
+                <textarea
+                  id="about-story"
+                  value={aboutFields.story}
+                  onChange={(e) =>
+                    setAboutFields((p) => ({ ...p, story: e.target.value }))
+                  }
+                  rows={6}
+                  data-ocid="about.textarea"
+                  style={{
+                    width: "100%",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(200,169,106,0.2)",
+                    borderRadius: 7,
+                    padding: "0.6rem 0.8rem",
+                    color: "#F5E6D3",
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                    resize: "vertical",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="about-fragments"
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.75rem",
+                    color: "rgba(200,169,106,0.6)",
+                    display: "block",
+                    marginBottom: "0.3rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Poetry Fragments
+                </label>
+                <textarea
+                  id="about-fragments"
+                  value={aboutFields.poetryFragments}
+                  onChange={(e) =>
+                    setAboutFields((p) => ({
+                      ...p,
+                      poetryFragments: e.target.value,
+                    }))
+                  }
+                  rows={4}
+                  data-ocid="about.textarea"
+                  style={{
+                    width: "100%",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(200,169,106,0.2)",
+                    borderRadius: 7,
+                    padding: "0.6rem 0.8rem",
+                    color: "#F5E6D3",
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                    resize: "vertical",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                <button
+                  type="button"
+                  onClick={saveAboutContent}
+                  data-ocid="about.save_button"
+                  style={{
+                    background: "#C8A96A",
+                    border: "none",
+                    borderRadius: 7,
+                    padding: "0.55rem 1.2rem",
+                    color: "#1A1410",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.82rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAboutEditing(false)}
+                  data-ocid="about.cancel_button"
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(245,230,211,0.15)",
+                    borderRadius: 7,
+                    padding: "0.55rem 1rem",
+                    color: "rgba(245,230,211,0.5)",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.82rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
         <div
           style={{
             display: "grid",

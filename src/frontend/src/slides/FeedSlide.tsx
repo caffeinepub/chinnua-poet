@@ -8,6 +8,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import CommentThread, {
   type Comment,
   type CommentReply,
@@ -96,6 +97,14 @@ function getPoetsNotePost(): Post | null {
   };
 }
 
+function getUserAvatar(username: string): string | null {
+  try {
+    const p = localStorage.getItem(`chinnua_profile_${username}`);
+    if (p) return JSON.parse(p)?.photo ?? null;
+  } catch {}
+  return null;
+}
+
 function PostCard({
   post,
   liked,
@@ -169,6 +178,19 @@ function PostCard({
           replies: [],
         };
         setCommentsState((prev) => [...prev, newComment]);
+      } else {
+        const kind = (result as { __kind__: string }).__kind__;
+        if (kind === "pendingReview") {
+          toast(
+            "Your post is under review. It will be published once approved.",
+            { icon: "🛡️" },
+          );
+        } else if (kind === "moderationRejected") {
+          toast(
+            "Your post could not be published. Please review our community guidelines.",
+            { icon: "🖤" },
+          );
+        }
       }
     } catch {}
   };
@@ -284,33 +306,43 @@ function PostCard({
             onViewProfile?.(post.username);
           }}
           title={`View ${post.username}'s profile`}
-          style={
-            {
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background:
-                post.username === "CHINNUA_POET"
-                  ? "rgba(200,169,106,0.3)"
-                  : "rgba(255,255,255,0.1)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              color: "#F5E6D3",
-              border:
-                post.username === "CHINNUA_POET"
-                  ? "1px solid rgba(200,169,106,0.5)"
-                  : "1px solid rgba(255,255,255,0.15)",
-              flexShrink: 0,
-              cursor: "pointer",
-              background2: "none",
-              transition: "opacity 0.15s",
-            } as React.CSSProperties
-          }
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: "50%",
+            background:
+              post.username === "CHINNUA_POET"
+                ? "rgba(200,169,106,0.3)"
+                : "rgba(255,255,255,0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "0.7rem",
+            fontWeight: 700,
+            color: "#F5E6D3",
+            border:
+              post.username === "CHINNUA_POET"
+                ? "1px solid rgba(200,169,106,0.5)"
+                : "1px solid rgba(255,255,255,0.15)",
+            flexShrink: 0,
+            cursor: "pointer",
+            overflow: "hidden",
+            padding: 0,
+            transition: "opacity 0.15s",
+          }}
         >
-          {post.username.charAt(0).toUpperCase()}
+          {(() => {
+            const photo = getUserAvatar(post.username);
+            return photo ? (
+              <img
+                src={photo}
+                alt={post.username}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            ) : (
+              post.username.charAt(0).toUpperCase()
+            );
+          })()}
         </button>
         <div style={{ flex: 1, minWidth: 0 }}>
           <button

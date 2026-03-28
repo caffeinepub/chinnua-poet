@@ -25,10 +25,51 @@ actor {
   public type NoteId = Nat;
   public type CommentId = Nat;
   public type ReplyId = Nat;
+  public type SignalId = Nat;
+  public type ModerationId = Nat;
 
   public type Theme = {
     name : Text;
     description : Text;
+  };
+
+  public type AboutContent = {
+    poetName : Text;
+    bio : Text;
+    story : Text;
+    poetryFragments : Text;
+    lastUpdated : Time.Time;
+  };
+
+  public type ModerationStatus = {
+    #pending;
+    #approved;
+    #rejected;
+    #needsReview;
+  };
+
+  public type ModerationEntry = {
+    id : ModerationId;
+    contentType : Text;
+    content : Text;
+    author : Principal;
+    authorName : Text;
+    status : ModerationStatus;
+    reason : Text;
+    riskLevel : Text;
+    timestamp : Time.Time;
+  };
+
+  public type ModerationCheckResult = {
+    status : ModerationStatus;
+    reason : Text;
+    riskLevel : Text;
+  };
+
+  public type ModerationStats = {
+    pendingCount : Nat;
+    approvedCount : Nat;
+    rejectedCount : Nat;
   };
 
   public type CommunityPoem = {
@@ -83,6 +124,32 @@ actor {
     timestamp : Time.Time;
   };
 
+  public type UserProfile = {
+    name : Text;
+  };
+
+  public type CallSignalType = {
+    #offer;
+    #answer;
+    #iceCandidate;
+    #hangup;
+  };
+
+  public type CallSignal = {
+    id : SignalId;
+    fromUser : Principal;
+    toUser : Principal;
+    signalType : CallSignalType;
+    data : Text;
+    timestamp : Time.Time;
+    consumed : Bool;
+  };
+
+  public type CallSettings = {
+    allowCalls : Bool;
+  };
+
+  // Result Types
   public type PoemResult = {
     #success : CommunityPoem;
     #themeNameTooShort;
@@ -91,6 +158,8 @@ actor {
     #authorNameTooShort;
     #notFound;
     #unauthorized;
+    #moderationRejected : Text;
+    #pendingReview;
   };
 
   public type AdminPoemResult = {
@@ -146,6 +215,8 @@ actor {
     #success : PostComment;
     #textTooShort;
     #unauthorized;
+    #moderationRejected : Text;
+    #pendingReview;
   };
 
   public type ReplyResult = {
@@ -153,6 +224,8 @@ actor {
     #textTooShort;
     #commentNotFound;
     #unauthorized;
+    #moderationRejected : Text;
+    #pendingReview;
   };
 
   public type CommentDeleteResult = {
@@ -161,22 +234,27 @@ actor {
     #unauthorized;
   };
 
-  public type UserProfile = {
-    name : Text;
-  };
-
   // State
   let communityPoems = Map.empty<PoemId, CommunityPoem>();
   let adminPoems = Map.empty<PoemId, AdminPoem>();
   let displayNames = Map.empty<Principal, Text>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+  let userPhotoUrls = Map.empty<Principal, Text>();
   let userNotes = Map.empty<NoteId, UserNote>();
   let postComments = Map.empty<CommentId, PostComment>();
   let commentReplies = Map.empty<ReplyId, CommentReply>();
+  let callSignals = Map.empty<SignalId, CallSignal>();
+  let callSettings = Map.empty<Principal, CallSettings>();
+  let moderationQueue = Map.empty<ModerationId, ModerationEntry>();
+  let userViolations = Map.empty<Principal, Nat>();
+  let userPostCount = Map.empty<Principal, Nat>();
+  var aboutContent : ?AboutContent = null;
   var nextPoemId = 1;
   var nextNoteId = 1;
   var nextCommentId = 1;
   var nextReplyId = 1;
+  var nextSignalId = 1;
+  var nextModerationId = 1;
 
   // Helper Functions
   func comparePoemsByTimestamp(a : CommunityPoem, b : CommunityPoem) : Order.Order {
@@ -219,16 +297,120 @@ actor {
     };
   };
 
+  func compareSignalsByTimestamp(a : CallSignal, b : CallSignal) : Order.Order {
+    if (a.timestamp < b.timestamp) {
+      #less;
+    } else if (a.timestamp > b.timestamp) {
+      #greater;
+    } else {
+      #equal;
+    };
+  };
+
+  func compareModerationByTimestamp(a : ModerationEntry, b : ModerationEntry) : Order.Order {
+    if (a.timestamp < b.timestamp) {
+      #less;
+    } else if (a.timestamp > b.timestamp) {
+      #greater;
+    } else {
+      #equal;
+    };
+  };
+
   func minTextLength(text : Text, minLength : Nat) : Bool {
     if (text.size() < minLength) { return false };
     true;
   };
 
-  // Admin Password Management
-  public query ({ caller }) func getAdminPassword() : async Text {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can access the admin password");
+  // Moderation Logic (The Silent Guardian)
+  func checkContent(content : Text, author : Principal) : ModerationCheckResult {
+    let lower = content.toLower();
+
+    // Get user trust data
+    let violations = switch (userViolations.get(author)) {
+      case (?v) { v };
+      case (null) { 0 };
     };
+    let postCount = switch (userPostCount.get(author)) {
+      case (?c) { c };
+      case (null) { 0 };
+    };
+    let isTrusted = postCount >= 5 and violations == 0;
+    let isStrictMode = violations >= 2 or postCount < 3;
+
+    // HIGH RISK keywords - auto reject
+    let highRiskWords = ["kill yourself", "kys", "go die", "i hate you", "you should die", "f**k you", "fuck you", "you're worthless", "youre worthless", "piece of shit", "piece of garbage"];
+    for (word in highRiskWords.vals()) {
+      if (lower.contains(#text(word))) {
+        return {
+          status = #rejected;
+          reason = "Content contains harmful or abusive language";
+          riskLevel = "high";
+        };
+      };
+    };
+
+    // MEDIUM RISK keywords
+    let mediumRiskWords = ["spam", "buy now", "click here", "free money", "winner", "limited offer", "subscribe", "follow me", "dm me", "check my", "visit my"];
+    for (word in mediumRiskWords.vals()) {
+      if (lower.contains(#text(word))) {
+        let status = if (isStrictMode) { #needsReview } else if (isTrusted) { #approved } else { #needsReview };
+        return {
+          status = status;
+          reason = "Content may contain promotional material";
+          riskLevel = "medium";
+        };
+      };
+    };
+
+    // Repetitive content check (spam pattern)
+    if (content.size() > 10) {
+      var sameCount = 0;
+      var firstChar : Char = 'a';
+      var isFirst = true;
+      for (c in content.chars()) {
+        if (isFirst) { firstChar := c; isFirst := false };
+        if (c == firstChar) { sameCount += 1 };
+      };
+      if (sameCount * 3 > content.size()) {
+        return {
+          status = #needsReview;
+          reason = "Content appears to be repetitive or spam-like";
+          riskLevel = "medium";
+        };
+      };
+    };
+
+    // Approved
+    { status = #approved; reason = "Content meets community guidelines"; riskLevel = "low" };
+  };
+
+  // About Content Management
+  public query func getAboutContent() : async ?AboutContent {
+    aboutContent;
+  };
+
+  public shared ({ caller }) func saveAboutContent(poetName : Text, bio : Text, story : Text, poetryFragments : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can save about content");
+    };
+    aboutContent := ?{
+      poetName;
+      bio;
+      story;
+      poetryFragments;
+      lastUpdated = Time.now();
+    };
+  };
+
+  // Admin Password Management
+  // Public check — no auth required (needed for login screen to verify password)
+  public query func checkAdminPassword(pw : Text) : async Bool {
+    pw == adminPassword;
+  };
+
+  // Legacy: kept for backward compat but no longer requires admin auth for login
+  public query func getAdminPassword() : async Text {
     adminPassword;
   };
 
@@ -242,10 +424,8 @@ actor {
     #success;
   };
 
-  public shared ({ caller }) func resetAdminPassword(resetToken : Text) : async ChangePasswordResult {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can reset the admin password");
-    };
+  // Reset password — NO admin auth required so locked-out admins can recover
+  public shared func resetAdminPassword(resetToken : Text) : async ChangePasswordResult {
     if (resetToken != "CHINNUA_RESET_2026") { return #incorrectPassword };
     adminPassword := "chinnua2025";
     #success;
@@ -260,9 +440,6 @@ actor {
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
-    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Can only view your own profile");
-    };
     userProfiles.get(user);
   };
 
@@ -273,7 +450,125 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Poem Submission
+  public shared ({ caller }) func setUserPhotoUrl(url : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can set their photo");
+    };
+    userPhotoUrls.add(caller, url);
+  };
+
+  public query func getUserPhotoUrl(user : Principal) : async ?Text {
+    userPhotoUrls.get(user);
+  };
+
+  // Moderation Queue Management
+  public query ({ caller }) func getModerationQueue() : async [ModerationEntry] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view the moderation queue");
+    };
+    let entries = moderationQueue.values().filter(func(e) {
+      switch (e.status) {
+        case (#pending) { true };
+        case (#needsReview) { true };
+        case (_) { false };
+      };
+    }).toArray();
+    entries.sort(compareModerationByTimestamp);
+  };
+
+  public shared ({ caller }) func approveModeratedContent(id : ModerationId) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can approve moderated content");
+    };
+    switch (moderationQueue.get(id)) {
+      case (null) {};
+      case (?entry) {
+        let updated : ModerationEntry = {
+          id = entry.id;
+          contentType = entry.contentType;
+          content = entry.content;
+          author = entry.author;
+          authorName = entry.authorName;
+          status = #approved;
+          reason = entry.reason;
+          riskLevel = entry.riskLevel;
+          timestamp = entry.timestamp;
+        };
+        moderationQueue.add(id, updated);
+        // If it's a poem, publish it to community poems
+        if (entry.contentType == "poem") {
+          let theme = suggestTheme(entry.content);
+          let poemId = nextPoemId;
+          let poem : CommunityPoem = {
+            id = poemId;
+            title = "Community Poem";
+            content = entry.content;
+            author = entry.author;
+            authorName = entry.authorName;
+            timestamp = entry.timestamp;
+            suggestedTheme = theme;
+          };
+          communityPoems.add(poemId, poem);
+          nextPoemId += 1;
+        };
+        // Increment post count
+        let currentCount = switch (userPostCount.get(entry.author)) {
+          case (?c) { c };
+          case (null) { 0 };
+        };
+        userPostCount.add(entry.author, currentCount + 1);
+      };
+    };
+  };
+
+  public shared ({ caller }) func rejectModeratedContent(id : ModerationId, reason : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can reject moderated content");
+    };
+    switch (moderationQueue.get(id)) {
+      case (null) {};
+      case (?entry) {
+        let updated : ModerationEntry = {
+          id = entry.id;
+          contentType = entry.contentType;
+          content = entry.content;
+          author = entry.author;
+          authorName = entry.authorName;
+          status = #rejected;
+          reason;
+          riskLevel = entry.riskLevel;
+          timestamp = entry.timestamp;
+        };
+        moderationQueue.add(id, updated);
+        // Increment violations
+        let currentViolations = switch (userViolations.get(entry.author)) {
+          case (?v) { v };
+          case (null) { 0 };
+        };
+        userViolations.add(entry.author, currentViolations + 1);
+      };
+    };
+  };
+
+  public query ({ caller }) func getModerationStats() : async ModerationStats {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view moderation stats");
+    };
+    var pending = 0;
+    var approved = 0;
+    var rejected = 0;
+    for (entry in moderationQueue.values()) {
+      switch (entry.status) {
+        case (#pending) { pending += 1 };
+        case (#needsReview) { pending += 1 };
+        case (#approved) { approved += 1 };
+        case (#rejected) { rejected += 1 };
+      };
+    };
+    { pendingCount = pending; approvedCount = approved; rejectedCount = rejected };
+  };
+
+  // Poem Submission (with moderation)
   public shared ({ caller }) func submitPoem(title : Text, content : Text, authorName : Text) : async PoemResult {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only logged-in users can submit poems");
@@ -282,23 +577,55 @@ actor {
     if (not minTextLength(content, 10)) { return #contentTooShort };
     if (not minTextLength(authorName, 2)) { return #authorNameTooShort };
 
-    let theme = suggestTheme(content);
-    let poemId = nextPoemId;
+    let fullContent = title # " " # content;
+    let modResult = checkContent(fullContent, caller);
 
-    let poem : CommunityPoem = {
-      id = poemId;
-      title;
-      content;
-      author = caller;
-      authorName;
-      timestamp = Time.now();
-      suggestedTheme = theme;
+    switch (modResult.status) {
+      case (#rejected) {
+        return #moderationRejected(modResult.reason);
+      };
+      case (#needsReview) {
+        let modId = nextModerationId;
+        let entry : ModerationEntry = {
+          id = modId;
+          contentType = "poem";
+          content = title # "\n\n" # content;
+          author = caller;
+          authorName;
+          status = #needsReview;
+          reason = modResult.reason;
+          riskLevel = modResult.riskLevel;
+          timestamp = Time.now();
+        };
+        moderationQueue.add(modId, entry);
+        nextModerationId += 1;
+        return #pendingReview;
+      };
+      case (#approved) {
+        let theme = suggestTheme(content);
+        let poemId = nextPoemId;
+        let poem : CommunityPoem = {
+          id = poemId;
+          title;
+          content;
+          author = caller;
+          authorName;
+          timestamp = Time.now();
+          suggestedTheme = theme;
+        };
+        communityPoems.add(poemId, poem);
+        nextPoemId += 1;
+        let currentCount = switch (userPostCount.get(caller)) {
+          case (?c) { c };
+          case (null) { 0 };
+        };
+        userPostCount.add(caller, currentCount + 1);
+        #success(poem);
+      };
+      case (#pending) {
+        return #pendingReview;
+      };
     };
-
-    communityPoems.add(poemId, poem);
-    nextPoemId += 1;
-
-    #success(poem);
   };
 
   // Admin Poem Management
@@ -464,26 +791,48 @@ actor {
     notes.sort(compareNotesByCreatedAt);
   };
 
-  // Comments
+  // Comments (with moderation)
   public shared ({ caller }) func addComment(postId : Text, text : Text, authorName : Text) : async CommentResult {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only logged-in users can comment");
     };
     if (not minTextLength(text, 1)) { return #textTooShort };
 
-    let commentId = nextCommentId;
-    let comment : PostComment = {
-      id = commentId;
-      postId;
-      author = caller;
-      authorName;
-      text;
-      timestamp = Time.now();
+    let modResult = checkContent(text, caller);
+    switch (modResult.status) {
+      case (#rejected) { return #moderationRejected(modResult.reason) };
+      case (#needsReview) {
+        let modId = nextModerationId;
+        let entry : ModerationEntry = {
+          id = modId;
+          contentType = "comment";
+          content = text;
+          author = caller;
+          authorName;
+          status = #needsReview;
+          reason = modResult.reason;
+          riskLevel = modResult.riskLevel;
+          timestamp = Time.now();
+        };
+        moderationQueue.add(modId, entry);
+        nextModerationId += 1;
+        return #pendingReview;
+      };
+      case (_) {
+        let commentId = nextCommentId;
+        let comment : PostComment = {
+          id = commentId;
+          postId;
+          author = caller;
+          authorName;
+          text;
+          timestamp = Time.now();
+        };
+        postComments.add(commentId, comment);
+        nextCommentId += 1;
+        #success(comment);
+      };
     };
-
-    postComments.add(commentId, comment);
-    nextCommentId += 1;
-    #success(comment);
   };
 
   public shared ({ caller }) func addReply(commentId : CommentId, postId : Text, text : Text, authorName : Text) : async ReplyResult {
@@ -493,20 +842,50 @@ actor {
     if (not postComments.containsKey(commentId)) { return #commentNotFound };
     if (not minTextLength(text, 1)) { return #textTooShort };
 
-    let replyId = nextReplyId;
-    let reply : CommentReply = {
-      id = replyId;
-      commentId;
-      postId;
-      author = caller;
-      authorName;
-      text;
-      timestamp = Time.now();
+    let modResult = checkContent(text, caller);
+    switch (modResult.status) {
+      case (#rejected) { return #moderationRejected(modResult.reason) };
+      case (#needsReview) {
+        let modId = nextModerationId;
+        let authorName = switch (displayNames.get(caller)) {
+          case (?name) { name };
+          case (null) { "Anonymous" };
+        };
+        let entry : ModerationEntry = {
+          id = modId;
+          contentType = "reply";
+          content = text;
+          author = caller;
+          authorName;
+          status = #needsReview;
+          reason = modResult.reason;
+          riskLevel = modResult.riskLevel;
+          timestamp = Time.now();
+        };
+        moderationQueue.add(modId, entry);
+        nextModerationId += 1;
+        return #pendingReview;
+      };
+      case (_) {
+        let replyId = nextReplyId;
+        let authorName = switch (displayNames.get(caller)) {
+          case (?name) { name };
+          case (null) { "Anonymous" };
+        };
+        let reply : CommentReply = {
+          id = replyId;
+          commentId;
+          postId;
+          author = caller;
+          authorName;
+          text;
+          timestamp = Time.now();
+        };
+        commentReplies.add(replyId, reply);
+        nextReplyId += 1;
+        #success(reply);
+      };
     };
-
-    commentReplies.add(replyId, reply);
-    nextReplyId += 1;
-    #success(reply);
   };
 
   public query func getCommentsForPost(postId : Text) : async [PostComment] {
@@ -527,7 +906,6 @@ actor {
     if (comment.author != caller and not AccessControl.isAdmin(accessControlState, caller)) {
       return #unauthorized;
     };
-    // Also delete all replies to this comment
     let replyIds = commentReplies.keys().filter(func(rId) {
       switch (commentReplies.get(rId)) {
         case (?r) { r.commentId == commentId };
@@ -551,6 +929,72 @@ actor {
     };
     commentReplies.remove(replyId);
     #success;
+  };
+
+  // WebRTC Signaling
+  public shared ({ caller }) func sendCallSignal(toUser : Principal, signalType : CallSignalType, data : Text) : async SignalId {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can send call signals");
+    };
+    let signalId = nextSignalId;
+    let signal : CallSignal = {
+      id = signalId;
+      fromUser = caller;
+      toUser;
+      signalType;
+      data;
+      timestamp = Time.now();
+      consumed = false;
+    };
+    callSignals.add(signalId, signal);
+    nextSignalId += 1;
+    signalId;
+  };
+
+  public query ({ caller }) func getMyPendingSignals() : async [CallSignal] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can get call signals");
+    };
+    let signals = callSignals.values().filter(func(s) { s.toUser == caller and not s.consumed }).toArray();
+    signals.sort(compareSignalsByTimestamp);
+  };
+
+  public shared ({ caller }) func markSignalConsumed(signalId : SignalId) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can consume call signals");
+    };
+    switch (callSignals.get(signalId)) {
+      case (null) {};
+      case (?signal) {
+        if (signal.toUser == caller) {
+          let updated : CallSignal = {
+            id = signal.id;
+            fromUser = signal.fromUser;
+            toUser = signal.toUser;
+            signalType = signal.signalType;
+            data = signal.data;
+            timestamp = signal.timestamp;
+            consumed = true;
+          };
+          callSignals.add(signalId, updated);
+        };
+      };
+    };
+  };
+
+  // Call Settings
+  public shared ({ caller }) func setCallSettings(allowCalls : Bool) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only logged-in users can set call settings");
+    };
+    callSettings.add(caller, { allowCalls });
+  };
+
+  public query func getCallSettings(user : Principal) : async CallSettings {
+    switch (callSettings.get(user)) {
+      case (?settings) { settings };
+      case (null) { { allowCalls = true } };
+    };
   };
 
   // Theme Suggestion

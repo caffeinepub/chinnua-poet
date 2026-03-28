@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { useCamera } from "../camera/useCamera";
 import { POEMS } from "../poems-data";
 
 interface User {
@@ -151,6 +152,13 @@ export default function UserProfileSlide({
   const [editBio, setEditBio] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
+  const camera = useCamera({
+    facingMode: "user",
+    quality: 0.9,
+    format: "image/jpeg",
+  });
 
   // ── Posts ──
   const [allPosts, setAllPosts] = useState<Post[]>([]);
@@ -242,6 +250,36 @@ export default function UserProfileSlide({
       setProfilePhoto(dataUrl);
     };
     reader.readAsDataURL(file);
+  };
+
+  const openCamera = async () => {
+    setShowCameraModal(true);
+    setCapturedPhoto(null);
+    await camera.startCamera();
+  };
+
+  const closeCamera = () => {
+    setShowCameraModal(false);
+    setCapturedPhoto(null);
+    camera.stopCamera();
+  };
+
+  const handleCameraCapture = async () => {
+    const file = await camera.capturePhoto();
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => setCapturedPhoto(ev.target?.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const confirmCameraPhoto = () => {
+    if (capturedPhoto) {
+      setProfilePhoto(capturedPhoto);
+      setCapturedPhoto(null);
+      setShowCameraModal(false);
+      camera.stopCamera();
+    }
   };
 
   // ── Post edit/delete ──
@@ -500,6 +538,30 @@ export default function UserProfileSlide({
                   onChange={handlePhotoChange}
                   style={{ display: "none" }}
                 />
+                <button
+                  type="button"
+                  onClick={openCamera}
+                  data-ocid="profile.upload_button"
+                  title="Take a photo with camera"
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    background: "#1A1410",
+                    border: "1px solid rgba(200,169,106,0.4)",
+                    borderRadius: "50%",
+                    width: 24,
+                    height: 24,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    color: "#C8A96A",
+                    fontSize: "0.6rem",
+                  }}
+                >
+                  cam
+                </button>
               </>
             )}
           </div>
@@ -1536,6 +1598,208 @@ export default function UserProfileSlide({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Camera Modal */}
+      {showCameraModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.88)",
+            backdropFilter: "blur(6px)",
+            zIndex: 300,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1rem",
+          }}
+          data-ocid="profile.modal"
+        >
+          <div
+            style={{
+              background: "#1A1410",
+              border: "1px solid rgba(200,169,106,0.25)",
+              borderRadius: 14,
+              padding: "1.5rem",
+              width: "100%",
+              maxWidth: 480,
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                color: "#C8A96A",
+                margin: 0,
+              }}
+            >
+              Take a Photo
+            </h3>
+            <div
+              style={{
+                borderRadius: 10,
+                overflow: "hidden",
+                background: "#000",
+                minHeight: 240,
+                position: "relative",
+              }}
+            >
+              {capturedPhoto ? (
+                <img
+                  src={capturedPhoto}
+                  alt="Preview"
+                  style={{ width: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                <>
+                  <video
+                    ref={camera.videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    style={{
+                      width: "100%",
+                      display: camera.isActive ? "block" : "none",
+                    }}
+                  />
+                  <canvas ref={camera.canvasRef} style={{ display: "none" }} />
+                  {!camera.isActive && !camera.isLoading && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minHeight: 240,
+                        color: "rgba(245,230,211,0.4)",
+                        fontFamily: "'Libre Baskerville', Georgia, serif",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      {camera.error ? camera.error.message : "Camera inactive"}
+                    </div>
+                  )}
+                  {camera.isLoading && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minHeight: 240,
+                        color: "#C8A96A",
+                        fontFamily: "'Libre Baskerville', Georgia, serif",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      Starting camera…
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              {!capturedPhoto ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleCameraCapture}
+                    disabled={!camera.isActive}
+                    data-ocid="profile.primary_button"
+                    style={{
+                      flex: 1,
+                      background: "rgba(200,169,106,0.85)",
+                      border: "none",
+                      borderRadius: 7,
+                      padding: "0.55rem",
+                      color: "#1A1410",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: "0.82rem",
+                      cursor: "pointer",
+                      fontWeight: 700,
+                    }}
+                  >
+                    📸 Capture
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => camera.switchCamera()}
+                    data-ocid="profile.toggle"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: 7,
+                      padding: "0.55rem 0.75rem",
+                      color: "rgba(245,230,211,0.65)",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: "0.82rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    🔄
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={confirmCameraPhoto}
+                    data-ocid="profile.confirm_button"
+                    style={{
+                      flex: 1,
+                      background: "rgba(200,169,106,0.85)",
+                      border: "none",
+                      borderRadius: 7,
+                      padding: "0.55rem",
+                      color: "#1A1410",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: "0.82rem",
+                      cursor: "pointer",
+                      fontWeight: 700,
+                    }}
+                  >
+                    ✓ Use Photo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCapturedPhoto(null)}
+                    data-ocid="profile.secondary_button"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: 7,
+                      padding: "0.55rem 0.75rem",
+                      color: "rgba(245,230,211,0.65)",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: "0.82rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Retake
+                  </button>
+                </>
+              )}
+              <button
+                type="button"
+                onClick={closeCamera}
+                data-ocid="profile.close_button"
+                style={{
+                  background: "transparent",
+                  border: "1px solid rgba(245,230,211,0.12)",
+                  borderRadius: 7,
+                  padding: "0.55rem 0.75rem",
+                  color: "rgba(245,230,211,0.45)",
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.82rem",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

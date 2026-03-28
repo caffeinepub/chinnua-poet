@@ -304,8 +304,8 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
     setCheckingPw(true);
     setPwError(false);
     try {
-      const storedPw = await actor.getAdminPassword();
-      if (pwInput === storedPw) {
+      const isCorrect = await actor.checkAdminPassword(pwInput);
+      if (isCorrect) {
         sessionStorage.setItem(SESSION_KEY, "1");
         setAuthed(true);
       } else {
@@ -326,6 +326,7 @@ export function AdminPanel({ open, onClose, onPoemsChanged }: AdminPanelProps) {
     try {
       const result = await actor.resetAdminPassword(resetToken);
       if (result === ChangePasswordResult.success) {
+        localStorage.removeItem("chinnua_admin_password");
         setResetMsg("Password reset to chinnua2025");
         setTimeout(() => {
           setShowForgot(false);

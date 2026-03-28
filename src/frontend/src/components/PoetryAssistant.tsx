@@ -179,7 +179,7 @@ export default function PoetryAssistant() {
     <>
       {/* Floating Button */}
       <motion.div
-        className="fixed bottom-24 left-5 z-50"
+        className="fixed bottom-24 right-5 z-50"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1.5, type: "spring", stiffness: 200 }}
@@ -235,7 +235,7 @@ export default function PoetryAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-44 left-5 z-50 flex flex-col rounded-2xl overflow-hidden shadow-2xl"
+            className="fixed bottom-44 right-5 z-50 flex flex-col rounded-2xl overflow-hidden shadow-2xl"
             style={{
               width: "min(380px, calc(100vw - 40px))",
               height: "min(500px, calc(100vh - 200px))",

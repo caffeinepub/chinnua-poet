@@ -257,6 +257,7 @@ export interface backendInterface {
     deleteMyPoem(id: PoemId): Promise<PoemDeleteResult>;
     deleteNote(id: NoteId): Promise<NoteDeleteResult>;
     deleteReply(replyId: ReplyId): Promise<CommentDeleteResult>;
+    checkAdminPassword(pw: string): Promise<boolean>;
     getAdminPassword(): Promise<string>;
     getAdminPoems(): Promise<Array<AdminPoemEntry>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
@@ -446,6 +447,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.deleteReply(arg0);
             return from_candid_CommentDeleteResult_n15(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async checkAdminPassword(pw: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.checkAdminPassword(pw);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.checkAdminPassword(pw);
+            return result;
         }
     }
     async getAdminPassword(): Promise<string> {
