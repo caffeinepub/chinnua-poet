@@ -67,6 +67,32 @@ function buildFeedPosts(): Post[] {
   }));
 }
 
+/** Returns a Poet's Note feed post if it's 24h+ old and not yet posted */
+function getPoetsNotePost(): Post | null {
+  const note = localStorage.getItem("chinnua_poets_note") || "";
+  const savedAtStr = localStorage.getItem("chinnua_poets_note_saved_at");
+  const alreadyPosted =
+    localStorage.getItem("chinnua_poets_note_feed_posted") === "true";
+  if (!note || !savedAtStr || alreadyPosted) return null;
+  const savedAt = Number.parseInt(savedAtStr, 10);
+  const elapsed = Date.now() - savedAt;
+  const twentyFourHours = 24 * 60 * 60 * 1000;
+  if (elapsed < twentyFourHours) return null;
+  // Mark as posted so it only appears once
+  localStorage.setItem("chinnua_poets_note_feed_posted", "true");
+  return {
+    id: `poets_note_${savedAt}`,
+    username: "CHINNUA_POET",
+    title: "A Note from the Poet",
+    preview: note.slice(0, 200),
+    fullContent: note,
+    category: "Poet's Note",
+    timestamp: new Date(savedAt + twentyFourHours).toISOString(),
+    likes: 0,
+    replies: [],
+  };
+}
+
 function PostCard({
   post,
   liked,
@@ -96,8 +122,14 @@ function PostCard({
         flexShrink: 0,
         width: "clamp(280px, 33vw, 360px)",
         height: 400,
-        background: "rgba(16,24,38,0.85)",
-        border: "1px solid rgba(200,169,106,0.15)",
+        background:
+          post.category === "Poet's Note"
+            ? "rgba(200,169,106,0.07)"
+            : "rgba(16,24,38,0.85)",
+        border:
+          post.category === "Poet's Note"
+            ? "1px solid rgba(200,169,106,0.35)"
+            : "1px solid rgba(200,169,106,0.15)",
         borderRadius: 14,
         padding: "1.4rem",
         display: "flex",
@@ -114,7 +146,9 @@ function PostCard({
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(200,169,106,0.15)";
+          post.category === "Poet's Note"
+            ? "rgba(200,169,106,0.35)"
+            : "rgba(200,169,106,0.15)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
           "0 4px 20px rgba(0,0,0,0.35)";
       }}
@@ -170,7 +204,7 @@ function PostCard({
             }}
           >
             {post.username === "CHINNUA_POET"
-              ? "❆ CHINNUA_POET"
+              ? "\u2746 CHINNUA_POET"
               : post.username}
           </p>
           <p
@@ -188,10 +222,13 @@ function PostCard({
           <span
             style={{
               padding: "2px 8px",
-              background: "rgba(200,169,106,0.1)",
+              background:
+                post.category === "Poet's Note"
+                  ? "rgba(200,169,106,0.2)"
+                  : "rgba(200,169,106,0.1)",
               borderRadius: 4,
               fontSize: "0.65rem",
-              color: "rgba(200,169,106,0.8)",
+              color: "rgba(200,169,106,0.9)",
               fontFamily: "'Libre Baskerville', Georgia, serif",
               flexShrink: 0,
             }}
@@ -281,7 +318,7 @@ function PostCard({
             transition: "color 0.2s",
           }}
         >
-          ❤️ {post.likes}
+          \u2764\uFE0F {post.likes}
         </button>
         <button
           type="button"
@@ -302,7 +339,7 @@ function PostCard({
             gap: 3,
           }}
         >
-          💬 {post.replies.length}
+          \uD83D\uDCAC {post.replies.length}
         </button>
       </div>
     </motion.button>
@@ -340,7 +377,12 @@ export default function FeedSlide({
       localStorage.getItem("chinnua_liked_ids") || "[]",
     );
     setLikedPosts(new Set(liked));
-    const all = [...stored, ...poemPosts]
+
+    // Inject Poet's Note if 24h+ old
+    const notePost = getPoetsNotePost();
+    const extraPosts = notePost ? [notePost] : [];
+
+    const all = [...extraPosts, ...stored, ...poemPosts]
       .filter((p) => !deletedIds.has(p.id))
       .map((p) => ({
         ...p,

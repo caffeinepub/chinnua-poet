@@ -1,7 +1,8 @@
-import { Mail } from "lucide-react";
+import { Check, Mail, Pencil, X } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SiInstagram, SiX, SiYoutube } from "react-icons/si";
+import { toast } from "sonner";
 
 const PERSONAL_STORY = `I was born with a cleft lip and palate. As the years passed, surgeries became a part of my childhood—four operations before I even turned five. My body healed in time, but my voice became something people noticed in ways that hurt. School life was never easy. Many people humiliated me because of how I sounded, and sometimes that pain came even from within my own family. I think that is where my shyness began—or maybe it only deepened what already existed within me.
 
@@ -195,6 +196,54 @@ export default function AboutSlide() {
   const [goodbyeOpen, setGoodbyeOpen] = useState(false);
   const [scareOpen, setScareOpen] = useState(false);
   const [birthdayOpen, setBirthdayOpen] = useState(false);
+
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [poetsNote, setPoetsNote] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editValue, setEditValue] = useState("");
+
+  useEffect(() => {
+    // Check if admin is currently authenticated
+    const adminAuthed = localStorage.getItem("chinnua_admin_authed") === "true";
+    setIsAdmin(adminAuthed);
+
+    // Load saved poet's note
+    const savedNote = localStorage.getItem("chinnua_poets_note") || "";
+    setPoetsNote(savedNote);
+  }, []);
+
+  const startEdit = () => {
+    setEditValue(poetsNote);
+    setEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setEditing(false);
+    setEditValue("");
+  };
+
+  const saveNote = () => {
+    const trimmed = editValue.trim();
+    // Check if this is a new/changed note (not just whitespace edit of same content)
+    const prevNote = localStorage.getItem("chinnua_poets_note") || "";
+    const isNewContent = trimmed !== prevNote.trim();
+
+    localStorage.setItem("chinnua_poets_note", trimmed);
+
+    // Only reset the 24h timer if the content actually changed
+    if (isNewContent && trimmed) {
+      localStorage.setItem(
+        "chinnua_poets_note_saved_at",
+        Date.now().toString(),
+      );
+      // Clear the "already posted to feed" flag so the new note can be posted
+      localStorage.removeItem("chinnua_poets_note_feed_posted");
+    }
+
+    setPoetsNote(trimmed);
+    setEditing(false);
+    toast.success("Poet's Note saved");
+  };
 
   return (
     <div
@@ -503,30 +552,146 @@ export default function AboutSlide() {
                 borderTop: "1px solid rgba(200,169,106,0.1)",
               }}
             >
-              <p
+              <div
                 style={{
-                  fontFamily: "'Libre Baskerville', Georgia, serif",
-                  fontSize: "0.68rem",
-                  color: "rgba(200,169,106,0.5)",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  fontVariant: "small-caps",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
                   marginBottom: "0.5rem",
                 }}
               >
-                Poet's Note
-              </p>
-              <p
-                style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontStyle: "italic",
-                  color: "rgba(229,231,235,0.35)",
-                  fontSize: "0.88rem",
-                  lineHeight: 1.7,
-                }}
-              >
-                No note from the poet yet.
-              </p>
+                <p
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.68rem",
+                    color: "rgba(200,169,106,0.5)",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    fontVariant: "small-caps",
+                    margin: 0,
+                  }}
+                >
+                  Poet's Note
+                </p>
+                {isAdmin && !editing && (
+                  <button
+                    type="button"
+                    onClick={startEdit}
+                    title="Edit Poet's Note"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "rgba(200,169,106,0.5)",
+                      padding: "2px",
+                      display: "flex",
+                      alignItems: "center",
+                      transition: "color 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "rgba(200,169,106,0.9)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "rgba(200,169,106,0.5)";
+                    }}
+                  >
+                    <Pencil size={13} />
+                  </button>
+                )}
+              </div>
+
+              {editing ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <textarea
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    placeholder="Write a note to your readers…"
+                    rows={5}
+                    style={{
+                      width: "100%",
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(200,169,106,0.3)",
+                      borderRadius: 8,
+                      padding: "0.75rem",
+                      color: "#F5E6D3",
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontStyle: "italic",
+                      fontSize: "0.88rem",
+                      lineHeight: 1.7,
+                      resize: "vertical",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.5rem",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={saveNote}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.3rem",
+                        background: "rgba(200,169,106,0.2)",
+                        border: "1px solid rgba(200,169,106,0.4)",
+                        borderRadius: 6,
+                        color: "rgba(200,169,106,0.9)",
+                        fontFamily: "'Libre Baskerville', Georgia, serif",
+                        fontSize: "0.8rem",
+                        padding: "0.35rem 0.75rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Check size={13} /> Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={cancelEdit}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.3rem",
+                        background: "none",
+                        border: "1px solid rgba(229,231,235,0.15)",
+                        borderRadius: 6,
+                        color: "rgba(229,231,235,0.4)",
+                        fontFamily: "'Libre Baskerville', Georgia, serif",
+                        fontSize: "0.8rem",
+                        padding: "0.35rem 0.75rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <X size={13} /> Cancel
+                    </button>
+                  </div>
+                </motion.div>
+              ) : (
+                <p
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontStyle: "italic",
+                    color: poetsNote
+                      ? "rgba(229,231,235,0.75)"
+                      : "rgba(229,231,235,0.35)",
+                    fontSize: "0.88rem",
+                    lineHeight: 1.7,
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {poetsNote || "No note from the poet yet."}
+                </p>
+              )}
             </div>
 
             {/* === New Personal Writings === */}

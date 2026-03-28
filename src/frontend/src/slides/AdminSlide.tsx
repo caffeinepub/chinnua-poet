@@ -57,8 +57,17 @@ export default function AdminSlide() {
   const checkPassword = () => {
     const adminPw =
       localStorage.getItem("chinnua_admin_password") || "chinnua2025";
-    if (password === adminPw) setAuthed(true);
-    else toast.error("Incorrect password");
+    if (password === adminPw) {
+      setAuthed(true);
+      localStorage.setItem("chinnua_admin_authed", "true");
+    } else {
+      toast.error("Incorrect password");
+    }
+  };
+
+  const lockAdmin = () => {
+    setAuthed(false);
+    localStorage.removeItem("chinnua_admin_authed");
   };
 
   const deletePoem = (id: number) => {
@@ -249,7 +258,7 @@ export default function AdminSlide() {
             Admin Panel
           </h2>
           <Button
-            onClick={() => setAuthed(false)}
+            onClick={lockAdmin}
             data-ocid="admin.secondary_button"
             style={{
               background: "rgba(255,255,255,0.06)",

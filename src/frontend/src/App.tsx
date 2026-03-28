@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { LoginGate } from "./components/LoginGate";
 import PoetryAssistant from "./components/PoetryAssistant";
 import { UserSetupModal } from "./components/UserSetupModal";
 import AboutSlide from "./slides/AboutSlide";
@@ -36,13 +37,33 @@ const NAV_ITEMS: { slide: Slide; label: string }[] = [
   { slide: "music", label: "Music" },
   { slide: "messages", label: "Messages" },
   { slide: "about", label: "About" },
-  { slide: "admin", label: "Admin" },
 ];
+
+function UserIcon({ color }: { color: string }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label="User"
+    >
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
 
 export default function App() {
   const [activeSlide, setActiveSlide] = useState<Slide>("home");
   const [adminClickCount, setAdminClickCount] = useState(0);
   const [showUserSetup, setShowUserSetup] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -96,11 +117,18 @@ export default function App() {
     email?: string;
     createdAt: string;
   }) => {
-    setCurrentUser({
+    const u: User = {
       username: user.username,
       bio: user.bio ?? "",
       createdAt: user.createdAt,
-    });
+    };
+    setCurrentUser(u);
+    setShowLoginModal(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("chinnua_user");
+    setCurrentUser(null);
   };
 
   const renderSlide = () => {
@@ -274,14 +302,84 @@ export default function App() {
             ))}
           </div>
 
-          {/* Bottom divider + social */}
+          {/* User area + bottom quote */}
           <div
             style={{
               borderTop: "1px solid oklch(0.22 0.02 60 / 0.3)",
               margin: "0 1.5rem",
               paddingTop: "1.25rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.75rem",
             }}
           >
+            {currentUser ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.4rem",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.68rem",
+                    color: "#C8A96A",
+                    letterSpacing: "0.05em",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {currentUser.username}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  data-ocid="nav.secondary_button"
+                  style={{
+                    background: "rgba(200,169,106,0.08)",
+                    border: "1px solid rgba(200,169,106,0.2)",
+                    borderRadius: 5,
+                    padding: "0.3rem 0.6rem",
+                    color: "rgba(245,230,211,0.55)",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.62rem",
+                    letterSpacing: "0.07em",
+                    cursor: "pointer",
+                    textAlign: "center",
+                    transition: "all 0.2s",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(true)}
+                data-ocid="nav.primary_button"
+                style={{
+                  background: "rgba(200,169,106,0.12)",
+                  border: "1px solid rgba(200,169,106,0.3)",
+                  borderRadius: 5,
+                  padding: "0.35rem 0.6rem",
+                  color: "#C8A96A",
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.07em",
+                  cursor: "pointer",
+                  textAlign: "center",
+                  transition: "all 0.2s",
+                  textTransform: "uppercase",
+                }}
+              >
+                Sign In
+              </button>
+            )}
+
             <p
               style={{
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
@@ -289,6 +387,7 @@ export default function App() {
                 fontSize: "0.65rem",
                 color: "rgba(200,169,106,0.35)",
                 lineHeight: 1.6,
+                margin: 0,
               }}
             >
               &ldquo;Words that linger.
@@ -341,7 +440,6 @@ export default function App() {
           }}
           data-ocid="nav.panel"
         >
-          {/* Logo tap-5 for admin */}
           <button
             type="button"
             onClick={handleLogoClick}
@@ -414,8 +512,136 @@ export default function App() {
               </span>
             </button>
           ))}
+
+          {/* Mobile user indicator */}
+          <button
+            type="button"
+            onClick={() => {
+              if (currentUser) {
+                handleLogout();
+              } else {
+                setShowLoginModal(true);
+              }
+            }}
+            data-ocid="nav.secondary_button"
+            style={{
+              flexShrink: 0,
+              background: "none",
+              border: "none",
+              padding: "0 0.7rem",
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 2,
+              height: "100%",
+            }}
+          >
+            {currentUser ? (
+              <>
+                <UserIcon color="#C8A96A" />
+                <span
+                  style={{
+                    fontFamily: "'PlayfairDisplay', Georgia, serif",
+                    fontSize: "0.42rem",
+                    color: "#C8A96A",
+                    letterSpacing: "0.06em",
+                    maxWidth: 44,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {currentUser.username}
+                </span>
+              </>
+            ) : (
+              <>
+                <UserIcon color="rgba(200,169,106,0.5)" />
+                <span
+                  style={{
+                    fontFamily: "'PlayfairDisplay', Georgia, serif",
+                    fontSize: "0.42rem",
+                    color: "rgba(200,169,106,0.5)",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  Sign In
+                </span>
+              </>
+            )}
+          </button>
         </nav>
       )}
+
+      {/* ── Login Modal ── */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(0,0,0,0.75)",
+              backdropFilter: "blur(4px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 100,
+              padding: "1rem",
+            }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowLoginModal(false);
+            }}
+            data-ocid="login_gate.modal"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                background: "#1A1410",
+                border: "1px solid rgba(200,169,106,0.2)",
+                borderRadius: 12,
+                width: "100%",
+                maxWidth: 400,
+                position: "relative",
+                boxShadow: "0 8px 40px rgba(0,0,0,0.8)",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(false)}
+                data-ocid="login_gate.close_button"
+                aria-label="Close"
+                style={{
+                  position: "absolute",
+                  top: "0.75rem",
+                  right: "0.75rem",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "rgba(245,230,211,0.4)",
+                  fontSize: "1.2rem",
+                  lineHeight: 1,
+                  padding: "0.25rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                ×
+              </button>
+              <LoginGate onLogin={handleLogin} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <PoetryAssistant />
 

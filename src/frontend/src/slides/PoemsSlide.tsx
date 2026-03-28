@@ -720,7 +720,7 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
               onLogin={(u) =>
                 onLogin({
                   username: u.username,
-                  email: u.email,
+                  bio: u.bio,
                   createdAt: u.createdAt,
                 })
               }

@@ -127,7 +127,7 @@ export default function HomeSlide({ goToFeed }: HomeSlideProps) {
             zIndex: 1,
           }}
         >
-          "I exist… but not everyone gets to see me."
+          &ldquo;I exist… but not everyone gets to see me.&rdquo;
         </motion.p>
 
         <motion.div
@@ -258,6 +258,107 @@ export default function HomeSlide({ goToFeed }: HomeSlideProps) {
         </section>
       ))}
 
+      {/* ── NOTE FROM THE POET ── */}
+      <section
+        style={{
+          paddingTop: "8rem",
+          paddingBottom: "6rem",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "8rem 2rem 6rem",
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1.4, ease: "easeOut" }}
+          style={{
+            maxWidth: 560,
+            width: "100%",
+            background: "rgba(26,20,16,0.6)",
+            border: "1px solid rgba(200,169,106,0.2)",
+            borderRadius: 4,
+            padding: "3rem",
+            textAlign: "center",
+            boxShadow: "0 0 40px rgba(200,169,106,0.05)",
+          }}
+        >
+          {/* Label */}
+          <p
+            style={{
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.62rem",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: "#C8A96A",
+              margin: "0 0 1.2rem",
+              opacity: 0.85,
+            }}
+          >
+            A Note from the Poet
+          </p>
+
+          {/* Divider */}
+          <div
+            style={{
+              width: 50,
+              height: 1,
+              background: "rgba(200,169,106,0.35)",
+              margin: "0 auto 2rem",
+            }}
+          />
+
+          {/* Note body */}
+          <p
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: "italic",
+              fontSize: "clamp(1rem, 2.4vw, 1.2rem)",
+              color: "#F5E6D3",
+              lineHeight: 2,
+              margin: "0 0 2rem",
+              fontWeight: 400,
+            }}
+          >
+            Dear Reader, As you reach the final page, may these poems linger in
+            your heart, like whispers of forgotten dreams and silent hopes. Each
+            verse is a window into a world of feelings—love, loss, wonder, and
+            discovery. Carry them with you, and let your soul wander in their
+            echoes.
+          </p>
+
+          {/* Thank you */}
+          <p
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: "italic",
+              fontSize: "1.1rem",
+              color: "#C8A96A",
+              margin: "0 0 1rem",
+            }}
+          >
+            Thank you
+          </p>
+
+          {/* Signature */}
+          <p
+            style={{
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.65rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "#C8A96A",
+              margin: 0,
+              opacity: 0.75,
+            }}
+          >
+            — CHINNUA_POET
+          </p>
+        </motion.div>
+      </section>
+
       {/* ── FOOTER QUOTE ── */}
       <section
         style={{
@@ -294,7 +395,7 @@ export default function HomeSlide({ goToFeed }: HomeSlideProps) {
               margin: 0,
             }}
           >
-            "If you understood even a part of this…"
+            &ldquo;If you understood even a part of this…&rdquo;
             <br />
             you&apos;ve felt it too.
           </p>
@@ -311,26 +412,6 @@ export default function HomeSlide({ goToFeed }: HomeSlideProps) {
             — CHINNUA
           </p>
         </motion.div>
-
-        {/* Caffeine footer */}
-        <p
-          style={{
-            marginTop: "4rem",
-            fontFamily: "'Libre Baskerville', Georgia, serif",
-            fontSize: "0.7rem",
-            color: "rgba(245,230,211,0.18)",
-          }}
-        >
-          © {new Date().getFullYear()}. Built with love using{" "}
-          <a
-            href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "rgba(200,169,106,0.4)", textDecoration: "none" }}
-          >
-            caffeine.ai
-          </a>
-        </p>
       </section>
     </div>
   );
