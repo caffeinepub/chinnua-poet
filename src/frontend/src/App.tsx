@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import LanguageTranslator from "./components/LanguageTranslator";
 import { LoginGate } from "./components/LoginGate";
 import PoetryAssistant from "./components/PoetryAssistant";
+import SilentListenerChat from "./components/SilentListenerChat";
 import { UserSetupModal } from "./components/UserSetupModal";
 import AboutSlide from "./slides/AboutSlide";
 import AdminSlide from "./slides/AdminSlide";
 import FeedSlide from "./slides/FeedSlide";
 import GallerySlide from "./slides/GallerySlide";
 import HomeSlide from "./slides/HomeSlide";
+import InboxSlide from "./slides/InboxSlide";
 import MessagesSlide from "./slides/MessagesSlide";
 import MusicSlide from "./slides/MusicSlide";
 import NotesSlide from "./slides/NotesSlide";
@@ -32,7 +34,8 @@ type Slide =
   | "profile"
   | "settings"
   | "terms"
-  | "privacy";
+  | "privacy"
+  | "inbox";
 
 interface User {
   username: string;
@@ -54,6 +57,10 @@ const NOTES_NAV_ITEM: { slide: Slide; label: string } = {
   slide: "notes",
   label: "My Notes",
 };
+const INBOX_NAV_ITEM: { slide: Slide; label: string } = {
+  slide: "inbox",
+  label: "Inbox",
+};
 
 function UserIcon({ color }: { color: string }) {
   return (
@@ -74,6 +81,16 @@ function UserIcon({ color }: { color: string }) {
     </svg>
   );
 }
+
+// Warm theme constants
+const WARM_BG = "#FFF8EE";
+const WARM_PAPER = "#F5ECD7";
+const WARM_BROWN = "#8B6F47";
+const WARM_MOCHA = "#5C3D2E";
+const WARM_GOLD = "#D4A853";
+const WARM_TEXT = "#3D2B1F";
+const WARM_MUTED = "rgba(92,61,46,0.5)";
+const WARM_BORDER = "rgba(139,111,71,0.25)";
 
 export default function App() {
   const [activeSlide, setActiveSlide] = useState<Slide>("home");
@@ -106,7 +123,13 @@ export default function App() {
     label: "Settings",
   };
   const navItems = currentUser
-    ? [...BASE_NAV_ITEMS, NOTES_NAV_ITEM, PROFILE_NAV_ITEM, SETTINGS_NAV_ITEM]
+    ? [
+        ...BASE_NAV_ITEMS,
+        NOTES_NAV_ITEM,
+        INBOX_NAV_ITEM,
+        PROFILE_NAV_ITEM,
+        SETTINGS_NAV_ITEM,
+      ]
     : BASE_NAV_ITEMS;
 
   const handleLogoClick = () => {
@@ -163,7 +186,11 @@ export default function App() {
   const handleLogout = () => {
     localStorage.removeItem("chinnua_user");
     setCurrentUser(null);
-    if (activeSlide === "notes" || activeSlide === "profile")
+    if (
+      activeSlide === "notes" ||
+      activeSlide === "profile" ||
+      activeSlide === "inbox"
+    )
       setActiveSlide("home");
   };
 
@@ -179,7 +206,12 @@ export default function App() {
   const renderSlide = () => {
     switch (activeSlide) {
       case "home":
-        return <HomeSlide goToFeed={() => setActiveSlide("feed")} />;
+        return (
+          <HomeSlide
+            goToFeed={() => setActiveSlide("feed")}
+            currentUser={currentUser}
+          />
+        );
       case "feed":
         return (
           <FeedSlide
@@ -211,6 +243,13 @@ export default function App() {
             onLogin={() => setShowLoginModal(true)}
           />
         );
+      case "inbox":
+        return (
+          <InboxSlide
+            currentUser={currentUser}
+            onLogin={() => setShowLoginModal(true)}
+          />
+        );
       case "admin":
         return <AdminSlide />;
       case "settings":
@@ -238,10 +277,18 @@ export default function App() {
             onLogin={() => setShowLoginModal(true)}
           />
         ) : (
-          <HomeSlide goToFeed={() => setActiveSlide("feed")} />
+          <HomeSlide
+            goToFeed={() => setActiveSlide("feed")}
+            currentUser={currentUser}
+          />
         );
       default:
-        return <HomeSlide goToFeed={() => setActiveSlide("feed")} />;
+        return (
+          <HomeSlide
+            goToFeed={() => setActiveSlide("feed")}
+            currentUser={currentUser}
+          />
+        );
     }
   };
 
@@ -250,9 +297,9 @@ export default function App() {
   return (
     <div
       style={{
-        background: "#0D0D0D",
+        background: WARM_BG,
         minHeight: "100vh",
-        color: "#F5E6D3",
+        color: WARM_TEXT,
         display: "flex",
       }}
     >
@@ -267,12 +314,13 @@ export default function App() {
             top: 0,
             bottom: 0,
             width: sidebarWidth,
-            background: "oklch(0.07 0.006 52)",
-            borderRight: "1px solid oklch(0.22 0.02 60 / 0.4)",
+            background: WARM_PAPER,
+            borderRight: `1px solid ${WARM_BORDER}`,
             display: "flex",
             flexDirection: "column",
             padding: "2rem 0 2rem",
             zIndex: 40,
+            boxShadow: "2px 0 12px rgba(92,61,46,0.08)",
           }}
           data-ocid="nav.panel"
         >
@@ -292,18 +340,32 @@ export default function App() {
           >
             <span
               style={{
-                fontFamily: "'PlayfairDisplay', Georgia, serif",
+                fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: "0.75rem",
                 letterSpacing: "0.15em",
-                color: "#C8A96A",
+                color: WARM_MOCHA,
                 textTransform: "uppercase",
                 display: "block",
                 lineHeight: 1.3,
+                fontWeight: 700,
               }}
             >
               CHINNUA
               <br />
               POET
+            </span>
+            <span
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontStyle: "italic",
+                fontSize: "0.6rem",
+                color: WARM_BROWN,
+                letterSpacing: "0.05em",
+                marginTop: "0.2rem",
+                display: "block",
+              }}
+            >
+              Where words bloom
             </span>
           </button>
 
@@ -316,7 +378,7 @@ export default function App() {
           <div
             style={{
               height: 1,
-              background: "oklch(0.22 0.02 60 / 0.4)",
+              background: WARM_BORDER,
               margin: "0 1.5rem 1.5rem",
             }}
           />
@@ -326,8 +388,9 @@ export default function App() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "0.25rem",
+              gap: "0.15rem",
               flex: 1,
+              overflowY: "auto",
             }}
           >
             {navItems.map((item) => (
@@ -339,15 +402,15 @@ export default function App() {
                 style={{
                   background:
                     activeSlide === item.slide
-                      ? "rgba(200,169,106,0.08)"
+                      ? "rgba(212,168,83,0.12)"
                       : "transparent",
                   border: "none",
                   borderLeft:
                     activeSlide === item.slide
-                      ? "2px solid #C8A96A"
+                      ? `2px solid ${WARM_GOLD}`
                       : "2px solid transparent",
                   cursor: "pointer",
-                  padding: "0.65rem 1.5rem",
+                  padding: "0.6rem 1.5rem",
                   textAlign: "left",
                   transition: "all 0.2s",
                   width: "100%",
@@ -355,29 +418,23 @@ export default function App() {
                 onMouseEnter={(e) => {
                   if (activeSlide !== item.slide) {
                     (e.currentTarget as HTMLButtonElement).style.background =
-                      "rgba(200,169,106,0.04)";
-                    (e.currentTarget as HTMLButtonElement).style.color =
-                      "#C8A96A";
+                      "rgba(212,168,83,0.06)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (activeSlide !== item.slide) {
                     (e.currentTarget as HTMLButtonElement).style.background =
                       "transparent";
-                    (e.currentTarget as HTMLButtonElement).style.color = "";
                   }
                 }}
               >
                 <span
                   style={{
-                    fontFamily: "'PlayfairDisplay', Georgia, serif",
+                    fontFamily: "'Playfair Display', Georgia, serif",
                     fontSize: "0.68rem",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
-                    color:
-                      activeSlide === item.slide
-                        ? "#C8A96A"
-                        : "rgba(245,230,211,0.5)",
+                    color: activeSlide === item.slide ? WARM_GOLD : WARM_BROWN,
                     transition: "color 0.2s",
                   }}
                 >
@@ -387,10 +444,10 @@ export default function App() {
             ))}
           </div>
 
-          {/* User area + bottom quote */}
+          {/* User area */}
           <div
             style={{
-              borderTop: "1px solid oklch(0.22 0.02 60 / 0.3)",
+              borderTop: `1px solid ${WARM_BORDER}`,
               margin: "0 1.5rem",
               paddingTop: "1.25rem",
               display: "flex",
@@ -415,27 +472,20 @@ export default function App() {
                     padding: 0,
                     cursor: "pointer",
                     textAlign: "left",
-                    transition: "opacity 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.opacity =
-                      "0.7";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.opacity = "1";
                   }}
                   title="View your profile"
                 >
                   <span
                     style={{
-                      fontFamily: "'Libre Baskerville', Georgia, serif",
-                      fontSize: "0.68rem",
-                      color: "#C8A96A",
+                      fontFamily: "'Lora', Georgia, serif",
+                      fontSize: "0.7rem",
+                      color: WARM_MOCHA,
                       letterSpacing: "0.05em",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
                       display: "block",
+                      fontWeight: 600,
                     }}
                   >
                     {currentUser.username}
@@ -446,12 +496,12 @@ export default function App() {
                   onClick={handleLogout}
                   data-ocid="nav.secondary_button"
                   style={{
-                    background: "rgba(200,169,106,0.08)",
-                    border: "1px solid rgba(200,169,106,0.2)",
-                    borderRadius: 5,
+                    background: "rgba(139,111,71,0.1)",
+                    border: `1px solid ${WARM_BORDER}`,
+                    borderRadius: 6,
                     padding: "0.3rem 0.6rem",
-                    color: "rgba(245,230,211,0.55)",
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    color: WARM_BROWN,
+                    fontFamily: "'Lora', Georgia, serif",
                     fontSize: "0.62rem",
                     letterSpacing: "0.07em",
                     cursor: "pointer",
@@ -469,30 +519,30 @@ export default function App() {
                 onClick={() => setShowLoginModal(true)}
                 data-ocid="nav.primary_button"
                 style={{
-                  background: "rgba(200,169,106,0.12)",
-                  border: "1px solid rgba(200,169,106,0.3)",
-                  borderRadius: 5,
+                  background: "rgba(212,168,83,0.15)",
+                  border: "1px solid rgba(212,168,83,0.4)",
+                  borderRadius: 6,
                   padding: "0.35rem 0.6rem",
-                  color: "#C8A96A",
-                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  color: WARM_MOCHA,
+                  fontFamily: "'Lora', Georgia, serif",
                   fontSize: "0.62rem",
                   letterSpacing: "0.07em",
                   cursor: "pointer",
                   textAlign: "center",
                   transition: "all 0.2s",
                   textTransform: "uppercase",
+                  fontWeight: 600,
                 }}
               >
                 Sign In
               </button>
             )}
-
             <p
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "'Lora', Georgia, serif",
                 fontStyle: "italic",
-                fontSize: "0.65rem",
-                color: "rgba(200,169,106,0.35)",
+                fontSize: "0.62rem",
+                color: WARM_MUTED,
                 lineHeight: 1.6,
                 margin: 0,
               }}
@@ -525,7 +575,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.5 }}
             style={{ minHeight: "100vh" }}
           >
             {renderSlide()}
@@ -542,12 +592,13 @@ export default function App() {
             left: 0,
             right: 0,
             height: 64,
-            background: "oklch(0.07 0.006 52)",
-            borderTop: "1px solid oklch(0.22 0.02 60 / 0.4)",
+            background: WARM_PAPER,
+            borderTop: `1px solid ${WARM_BORDER}`,
             display: "flex",
             alignItems: "center",
             zIndex: 40,
             overflowX: "auto",
+            boxShadow: "0 -2px 12px rgba(92,61,46,0.08)",
           }}
           data-ocid="nav.panel"
         >
@@ -569,10 +620,11 @@ export default function App() {
           >
             <span
               style={{
-                fontFamily: "'PlayfairDisplay', Georgia, serif",
+                fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: "0.5rem",
-                color: "rgba(200,169,106,0.6)",
+                color: WARM_MOCHA,
                 letterSpacing: "0.1em",
+                fontWeight: 700,
               }}
             >
               C_P
@@ -587,35 +639,30 @@ export default function App() {
               data-ocid="nav.link"
               style={{
                 flex: 1,
-                minWidth: 52,
+                minWidth: 48,
                 height: "100%",
                 background: "none",
                 border: "none",
                 borderTop:
                   activeSlide === item.slide
-                    ? "2px solid #C8A96A"
+                    ? `2px solid ${WARM_GOLD}`
                     : "2px solid transparent",
                 cursor: "pointer",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 3,
                 paddingTop: 4,
                 transition: "all 0.2s",
               }}
             >
               <span
                 style={{
-                  fontFamily: "'PlayfairDisplay', Georgia, serif",
-                  fontSize: "0.52rem",
-                  letterSpacing: "0.1em",
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontSize: "0.48rem",
+                  letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color:
-                    activeSlide === item.slide
-                      ? "#C8A96A"
-                      : "rgba(245,230,211,0.45)",
-                  transition: "color 0.2s",
+                  color: activeSlide === item.slide ? WARM_GOLD : WARM_BROWN,
                   whiteSpace: "nowrap",
                 }}
               >
@@ -624,14 +671,12 @@ export default function App() {
             </button>
           ))}
 
-          {/* Mobile: translator + user */}
           <div
             style={{
               flexShrink: 0,
               padding: "0 0.4rem",
               display: "flex",
               alignItems: "center",
-              gap: 4,
             }}
           >
             <div
@@ -644,7 +689,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Mobile user indicator */}
           <button
             type="button"
             onClick={() => {
@@ -671,12 +715,12 @@ export default function App() {
           >
             {currentUser ? (
               <>
-                <UserIcon color="#C8A96A" />
+                <UserIcon color={WARM_MOCHA} />
                 <span
                   style={{
-                    fontFamily: "'PlayfairDisplay', Georgia, serif",
-                    fontSize: "0.42rem",
-                    color: "#C8A96A",
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "0.4rem",
+                    color: WARM_MOCHA,
                     letterSpacing: "0.06em",
                     maxWidth: 44,
                     overflow: "hidden",
@@ -689,12 +733,12 @@ export default function App() {
               </>
             ) : (
               <>
-                <UserIcon color="rgba(200,169,106,0.5)" />
+                <UserIcon color={WARM_BROWN} />
                 <span
                   style={{
-                    fontFamily: "'PlayfairDisplay', Georgia, serif",
-                    fontSize: "0.42rem",
-                    color: "rgba(200,169,106,0.5)",
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "0.4rem",
+                    color: WARM_BROWN,
                     letterSpacing: "0.06em",
                   }}
                 >
@@ -717,7 +761,7 @@ export default function App() {
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(0,0,0,0.75)",
+              background: "rgba(92,61,46,0.4)",
               backdropFilter: "blur(4px)",
               display: "flex",
               alignItems: "center",
@@ -736,13 +780,13 @@ export default function App() {
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.3 }}
               style={{
-                background: "#1A1410",
-                border: "1px solid rgba(200,169,106,0.2)",
-                borderRadius: 12,
+                background: WARM_PAPER,
+                border: "1px solid rgba(212,168,83,0.35)",
+                borderRadius: 16,
                 width: "100%",
                 maxWidth: 400,
                 position: "relative",
-                boxShadow: "0 8px 40px rgba(0,0,0,0.8)",
+                boxShadow: "0 8px 40px rgba(92,61,46,0.25)",
               }}
             >
               <button
@@ -757,13 +801,10 @@ export default function App() {
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "rgba(245,230,211,0.4)",
+                  color: WARM_BROWN,
                   fontSize: "1.2rem",
                   lineHeight: 1,
                   padding: "0.25rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                 }}
               >
                 ×
@@ -775,7 +816,7 @@ export default function App() {
       </AnimatePresence>
 
       <PoetryAssistant />
-
+      <SilentListenerChat />
       <UserSetupModal open={showUserSetup} onClose={handleUserSetupClose} />
     </div>
   );

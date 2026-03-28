@@ -28,6 +28,23 @@ const CATEGORIES = [
 
 type PoemType = (typeof POEMS)[number];
 
+function getCategoryGradient(category: string): string {
+  switch (category.toLowerCase()) {
+    case "hopeful":
+    case "spiritual":
+    case "nature":
+      return "linear-gradient(135deg, #D4A853 0%, #8B6F47 40%, #3D2B1F 100%)";
+    case "romantic":
+    case "love":
+      return "linear-gradient(135deg, #F5ECD7 0%, #D4A853 50%, #8B6F47 100%)";
+    case "sad":
+    case "loss":
+      return "linear-gradient(180deg, #9E8070 0%, #5C3D2E 60%, #3D2B1F 100%)";
+    default:
+      return "linear-gradient(135deg, #8B6F47 0%, #5C3D2E 100%)";
+  }
+}
+
 function assignCategory(poem: PoemType): string {
   if (poem.theme) {
     const t = poem.theme.trim();
@@ -824,6 +841,44 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
               {selected?.title}
             </DialogTitle>
           </DialogHeader>
+          {/* Category gradient image */}
+          {selected && (
+            <div
+              style={{
+                height: 160,
+                borderRadius: 12,
+                background: getCategoryGradient(assignCategory(selected)),
+                marginBottom: "0.5rem",
+                display: "flex",
+                alignItems: "flex-end",
+                padding: "1rem",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(180deg, transparent 40%, rgba(26,20,16,0.7) 100%)",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  fontStyle: "italic",
+                  fontSize: "0.85rem",
+                  color: "rgba(212,168,83,0.9)",
+                  position: "relative",
+                  zIndex: 1,
+                  letterSpacing: "0.06em",
+                }}
+              >
+                {assignCategory(selected)}
+              </span>
+            </div>
+          )}
           {selected && (
             <span
               style={{

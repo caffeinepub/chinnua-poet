@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "motion/react";
+import React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useActor } from "../hooks/useActor";
@@ -26,6 +27,558 @@ interface GalleryPhoto {
   src: string;
   uploader: string;
   timestamp: string;
+}
+
+const WARM_GOLD = "#D4A853";
+const WARM_BROWN = "#8B6F47";
+const WARM_MOCHA = "#5C3D2E";
+const WARM_PAPER = "#F5ECD7";
+const WARM_TEXT = "#3D2B1F";
+const WARM_MUTED = "#9E8070";
+
+interface InkReply {
+  id: string;
+  letterType: "morning" | "night";
+  userMessage: string;
+  adminReply?: string;
+  submittedAt: string;
+  repliedAt?: string;
+}
+
+function DailyLettersTab() {
+  const [morningLetters, setMorningLetters] = React.useState<string[]>(() => {
+    try {
+      const d = localStorage.getItem("chinnua_daily_messages");
+      if (d) return JSON.parse(d).morning || [];
+    } catch {}
+    return [
+      "The sun rose today, and so did you. That alone is something worth celebrating.",
+      "Before the world asks anything of you, let this letter remind you — you are enough.",
+      "Open your eyes slowly. There's no rush. Today belongs to you.",
+      "The morning mist clears, and in its place — a day written just for you.",
+      "Today may hold a thousand moments. Let the first one be quiet, and yours.",
+      "Good morning, dear heart. May today be gentle on you.",
+      "A new page. A new morning. Write it softly.",
+    ];
+  });
+  const [nightLetters, setNightLetters] = React.useState<string[]>(() => {
+    try {
+      const d = localStorage.getItem("chinnua_daily_messages");
+      if (d) return JSON.parse(d).night || [];
+    } catch {}
+    return [
+      "The day is done. Whatever it held, you held it too. Rest now.",
+      "Stars don't need to shine brightly every night. Neither do you.",
+      "Let the weight of today dissolve. Tomorrow will be lighter.",
+      "Close your eyes, dear soul. You did enough.",
+      "The moon is watching over you tonight. Sleep in peace.",
+      "In the silence of this night, your story continues. Rest well.",
+      "Another day loved, survived, breathed through. That's everything.",
+    ];
+  });
+  const [editIdx, setEditIdx] = React.useState<{
+    type: "morning" | "night";
+    idx: number;
+  } | null>(null);
+  const [editVal, setEditVal] = React.useState("");
+  const [newMsg, setNewMsg] = React.useState("");
+  const [newType, setNewType] = React.useState<"morning" | "night">("morning");
+
+  const save = (m: string[], n: string[]) => {
+    localStorage.setItem(
+      "chinnua_daily_messages",
+      JSON.stringify({ morning: m, night: n }),
+    );
+  };
+
+  const handleEdit = (type: "morning" | "night", idx: number, val: string) => {
+    if (type === "morning") {
+      const updated = morningLetters.map((l, i) => (i === idx ? val : l));
+      setMorningLetters(updated);
+      save(updated, nightLetters);
+    } else {
+      const updated = nightLetters.map((l, i) => (i === idx ? val : l));
+      setNightLetters(updated);
+      save(morningLetters, updated);
+    }
+    setEditIdx(null);
+  };
+
+  const handleDelete = (type: "morning" | "night", idx: number) => {
+    if (type === "morning") {
+      const updated = morningLetters.filter((_, i) => i !== idx);
+      setMorningLetters(updated);
+      save(updated, nightLetters);
+    } else {
+      const updated = nightLetters.filter((_, i) => i !== idx);
+      setNightLetters(updated);
+      save(morningLetters, updated);
+    }
+  };
+
+  const handleAdd = () => {
+    if (!newMsg.trim()) return;
+    if (newType === "morning") {
+      const updated = [...morningLetters, newMsg.trim()];
+      setMorningLetters(updated);
+      save(updated, nightLetters);
+    } else {
+      const updated = [...nightLetters, newMsg.trim()];
+      setNightLetters(updated);
+      save(morningLetters, updated);
+    }
+    setNewMsg("");
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    background: "rgba(245,236,215,0.5)",
+    border: "1px solid rgba(139,111,71,0.25)",
+    borderRadius: 8,
+    padding: "0.5rem 0.75rem",
+    color: WARM_TEXT,
+    fontFamily: "'Lora', Georgia, serif",
+    fontStyle: "italic",
+    fontSize: "0.9rem",
+    outline: "none",
+    boxSizing: "border-box",
+  };
+
+  const renderList = (items: string[], type: "morning" | "night") => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      {items.map((msg, i) => (
+        <div
+          key={`${type}-${String(i)}`}
+          style={{
+            background: "rgba(245,236,215,0.3)",
+            border: "1px solid rgba(139,111,71,0.2)",
+            borderRadius: 10,
+            padding: "0.75rem 1rem",
+          }}
+        >
+          {editIdx?.type === type && editIdx.idx === i ? (
+            <div
+              style={{
+                display: "flex",
+                gap: "0.5rem",
+                flexDirection: "column",
+              }}
+            >
+              <textarea
+                value={editVal}
+                onChange={(e) => setEditVal(e.target.value)}
+                rows={3}
+                style={{ ...inputStyle, resize: "none" }}
+              />
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <button
+                  type="button"
+                  onClick={() => handleEdit(type, i, editVal)}
+                  style={{
+                    background: WARM_GOLD,
+                    border: "none",
+                    borderRadius: 6,
+                    padding: "0.3rem 0.8rem",
+                    color: WARM_PAPER,
+                    cursor: "pointer",
+                    fontSize: "0.78rem",
+                    fontFamily: "'Lora', Georgia, serif",
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditIdx(null)}
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(139,111,71,0.3)",
+                    borderRadius: 6,
+                    padding: "0.3rem 0.8rem",
+                    color: WARM_BROWN,
+                    cursor: "pointer",
+                    fontSize: "0.78rem",
+                    fontFamily: "'Lora', Georgia, serif",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                gap: "0.75rem",
+                alignItems: "flex-start",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontStyle: "italic",
+                  fontSize: "0.88rem",
+                  color: WARM_TEXT,
+                  margin: 0,
+                  flex: 1,
+                  lineHeight: 1.6,
+                }}
+              >
+                {msg}
+              </p>
+              <div style={{ display: "flex", gap: "0.35rem", flexShrink: 0 }}>
+                <button
+                  type="button"
+                  data-ocid="admin.edit_button"
+                  onClick={() => {
+                    setEditIdx({ type, idx: i });
+                    setEditVal(msg);
+                  }}
+                  style={{
+                    background: "rgba(212,168,83,0.15)",
+                    border: "1px solid rgba(212,168,83,0.3)",
+                    borderRadius: 5,
+                    padding: "0.2rem 0.5rem",
+                    color: WARM_GOLD,
+                    cursor: "pointer",
+                    fontSize: "0.72rem",
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  data-ocid="admin.delete_button"
+                  onClick={() => handleDelete(type, i)}
+                  style={{
+                    background: "rgba(248,113,113,0.08)",
+                    border: "1px solid rgba(248,113,113,0.2)",
+                    borderRadius: 5,
+                    padding: "0.2rem 0.5rem",
+                    color: "rgba(248,113,113,0.7)",
+                    cursor: "pointer",
+                    fontSize: "0.72rem",
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.5rem",
+        paddingTop: "1rem",
+      }}
+    >
+      <div>
+        <h3
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_GOLD,
+            fontSize: "1rem",
+            margin: "0 0 0.75rem",
+          }}
+        >
+          ☀️ Morning Letters
+        </h3>
+        {renderList(morningLetters, "morning")}
+      </div>
+      <div>
+        <h3
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            fontSize: "1rem",
+            margin: "0 0 0.75rem",
+          }}
+        >
+          🌙 Evening Letters
+        </h3>
+        {renderList(nightLetters, "night")}
+      </div>
+      <div
+        style={{
+          background: "rgba(245,236,215,0.3)",
+          border: "1px solid rgba(139,111,71,0.2)",
+          borderRadius: 12,
+          padding: "1.25rem",
+        }}
+      >
+        <h4
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_BROWN,
+            fontSize: "0.9rem",
+            margin: "0 0 0.75rem",
+          }}
+        >
+          Add New Letter
+        </h4>
+        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
+          <label
+            style={{
+              display: "flex",
+              gap: "0.3rem",
+              alignItems: "center",
+              cursor: "pointer",
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.82rem",
+              color: WARM_TEXT,
+            }}
+          >
+            <input
+              type="radio"
+              name="newType"
+              checked={newType === "morning"}
+              onChange={() => setNewType("morning")}
+              style={{ accentColor: WARM_GOLD }}
+            />
+            Morning
+          </label>
+          <label
+            style={{
+              display: "flex",
+              gap: "0.3rem",
+              alignItems: "center",
+              cursor: "pointer",
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.82rem",
+              color: WARM_TEXT,
+            }}
+          >
+            <input
+              type="radio"
+              name="newType"
+              checked={newType === "night"}
+              onChange={() => setNewType("night")}
+              style={{ accentColor: WARM_GOLD }}
+            />
+            Evening
+          </label>
+        </div>
+        <textarea
+          value={newMsg}
+          onChange={(e) => setNewMsg(e.target.value)}
+          placeholder="Write a new letter…"
+          rows={3}
+          style={{ ...inputStyle, resize: "none", marginBottom: "0.5rem" }}
+        />
+        <button
+          type="button"
+          data-ocid="admin.primary_button"
+          onClick={handleAdd}
+          style={{
+            background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
+            border: "none",
+            borderRadius: 8,
+            padding: "0.5rem 1.25rem",
+            color: WARM_PAPER,
+            fontFamily: "'Lora', Georgia, serif",
+            fontSize: "0.85rem",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          Add Letter
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InkRepliesTab() {
+  const [replies, setReplies] = React.useState<InkReply[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("chinnua_ink_replies") || "[]");
+    } catch {
+      return [];
+    }
+  });
+  const [replyText, setReplyText] = React.useState<Record<string, string>>({});
+
+  const saveReply = (id: string) => {
+    const text = replyText[id]?.trim();
+    if (!text) return;
+    const updated = replies.map((r) =>
+      r.id === id
+        ? { ...r, adminReply: text, repliedAt: new Date().toISOString() }
+        : r,
+    );
+    setReplies(updated);
+    localStorage.setItem("chinnua_ink_replies", JSON.stringify(updated));
+    setReplyText((prev) => ({ ...prev, [id]: "" }));
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    background: "rgba(245,236,215,0.5)",
+    border: "1px solid rgba(139,111,71,0.25)",
+    borderRadius: 8,
+    padding: "0.5rem 0.75rem",
+    color: WARM_TEXT,
+    fontFamily: "'Lora', Georgia, serif",
+    fontStyle: "italic",
+    fontSize: "0.88rem",
+    outline: "none",
+    resize: "none" as const,
+    boxSizing: "border-box",
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        paddingTop: "1rem",
+      }}
+    >
+      {replies.length === 0 ? (
+        <div
+          data-ocid="admin.empty_state"
+          style={{
+            textAlign: "center",
+            padding: "3rem",
+            color: WARM_MUTED,
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+          }}
+        >
+          No Ink & Pen replies yet.
+        </div>
+      ) : (
+        replies.map((reply, i) => (
+          <div
+            key={reply.id}
+            data-ocid={`admin.item.${i + 1}`}
+            style={{
+              background: "rgba(245,236,215,0.3)",
+              border: "1px solid rgba(139,111,71,0.2)",
+              borderRadius: 12,
+              padding: "1.25rem",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: "0.5rem",
+                alignItems: "center",
+                marginBottom: "0.5rem",
+                flexWrap: "wrap",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color:
+                    reply.letterType === "morning" ? WARM_GOLD : WARM_MOCHA,
+                  background: "rgba(212,168,83,0.12)",
+                  padding: "2px 8px",
+                  borderRadius: 20,
+                }}
+              >
+                {reply.letterType === "morning" ? "☀️ Morning" : "🌙 Evening"}
+              </span>
+              <span
+                style={{
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontSize: "0.72rem",
+                  color: WARM_MUTED,
+                }}
+              >
+                {new Date(reply.submittedAt).toLocaleString()}
+              </span>
+            </div>
+            <p
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontStyle: "italic",
+                fontSize: "0.9rem",
+                color: WARM_TEXT,
+                margin: "0 0 0.75rem",
+                lineHeight: 1.7,
+              }}
+            >
+              "{reply.userMessage}"
+            </p>
+            {reply.adminReply ? (
+              <div
+                style={{
+                  background: "rgba(212,168,83,0.08)",
+                  border: "1px solid rgba(212,168,83,0.25)",
+                  borderRadius: 8,
+                  padding: "0.75rem 1rem",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontStyle: "italic",
+                    fontSize: "0.85rem",
+                    color: WARM_GOLD,
+                    margin: 0,
+                  }}
+                >
+                  Your reply: "{reply.adminReply}"
+                </p>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  flexDirection: "column",
+                }}
+              >
+                <textarea
+                  value={replyText[reply.id] || ""}
+                  onChange={(e) =>
+                    setReplyText((p) => ({ ...p, [reply.id]: e.target.value }))
+                  }
+                  placeholder="Write a warm, comforting reply…"
+                  rows={2}
+                  style={inputStyle}
+                  data-ocid="admin.textarea"
+                />
+                <button
+                  type="button"
+                  data-ocid="admin.save_button"
+                  onClick={() => saveReply(reply.id)}
+                  style={{
+                    alignSelf: "flex-start",
+                    background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
+                    border: "none",
+                    borderRadius: 8,
+                    padding: "0.4rem 1rem",
+                    color: WARM_PAPER,
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.82rem",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                  }}
+                >
+                  Send Reply
+                </button>
+              </div>
+            )}
+          </div>
+        ))
+      )}
+    </div>
+  );
 }
 
 export default function AdminSlide() {
@@ -390,6 +943,8 @@ export default function AdminSlide() {
               "settings",
               "rules",
               "guardian",
+              "letters",
+              "replies",
             ].map((tab) => (
               <TabsTrigger
                 key={tab}
@@ -1167,6 +1722,13 @@ export default function AdminSlide() {
                 </div>
               )}
             </div>
+          </TabsContent>
+          <TabsContent value="letters">
+            <DailyLettersTab />
+          </TabsContent>
+
+          <TabsContent value="replies">
+            <InkRepliesTab />
           </TabsContent>
         </Tabs>
       </motion.div>

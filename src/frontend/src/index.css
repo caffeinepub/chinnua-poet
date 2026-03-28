@@ -14,46 +14,62 @@
 
 @layer base {
   :root {
-    --radius: 0.5rem;
-    --background: 0.095 0.006 55;
-    --foreground: 0.92 0.04 65;
-    --card: 0.115 0.01 55;
-    --card-foreground: 0.92 0.04 65;
-    --popover: 0.115 0.01 55;
-    --popover-foreground: 0.92 0.04 65;
-    --primary: 0.72 0.09 75;
-    --primary-foreground: 0.095 0.006 55;
-    --secondary: 0.13 0.012 55;
-    --secondary-foreground: 0.92 0.04 65;
-    --muted: 0.15 0.012 55;
-    --muted-foreground: 0.52 0.04 65;
-    --accent: 0.72 0.09 75;
-    --accent-foreground: 0.095 0.006 55;
+    --radius: 0.75rem;
+
+    /* Warm palette — OKLCH */
+    --background: 0.975 0.018 80; /* #FFF8EE cream */
+    --foreground: 0.25 0.04 55; /* #3D2B1F dark brown text */
+    --card: 0.945 0.025 75; /* #F5ECD7 beige paper */
+    --card-foreground: 0.25 0.04 55;
+    --popover: 0.945 0.025 75;
+    --popover-foreground: 0.25 0.04 55;
+    --primary: 0.6 0.08 70; /* #8B6F47 warm brown */
+    --primary-foreground: 0.975 0.018 80;
+    --secondary: 0.36 0.06 55; /* #5C3D2E mocha */
+    --secondary-foreground: 0.975 0.018 80;
+    --muted: 0.91 0.02 75; /* light warm muted */
+    --muted-foreground: 0.55 0.05 65; /* #9E8070 */
+    --accent: 0.72 0.09 75; /* #D4A853 warm gold */
+    --accent-foreground: 0.25 0.04 55;
     --destructive: 0.577 0.245 27.325;
     --destructive-foreground: 0.985 0 0;
-    --border: 0.22 0.025 65;
-    --input: 0.15 0.012 55;
+    --border: 0.78 0.04 70; /* warm brown border */
+    --input: 0.99 0.01 80; /* #FFFDF5 near white cream */
     --ring: 0.72 0.09 75;
     --chart-1: 0.72 0.09 75;
     --chart-2: 0.6 0.08 70;
     --chart-3: 0.5 0.06 60;
     --chart-4: 0.75 0.1 80;
     --chart-5: 0.65 0.08 55;
-    --sidebar: 0.105 0.008 55;
-    --sidebar-foreground: 0.92 0.04 65;
-    --sidebar-primary: 0.72 0.09 75;
-    --sidebar-primary-foreground: 0.095 0.006 55;
-    --sidebar-accent: 0.15 0.012 55;
-    --sidebar-accent-foreground: 0.92 0.04 65;
-    --sidebar-border: 0.22 0.025 65;
+    --sidebar: 0.945 0.025 75;
+    --sidebar-foreground: 0.25 0.04 55;
+    --sidebar-primary: 0.6 0.08 70;
+    --sidebar-primary-foreground: 0.975 0.018 80;
+    --sidebar-accent: 0.91 0.02 75;
+    --sidebar-accent-foreground: 0.25 0.04 55;
+    --sidebar-border: 0.78 0.04 70;
     --sidebar-ring: 0.72 0.09 75;
-    --gold: #c8a96a;
-    --gold-dim: rgba(200, 169, 106, 0.6);
-    --gold-subtle: rgba(200, 169, 106, 0.15);
-    --surface: #0d0d0d;
-    --surface-raised: #1a1410;
-    --text-primary: #f5e6d3;
-    --text-muted: rgba(245, 230, 211, 0.5);
+
+    /* Legacy warm color vars */
+    --warm-bg: #fff8ee;
+    --warm-paper: #f5ecd7;
+    --warm-brown: #8b6f47;
+    --warm-mocha: #5c3d2e;
+    --warm-gold: #d4a853;
+    --warm-gold-light: #f0d080;
+    --warm-cream: #fffdf5;
+    --warm-text: #3d2b1f;
+    --warm-muted: #9e8070;
+    --warm-shadow: rgba(92, 61, 46, 0.15);
+
+    /* Keep gold vars compatible */
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.6);
+    --gold-subtle: rgba(212, 168, 83, 0.15);
+    --surface: #fff8ee;
+    --surface-raised: #f5ecd7;
+    --text-primary: #3d2b1f;
+    --text-muted: rgba(92, 61, 46, 0.5);
   }
   * {
     @apply border-border;
@@ -62,9 +78,24 @@
     scroll-behavior: smooth;
   }
   body {
-    background-color: #0d0d0d;
-    color: #f5e6d3;
-    font-family: "Libre Baskerville", Georgia, serif;
+    background-color: #fff8ee;
+    color: #3d2b1f;
+    font-family: "Lora", "Libre Baskerville", Georgia, serif;
+  }
+
+  /* Warm scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f5ecd7;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #8b6f47;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #5c3d2e;
   }
 }
 
@@ -82,42 +113,42 @@
     font-family: "Libre Baskerville", Georgia, serif;
   }
   .font-lora {
-    font-family: "Cormorant Garamond", Georgia, serif;
+    font-family: "Lora", "Cormorant Garamond", Georgia, serif;
   }
   .font-parisienne {
     font-family: "Parisienne", cursive;
   }
   .text-gold {
-    color: #c8a96a;
+    color: #d4a853;
   }
   .text-gold-dim {
-    color: rgba(200, 169, 106, 0.6);
+    color: rgba(212, 168, 83, 0.7);
   }
   .border-gold {
-    border-color: rgba(200, 169, 106, 0.3);
+    border-color: rgba(212, 168, 83, 0.35);
   }
   .bg-gold {
-    background-color: #c8a96a;
+    background-color: #d4a853;
   }
   .bg-surface {
-    background-color: #0d0d0d;
+    background-color: #fff8ee;
   }
   .bg-surface-raised {
-    background-color: #1a1410;
+    background-color: #f5ecd7;
   }
   .gold-gradient {
-    background: linear-gradient(135deg, #c8a96a, rgba(200, 169, 106, 0.6));
+    background: linear-gradient(135deg, #d4a853, rgba(212, 168, 83, 0.6));
   }
   .hero-vignette {
     background: radial-gradient(
       ellipse at center,
       transparent 30%,
-      rgba(13, 13, 13, 0.7) 80%,
-      #0d0d0d 100%
+      rgba(255, 248, 238, 0.5) 80%,
+      #fff8ee 100%
     );
   }
   .section-divider {
-    border-color: rgba(200, 169, 106, 0.2);
+    border-color: rgba(212, 168, 83, 0.25);
   }
 
   /* Slide layout */
@@ -126,12 +157,65 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    background-color: #fff8ee;
   }
 
   /* Feed card style */
   .feed-card {
-    background: #1a1410;
-    border: 1px solid rgba(200, 169, 106, 0.15);
-    border-radius: 12px;
+    background: #f5ecd7;
+    border: 1px solid rgba(212, 168, 83, 0.25);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(92, 61, 46, 0.08);
+  }
+
+  /* Warm card */
+  .warm-card {
+    background: #f5ecd7;
+    border: 1px solid rgba(139, 111, 71, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(92, 61, 46, 0.12);
+    transition: box-shadow 0.3s ease;
+  }
+  .warm-card:hover {
+    box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
+  }
+
+  /* Paper texture effect */
+  .paper-texture {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      rgba(139, 111, 71, 0.07) 27px,
+      rgba(139, 111, 71, 0.07) 28px
+    );
+  }
+
+  /* Fade in animation */
+  @keyframes warmFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .warm-fade-in {
+    animation: warmFadeIn 0.8s ease-out forwards;
+  }
+
+  /* Letter seal decoration */
+  .letter-seal {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #d4a853 0%, #8b6f47 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 8px rgba(212, 168, 83, 0.4);
   }
 }

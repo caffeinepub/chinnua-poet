@@ -261,33 +261,31 @@ function PostCard({
       style={{
         width: "100%",
         background:
-          post.category === "Poet's Note"
-            ? "rgba(200,169,106,0.07)"
-            : "rgba(16,24,38,0.85)",
+          post.category === "Poet's Note" ? "rgba(212,168,83,0.07)" : "#F5ECD7",
         border:
           post.category === "Poet's Note"
-            ? "1px solid rgba(200,169,106,0.35)"
-            : "1px solid rgba(200,169,106,0.15)",
+            ? "1px solid rgba(212,168,83,0.35)"
+            : "1px solid rgba(212,168,83,0.15)",
         borderRadius: 14,
         padding: "1.4rem",
         display: "flex",
         flexDirection: "column",
         transition: "border-color 0.25s, box-shadow 0.25s",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+        boxShadow: "0 4px 20px rgba(92,61,46,0.12)",
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLDivElement).style.borderColor =
-          "rgba(200,169,106,0.4)";
+          "rgba(212,168,83,0.4)";
         (e.currentTarget as HTMLDivElement).style.boxShadow =
-          "0 4px 30px rgba(0,0,0,0.5), 0 0 20px rgba(200,169,106,0.1)";
+          "0 4px 30px rgba(92,61,46,0.15), 0 0 20px rgba(212,168,83,0.1)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLDivElement).style.borderColor =
           post.category === "Poet's Note"
-            ? "rgba(200,169,106,0.35)"
-            : "rgba(200,169,106,0.15)";
+            ? "rgba(212,168,83,0.35)"
+            : "rgba(212,168,83,0.15)";
         (e.currentTarget as HTMLDivElement).style.boxShadow =
-          "0 4px 20px rgba(0,0,0,0.35)";
+          "0 4px 20px rgba(92,61,46,0.12)";
       }}
     >
       {/* Header */}
@@ -312,17 +310,17 @@ function PostCard({
             borderRadius: "50%",
             background:
               post.username === "CHINNUA_POET"
-                ? "rgba(200,169,106,0.3)"
-                : "rgba(255,255,255,0.1)",
+                ? "rgba(212,168,83,0.3)"
+                : "rgba(139,111,71,0.12)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             fontSize: "0.7rem",
             fontWeight: 700,
-            color: "#F5E6D3",
+            color: "#3D2B1F",
             border:
               post.username === "CHINNUA_POET"
-                ? "1px solid rgba(200,169,106,0.5)"
+                ? "1px solid rgba(212,168,83,0.5)"
                 : "1px solid rgba(255,255,255,0.15)",
             flexShrink: 0,
             cursor: "pointer",
@@ -363,8 +361,8 @@ function PostCard({
               style={{
                 color:
                   post.username === "CHINNUA_POET"
-                    ? "rgba(200,169,106,0.9)"
-                    : "#F5E6D3",
+                    ? "rgba(212,168,83,0.9)"
+                    : "#3D2B1F",
                 fontWeight: 600,
                 fontSize: "0.8rem",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
@@ -388,7 +386,7 @@ function PostCard({
           </button>
           <p
             style={{
-              color: "rgba(229,231,235,0.4)",
+              color: "rgba(61,43,31,0.4)",
               fontSize: "0.7rem",
               fontFamily: "'Libre Baskerville', Georgia, serif",
               margin: 0,
@@ -403,11 +401,11 @@ function PostCard({
               padding: "2px 8px",
               background:
                 post.category === "Poet's Note"
-                  ? "rgba(200,169,106,0.2)"
-                  : "rgba(200,169,106,0.1)",
+                  ? "rgba(212,168,83,0.2)"
+                  : "rgba(212,168,83,0.1)",
               borderRadius: 4,
               fontSize: "0.65rem",
-              color: "rgba(200,169,106,0.9)",
+              color: "rgba(212,168,83,0.9)",
               fontFamily: "'Libre Baskerville', Georgia, serif",
               flexShrink: 0,
             }}
@@ -436,7 +434,7 @@ function PostCard({
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1rem",
               fontWeight: 700,
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               lineHeight: 1.4,
               margin: "0 0 0.5rem",
               overflow: "hidden",
@@ -452,7 +450,7 @@ function PostCard({
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             fontStyle: "italic",
-            color: "rgba(229,231,235,0.72)",
+            color: "rgba(61,43,31,0.6)",
             fontSize: "0.88rem",
             lineHeight: 1.85,
             whiteSpace: "pre-line",
@@ -475,7 +473,7 @@ function PostCard({
           gap: "0.5rem",
           marginTop: "1rem",
           paddingTop: "0.75rem",
-          borderTop: "1px solid rgba(200,169,106,0.1)",
+          borderTop: "1px solid rgba(212,168,83,0.1)",
         }}
       >
         <button
@@ -484,7 +482,7 @@ function PostCard({
             background: "none",
             border: "none",
             fontSize: "0.72rem",
-            color: "rgba(200,169,106,0.7)",
+            color: "rgba(212,168,83,0.7)",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             flex: 1,
             cursor: "pointer",
@@ -505,7 +503,7 @@ function PostCard({
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: liked ? "#f43f5e" : "rgba(229,231,235,0.5)",
+            color: liked ? "#f43f5e" : "rgba(61,43,31,0.5)",
             fontSize: "0.8rem",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             display: "flex",
@@ -527,7 +525,7 @@ function PostCard({
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "rgba(229,231,235,0.5)",
+            color: "rgba(61,43,31,0.5)",
             fontSize: "0.8rem",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             display: "flex",
@@ -549,10 +547,10 @@ function PostCard({
           }}
           data-ocid="feed.toggle"
           style={{
-            background: showComments ? "rgba(200,169,106,0.1)" : "none",
+            background: showComments ? "rgba(212,168,83,0.1)" : "none",
             border: "none",
             cursor: "pointer",
-            color: showComments ? "#C8A96A" : "rgba(229,231,235,0.4)",
+            color: showComments ? "#D4A853" : "rgba(61,43,31,0.4)",
             fontSize: "0.75rem",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             display: "flex",
@@ -747,7 +745,7 @@ export default function FeedSlide({
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1.6rem",
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               fontWeight: 700,
               margin: 0,
             }}
@@ -760,11 +758,11 @@ export default function FeedSlide({
               onClick={() => onViewProfile(currentUser.username)}
               data-ocid="feed.primary_button"
               style={{
-                background: "rgba(200,169,106,0.08)",
-                border: "1px solid rgba(200,169,106,0.22)",
+                background: "rgba(212,168,83,0.08)",
+                border: "1px solid rgba(212,168,83,0.22)",
                 borderRadius: 20,
                 padding: "0.3rem 0.8rem",
-                color: "rgba(200,169,106,0.75)",
+                color: "rgba(212,168,83,0.75)",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 fontSize: "0.68rem",
                 letterSpacing: "0.05em",
@@ -776,14 +774,14 @@ export default function FeedSlide({
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.borderColor =
-                  "rgba(200,169,106,0.45)";
-                (e.currentTarget as HTMLButtonElement).style.color = "#C8A96A";
+                  "rgba(212,168,83,0.45)";
+                (e.currentTarget as HTMLButtonElement).style.color = "#D4A853";
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.borderColor =
-                  "rgba(200,169,106,0.22)";
+                  "rgba(212,168,83,0.22)";
                 (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(200,169,106,0.75)";
+                  "rgba(212,168,83,0.75)";
               }}
             >
               <span
@@ -791,7 +789,7 @@ export default function FeedSlide({
                   width: 18,
                   height: 18,
                   borderRadius: "50%",
-                  background: "rgba(200,169,106,0.2)",
+                  background: "rgba(212,168,83,0.2)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -825,8 +823,8 @@ export default function FeedSlide({
                 data-ocid="feed.textarea"
                 style={{
                   background: "transparent",
-                  border: "1px solid rgba(200,169,106,0.2)",
-                  color: "#F5E6D3",
+                  border: "1px solid rgba(212,168,83,0.2)",
+                  color: "#3D2B1F",
                   fontFamily: "'Playfair Display', Georgia, serif",
                   fontSize: "0.95rem",
                   resize: "none",
@@ -845,7 +843,7 @@ export default function FeedSlide({
                   disabled={!newPost.trim()}
                   data-ocid="feed.submit_button"
                   style={{
-                    background: "rgba(200,169,106,0.85)",
+                    background: "rgba(212,168,83,0.85)",
                     border: "none",
                     color: "#fff",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
@@ -859,7 +857,7 @@ export default function FeedSlide({
             <div style={{ textAlign: "center", padding: "0.75rem 0" }}>
               <p
                 style={{
-                  color: "rgba(229,231,235,0.6)",
+                  color: "rgba(61,43,31,0.55)",
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   marginBottom: "0.75rem",
                   fontSize: "0.9rem",
@@ -871,7 +869,7 @@ export default function FeedSlide({
                 onClick={onJoin}
                 data-ocid="feed.primary_button"
                 style={{
-                  background: "rgba(200,169,106,0.85)",
+                  background: "rgba(212,168,83,0.85)",
                   border: "none",
                   color: "#fff",
                 }}
@@ -895,7 +893,7 @@ export default function FeedSlide({
             paddingLeft: "0.5rem",
             paddingRight: "0.5rem",
             scrollbarWidth: "thin",
-            scrollbarColor: "rgba(200,169,106,0.25) transparent",
+            scrollbarColor: "rgba(212,168,83,0.25) transparent",
             WebkitOverflowScrolling: "touch",
           }}
         >
@@ -920,7 +918,7 @@ export default function FeedSlide({
         <DialogContent
           style={{
             background: "#1A1410",
-            border: "1px solid rgba(200,169,106,0.2)",
+            border: "1px solid rgba(212,168,83,0.2)",
             maxWidth: 600,
             maxHeight: "80vh",
             overflowY: "auto",
@@ -931,7 +929,7 @@ export default function FeedSlide({
             <DialogTitle
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 fontSize: "1.3rem",
               }}
             >
@@ -943,7 +941,7 @@ export default function FeedSlide({
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
-                color: "rgba(229,231,235,0.85)",
+                color: "rgba(61,43,31,0.8)",
                 fontSize: "0.95rem",
                 lineHeight: 2,
                 whiteSpace: "pre-wrap",
@@ -974,7 +972,7 @@ export default function FeedSlide({
             <DialogContent
               style={{
                 background: "#1A1410",
-                border: "1px solid rgba(200,169,106,0.2)",
+                border: "1px solid rgba(212,168,83,0.2)",
                 maxWidth: 480,
               }}
               data-ocid="feed.dialog"
@@ -983,7 +981,7 @@ export default function FeedSlide({
                 <DialogTitle
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     fontSize: "1.1rem",
                   }}
                 >
@@ -1006,11 +1004,11 @@ export default function FeedSlide({
                       data-ocid="feed.input"
                       style={{
                         flex: 1,
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(200,169,106,0.2)",
+                        background: "rgba(139,111,71,0.08)",
+                        border: "1px solid rgba(212,168,83,0.2)",
                         borderRadius: 6,
                         padding: "0.5rem 0.75rem",
-                        color: "#F5E6D3",
+                        color: "#3D2B1F",
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                         fontSize: "0.85rem",
                         outline: "none",
@@ -1023,7 +1021,7 @@ export default function FeedSlide({
                       onClick={() => handleReply(replyPost.id)}
                       data-ocid="feed.submit_button"
                       style={{
-                        background: "rgba(200,169,106,0.8)",
+                        background: "rgba(212,168,83,0.8)",
                         border: "none",
                         color: "#fff",
                       }}
@@ -1040,7 +1038,7 @@ export default function FeedSlide({
                         style={{
                           marginTop: "0.5rem",
                           paddingLeft: "0.75rem",
-                          borderLeft: "2px solid rgba(200,169,106,0.2)",
+                          borderLeft: "2px solid rgba(212,168,83,0.2)",
                         }}
                       >
                         <span
@@ -1055,7 +1053,7 @@ export default function FeedSlide({
                         </span>
                         <span
                           style={{
-                            color: "rgba(229,231,235,0.6)",
+                            color: "rgba(61,43,31,0.55)",
                             fontSize: "0.8rem",
                             fontFamily: "'Libre Baskerville', Georgia, serif",
                             marginLeft: 8,
@@ -1070,7 +1068,7 @@ export default function FeedSlide({
                 <div style={{ textAlign: "center", padding: "1rem 0" }}>
                   <p
                     style={{
-                      color: "rgba(229,231,235,0.6)",
+                      color: "rgba(61,43,31,0.55)",
                       fontFamily: "'Libre Baskerville', Georgia, serif",
                       marginBottom: "0.75rem",
                     }}
@@ -1084,7 +1082,7 @@ export default function FeedSlide({
                     }}
                     data-ocid="feed.primary_button"
                     style={{
-                      background: "rgba(200,169,106,0.85)",
+                      background: "rgba(212,168,83,0.85)",
                       border: "none",
                       color: "#fff",
                     }}

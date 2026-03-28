@@ -169,9 +169,9 @@ for being in a world where no one remembers, celebrates, or even wishes me.`;
 
 const toggleStyle: React.CSSProperties = {
   background: "none",
-  border: "1px solid rgba(200,169,106,0.3)",
+  border: "1px solid rgba(212,168,83,0.3)",
   borderRadius: 8,
-  color: "rgba(200,169,106,0.85)",
+  color: "rgba(212,168,83,0.85)",
   fontFamily: "'Libre Baskerville', Georgia, serif",
   fontSize: "0.85rem",
   cursor: "pointer",
@@ -183,7 +183,7 @@ const toggleStyle: React.CSSProperties = {
 const personalWritingStyle: React.CSSProperties = {
   fontFamily: "'Playfair Display', Georgia, serif",
   fontStyle: "italic",
-  color: "rgba(229,231,235,0.7)",
+  color: "rgba(61,43,31,0.6)",
   lineHeight: 1.9,
   fontSize: "0.92rem",
   whiteSpace: "pre-line",
@@ -314,7 +314,7 @@ export default function AboutSlide() {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1.6rem",
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               fontWeight: 700,
               margin: 0,
             }}
@@ -328,11 +328,11 @@ export default function AboutSlide() {
               data-ocid="about.edit_button"
               title="Edit About Section"
               style={{
-                background: "rgba(200,169,106,0.1)",
-                border: "1px solid rgba(200,169,106,0.3)",
+                background: "rgba(212,168,83,0.1)",
+                border: "1px solid rgba(212,168,83,0.3)",
                 borderRadius: 7,
                 padding: "0.3rem 0.7rem",
-                color: "rgba(200,169,106,0.8)",
+                color: "rgba(212,168,83,0.8)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
@@ -353,8 +353,8 @@ export default function AboutSlide() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             style={{
-              background: "rgba(26,20,16,0.95)",
-              border: "1px solid rgba(200,169,106,0.25)",
+              background: "#F5ECD7",
+              border: "1px solid rgba(212,168,83,0.25)",
               borderRadius: 12,
               padding: "1.5rem",
               marginBottom: "2rem",
@@ -363,7 +363,7 @@ export default function AboutSlide() {
             <h3
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "#C8A96A",
+                color: "#D4A853",
                 margin: "0 0 1rem",
                 fontSize: "1rem",
               }}
@@ -379,7 +379,7 @@ export default function AboutSlide() {
                   style={{
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.75rem",
-                    color: "rgba(200,169,106,0.6)",
+                    color: "rgba(212,168,83,0.6)",
                     display: "block",
                     marginBottom: "0.3rem",
                     letterSpacing: "0.1em",
@@ -397,11 +397,11 @@ export default function AboutSlide() {
                   data-ocid="about.input"
                   style={{
                     width: "100%",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(200,169,106,0.2)",
+                    background: "rgba(139,111,71,0.08)",
+                    border: "1px solid rgba(212,168,83,0.2)",
                     borderRadius: 7,
                     padding: "0.6rem 0.8rem",
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontSize: "0.9rem",
                     outline: "none",
@@ -415,7 +415,7 @@ export default function AboutSlide() {
                   style={{
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.75rem",
-                    color: "rgba(200,169,106,0.6)",
+                    color: "rgba(212,168,83,0.6)",
                     display: "block",
                     marginBottom: "0.3rem",
                     letterSpacing: "0.1em",
@@ -434,11 +434,11 @@ export default function AboutSlide() {
                   data-ocid="about.textarea"
                   style={{
                     width: "100%",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(200,169,106,0.2)",
+                    background: "rgba(139,111,71,0.08)",
+                    border: "1px solid rgba(212,168,83,0.2)",
                     borderRadius: 7,
                     padding: "0.6rem 0.8rem",
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontSize: "0.9rem",
                     outline: "none",
@@ -453,7 +453,7 @@ export default function AboutSlide() {
                   style={{
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.75rem",
-                    color: "rgba(200,169,106,0.6)",
+                    color: "rgba(212,168,83,0.6)",
                     display: "block",
                     marginBottom: "0.3rem",
                     letterSpacing: "0.1em",
@@ -472,11 +472,11 @@ export default function AboutSlide() {
                   data-ocid="about.textarea"
                   style={{
                     width: "100%",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(200,169,106,0.2)",
+                    background: "rgba(139,111,71,0.08)",
+                    border: "1px solid rgba(212,168,83,0.2)",
                     borderRadius: 7,
                     padding: "0.6rem 0.8rem",
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontSize: "0.9rem",
                     outline: "none",
@@ -491,7 +491,7 @@ export default function AboutSlide() {
                   style={{
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.75rem",
-                    color: "rgba(200,169,106,0.6)",
+                    color: "rgba(212,168,83,0.6)",
                     display: "block",
                     marginBottom: "0.3rem",
                     letterSpacing: "0.1em",
@@ -513,11 +513,11 @@ export default function AboutSlide() {
                   data-ocid="about.textarea"
                   style={{
                     width: "100%",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(200,169,106,0.2)",
+                    background: "rgba(139,111,71,0.08)",
+                    border: "1px solid rgba(212,168,83,0.2)",
                     borderRadius: 7,
                     padding: "0.6rem 0.8rem",
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontSize: "0.9rem",
                     outline: "none",
@@ -532,7 +532,7 @@ export default function AboutSlide() {
                   onClick={saveAboutContent}
                   data-ocid="about.save_button"
                   style={{
-                    background: "#C8A96A",
+                    background: "#D4A853",
                     border: "none",
                     borderRadius: 7,
                     padding: "0.55rem 1.2rem",
@@ -551,10 +551,10 @@ export default function AboutSlide() {
                   data-ocid="about.cancel_button"
                   style={{
                     background: "transparent",
-                    border: "1px solid rgba(245,230,211,0.15)",
+                    border: "1px solid rgba(139,111,71,0.2)",
                     borderRadius: 7,
                     padding: "0.55rem 1rem",
-                    color: "rgba(245,230,211,0.5)",
+                    color: "rgba(61,43,31,0.5)",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.82rem",
                     cursor: "pointer",
@@ -586,8 +586,8 @@ export default function AboutSlide() {
                 height: 260,
                 overflow: "hidden",
                 borderRadius: 12,
-                border: "2px solid rgba(200,169,106,0.4)",
-                boxShadow: "0 0 30px rgba(200,169,106,0.2)",
+                border: "2px solid rgba(212,168,83,0.4)",
+                boxShadow: "0 0 30px rgba(212,168,83,0.2)",
               }}
             >
               <img
@@ -614,7 +614,7 @@ export default function AboutSlide() {
                     style={{
                       fontFamily: "'Libre Baskerville', Georgia, serif",
                       fontSize: "0.7rem",
-                      color: "rgba(200,169,106,0.7)",
+                      color: "rgba(212,168,83,0.7)",
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
                       marginBottom: 2,
@@ -626,7 +626,7 @@ export default function AboutSlide() {
                     style={{
                       fontFamily: "'Libre Baskerville', Georgia, serif",
                       fontSize: "0.85rem",
-                      color: "rgba(229,231,235,0.6)",
+                      color: "rgba(61,43,31,0.55)",
                     }}
                   >
                     {item.value}
@@ -646,7 +646,7 @@ export default function AboutSlide() {
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: "2rem",
                 fontWeight: 700,
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 marginBottom: "0.25rem",
               }}
             >
@@ -656,7 +656,7 @@ export default function AboutSlide() {
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
-                color: "rgba(200,169,106,0.8)",
+                color: "rgba(212,168,83,0.8)",
                 fontSize: "1rem",
                 marginBottom: "1.5rem",
               }}
@@ -667,7 +667,7 @@ export default function AboutSlide() {
             <p
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "rgba(229,231,235,0.75)",
+                color: "rgba(61,43,31,0.65)",
                 lineHeight: 1.9,
                 fontSize: "0.95rem",
                 marginBottom: "0.75rem",
@@ -679,7 +679,7 @@ export default function AboutSlide() {
             <p
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "rgba(229,231,235,0.75)",
+                color: "rgba(61,43,31,0.65)",
                 lineHeight: 1.9,
                 fontSize: "0.95rem",
                 marginBottom: "0.75rem",
@@ -693,7 +693,7 @@ export default function AboutSlide() {
             <p
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "rgba(229,231,235,0.75)",
+                color: "rgba(61,43,31,0.65)",
                 lineHeight: 1.9,
                 fontSize: "0.95rem",
                 marginBottom: "1.75rem",
@@ -710,7 +710,7 @@ export default function AboutSlide() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
               style={{
-                borderLeft: "2px solid rgba(200,169,106,0.3)",
+                borderLeft: "2px solid rgba(212,168,83,0.3)",
                 paddingLeft: "1.25rem",
                 marginBottom: "1.75rem",
                 display: "flex",
@@ -724,7 +724,7 @@ export default function AboutSlide() {
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontStyle: "italic",
-                    color: "rgba(200,169,106,0.7)",
+                    color: "rgba(212,168,83,0.7)",
                     fontSize: "0.92rem",
                     lineHeight: 1.85,
                     whiteSpace: "pre-line",
@@ -756,7 +756,7 @@ export default function AboutSlide() {
                     key={para.slice(0, 30)}
                     style={{
                       fontFamily: "'Playfair Display', Georgia, serif",
-                      color: "rgba(229,231,235,0.7)",
+                      color: "rgba(61,43,31,0.6)",
                       lineHeight: 1.9,
                       fontSize: "0.92rem",
                       marginBottom: "1rem",
@@ -781,7 +781,7 @@ export default function AboutSlide() {
                 style={{
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   fontSize: "0.75rem",
-                  color: "rgba(229,231,235,0.4)",
+                  color: "rgba(61,43,31,0.4)",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
                   marginBottom: "0.25rem",
@@ -816,7 +816,7 @@ export default function AboutSlide() {
                     display: "flex",
                     alignItems: "center",
                     gap: "0.6rem",
-                    color: "rgba(229,231,235,0.6)",
+                    color: "rgba(61,43,31,0.55)",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.88rem",
                     textDecoration: "none",
@@ -832,7 +832,7 @@ export default function AboutSlide() {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.6rem",
-                  color: "rgba(229,231,235,0.6)",
+                  color: "rgba(61,43,31,0.55)",
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   fontSize: "0.88rem",
                   textDecoration: "none",
@@ -847,7 +847,7 @@ export default function AboutSlide() {
               style={{
                 marginTop: "2rem",
                 paddingTop: "1.5rem",
-                borderTop: "1px solid rgba(200,169,106,0.1)",
+                borderTop: "1px solid rgba(212,168,83,0.1)",
               }}
             >
               <div
@@ -862,7 +862,7 @@ export default function AboutSlide() {
                   style={{
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.68rem",
-                    color: "rgba(200,169,106,0.5)",
+                    color: "rgba(212,168,83,0.5)",
                     letterSpacing: "0.15em",
                     textTransform: "uppercase",
                     fontVariant: "small-caps",
@@ -880,7 +880,7 @@ export default function AboutSlide() {
                       background: "none",
                       border: "none",
                       cursor: "pointer",
-                      color: "rgba(200,169,106,0.5)",
+                      color: "rgba(212,168,83,0.5)",
                       padding: "2px",
                       display: "flex",
                       alignItems: "center",
@@ -888,11 +888,11 @@ export default function AboutSlide() {
                     }}
                     onMouseEnter={(e) => {
                       (e.currentTarget as HTMLButtonElement).style.color =
-                        "rgba(200,169,106,0.9)";
+                        "rgba(212,168,83,0.9)";
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLButtonElement).style.color =
-                        "rgba(200,169,106,0.5)";
+                        "rgba(212,168,83,0.5)";
                     }}
                   >
                     <Pencil size={13} />
@@ -914,10 +914,10 @@ export default function AboutSlide() {
                     style={{
                       width: "100%",
                       background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(200,169,106,0.3)",
+                      border: "1px solid rgba(212,168,83,0.3)",
                       borderRadius: 8,
                       padding: "0.75rem",
-                      color: "#F5E6D3",
+                      color: "#3D2B1F",
                       fontFamily: "'Playfair Display', Georgia, serif",
                       fontStyle: "italic",
                       fontSize: "0.88rem",
@@ -941,10 +941,10 @@ export default function AboutSlide() {
                         display: "flex",
                         alignItems: "center",
                         gap: "0.3rem",
-                        background: "rgba(200,169,106,0.2)",
-                        border: "1px solid rgba(200,169,106,0.4)",
+                        background: "rgba(212,168,83,0.2)",
+                        border: "1px solid rgba(212,168,83,0.4)",
                         borderRadius: 6,
-                        color: "rgba(200,169,106,0.9)",
+                        color: "rgba(212,168,83,0.9)",
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                         fontSize: "0.8rem",
                         padding: "0.35rem 0.75rem",
@@ -963,7 +963,7 @@ export default function AboutSlide() {
                         background: "none",
                         border: "1px solid rgba(229,231,235,0.15)",
                         borderRadius: 6,
-                        color: "rgba(229,231,235,0.4)",
+                        color: "rgba(61,43,31,0.4)",
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                         fontSize: "0.8rem",
                         padding: "0.35rem 0.75rem",
@@ -980,7 +980,7 @@ export default function AboutSlide() {
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontStyle: "italic",
                     color: poetsNote
-                      ? "rgba(229,231,235,0.75)"
+                      ? "rgba(61,43,31,0.65)"
                       : "rgba(229,231,235,0.35)",
                     fontSize: "0.88rem",
                     lineHeight: 1.7,
