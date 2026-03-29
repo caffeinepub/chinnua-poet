@@ -8,6 +8,7 @@ import SilentListenerChat from "./components/SilentListenerChat";
 import { UserSetupModal } from "./components/UserSetupModal";
 import AboutSlide from "./slides/AboutSlide";
 import AdminSlide from "./slides/AdminSlide";
+import ExploreSlide from "./slides/ExploreSlide";
 import FeedSlide from "./slides/FeedSlide";
 import GallerySlide from "./slides/GallerySlide";
 import HomeSlide from "./slides/HomeSlide";
@@ -15,6 +16,7 @@ import InboxSlide from "./slides/InboxSlide";
 import MessagesSlide from "./slides/MessagesSlide";
 import MusicSlide from "./slides/MusicSlide";
 import NotesSlide from "./slides/NotesSlide";
+import NotificationsSlide from "./slides/NotificationsSlide";
 import PoemsSlide from "./slides/PoemsSlide";
 import PrivacySlide from "./slides/PrivacySlide";
 import SettingsSlide from "./slides/SettingsSlide";
@@ -35,7 +37,9 @@ type Slide =
   | "settings"
   | "terms"
   | "privacy"
-  | "inbox";
+  | "inbox"
+  | "explore"
+  | "notifications";
 
 interface User {
   username: string;
@@ -50,9 +54,14 @@ const BASE_NAV_ITEMS: { slide: Slide; label: string }[] = [
   { slide: "gallery", label: "Gallery" },
   { slide: "music", label: "Music" },
   { slide: "messages", label: "Messages" },
+  { slide: "explore", label: "Explore" },
   { slide: "about", label: "About" },
 ];
 
+const NOTIFICATIONS_NAV_ITEM: { slide: Slide; label: string } = {
+  slide: "notifications",
+  label: "Notifications",
+};
 const NOTES_NAV_ITEM: { slide: Slide; label: string } = {
   slide: "notes",
   label: "My Notes",
@@ -104,6 +113,26 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("slide") === "admin") setActiveSlide("admin");
+    const validSlides = [
+      "home",
+      "feed",
+      "poems",
+      "gallery",
+      "music",
+      "messages",
+      "about",
+      "notes",
+      "admin",
+      "profile",
+      "settings",
+      "terms",
+      "privacy",
+      "inbox",
+      "explore",
+      "notifications",
+    ];
+    const hash = window.location.hash.replace("#", "");
+    if (hash && validSlides.includes(hash)) setActiveSlide(hash as Slide);
     try {
       const stored = localStorage.getItem("chinnua_user");
       if (stored) setCurrentUser(JSON.parse(stored));
@@ -126,6 +155,7 @@ export default function App() {
     ? [
         ...BASE_NAV_ITEMS,
         NOTES_NAV_ITEM,
+        NOTIFICATIONS_NAV_ITEM,
         INBOX_NAV_ITEM,
         PROFILE_NAV_ITEM,
         SETTINGS_NAV_ITEM,
@@ -201,6 +231,7 @@ export default function App() {
       setProfileUsername(null);
     }
     setActiveSlide(slide);
+    window.location.hash = slide;
   };
 
   const renderSlide = () => {
@@ -236,6 +267,15 @@ export default function App() {
         );
       case "about":
         return <AboutSlide />;
+      case "explore":
+        return <ExploreSlide currentUser={currentUser} />;
+      case "notifications":
+        return (
+          <NotificationsSlide
+            currentUser={currentUser}
+            onLogin={() => setShowLoginModal(true)}
+          />
+        );
       case "notes":
         return (
           <NotesSlide

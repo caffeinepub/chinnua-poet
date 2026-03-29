@@ -105,6 +105,14 @@ export default function MessagesSlide({
     "CHINNUA_POET",
   ]);
   const [activeConv, setActiveConv] = useState("CHINNUA_POET");
+  const [msgTab, setMsgTab] = useState<"inbox" | "requests">("inbox");
+  const [blockedUsers, setBlockedUsers] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("chinnua_blocked_users") || "[]");
+    } catch {
+      return [];
+    }
+  });
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [text, setText] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
@@ -350,6 +358,14 @@ export default function MessagesSlide({
       }
       setCamOff((c) => !c);
     }
+  };
+
+  const handleBlock = (username: string) => {
+    const updated = [...blockedUsers, username];
+    setBlockedUsers(updated);
+    localStorage.setItem("chinnua_blocked_users", JSON.stringify(updated));
+    setConversations((prev) => prev.filter((c) => c !== username));
+    if (activeConv === username) setActiveConv("CHINNUA_POET");
   };
 
   const sendMessage = () => {
@@ -719,62 +735,137 @@ export default function MessagesSlide({
             overflowY: "auto",
           }}
         >
-          <h3
-            style={{
-              fontFamily: "'Libre Baskerville', Georgia, serif",
-              fontSize: "0.75rem",
-              color: "rgba(229,231,235,0.4)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              marginBottom: "0.75rem",
-              paddingLeft: "0.25rem",
-            }}
+          <div
+            style={{ display: "flex", gap: "0.25rem", marginBottom: "0.75rem" }}
           >
-            Messages
-          </h3>
-          {conversations.map((conv) => (
-            <button
-              key={conv}
-              type="button"
-              onClick={() => setActiveConv(conv)}
-              data-ocid="messages.button"
-              style={{
-                width: "100%",
-                textAlign: "left",
-                padding: "0.65rem 0.75rem",
-                borderRadius: 8,
-                background:
-                  activeConv === conv
-                    ? "rgba(200,169,106,0.15)"
-                    : "transparent",
-                border:
-                  activeConv === conv
-                    ? "1px solid rgba(200,169,106,0.3)"
-                    : "1px solid transparent",
-                color:
-                  activeConv === conv ? "#F5E6D3" : "rgba(229,231,235,0.6)",
-                fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontSize: "0.85rem",
-                cursor: "pointer",
-                marginBottom: "0.25rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
-              <AvatarBubble username={conv} size={26} />
-              <span
+            {["inbox", "requests"].map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setMsgTab(t as "inbox" | "requests")}
+                data-ocid="messages.tab"
                 style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  fontSize: "0.82rem",
+                  flex: 1,
+                  background:
+                    msgTab === t ? "rgba(200,169,106,0.2)" : "transparent",
+                  border:
+                    msgTab === t
+                      ? "1px solid rgba(200,169,106,0.4)"
+                      : "1px solid transparent",
+                  borderRadius: 6,
+                  padding: "0.3rem",
+                  color: msgTab === t ? "#F5E6D3" : "rgba(229,231,235,0.5)",
+                  fontSize: "0.65rem",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  cursor: "pointer",
                 }}
               >
-                {conv}
-              </span>
-            </button>
-          ))}
+                {t === "inbox" ? "Inbox" : "Requests"}
+              </button>
+            ))}
+          </div>
+          {msgTab === "inbox" ? (
+            conversations
+              .filter((c) => !blockedUsers.includes(c))
+              .map((conv) => (
+                <div
+                  key={conv}
+                  style={{ position: "relative", marginBottom: "0.25rem" }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActiveConv(conv)}
+                    data-ocid="messages.button"
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "0.65rem 0.75rem",
+                      borderRadius: 8,
+                      background:
+                        activeConv === conv
+                          ? "rgba(200,169,106,0.15)"
+                          : "transparent",
+                      border:
+                        activeConv === conv
+                          ? "1px solid rgba(200,169,106,0.3)"
+                          : "1px solid transparent",
+                      color:
+                        activeConv === conv
+                          ? "#F5E6D3"
+                          : "rgba(229,231,235,0.6)",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: "0.85rem",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      paddingRight: "2rem",
+                    }}
+                  >
+                    <AvatarBubble username={conv} size={26} />
+                    <span
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        fontSize: "0.82rem",
+                      }}
+                    >
+                      {conv}
+                    </span>
+                  </button>
+                  {conv !== "CHINNUA_POET" && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (confirm(`Block ${conv}?`)) handleBlock(conv);
+                      }}
+                      title="Block user"
+                      data-ocid="messages.delete_button"
+                      style={{
+                        position: "absolute",
+                        right: 4,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: "rgba(229,100,100,0.6)",
+                        fontSize: "0.75rem",
+                        padding: "0.2rem",
+                      }}
+                    >
+                      ⊘
+                    </button>
+                  )}
+                </div>
+              ))
+          ) : (
+            <div style={{ textAlign: "center", padding: "1.5rem 0.5rem" }}>
+              <p
+                style={{
+                  color: "rgba(229,231,235,0.45)",
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontStyle: "italic",
+                  fontSize: "0.78rem",
+                }}
+              >
+                No message requests
+              </p>
+              <p
+                style={{
+                  color: "rgba(229,231,235,0.3)",
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.68rem",
+                  marginTop: "0.5rem",
+                }}
+              >
+                Messages from restricted users appear here
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Chat area */}

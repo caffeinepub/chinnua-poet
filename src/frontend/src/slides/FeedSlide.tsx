@@ -599,6 +599,13 @@ export default function FeedSlide({
 }: FeedSlideProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState("");
+  const [postTopic, setPostTopic] = useState("");
+  const [whoCanReply, setWhoCanReply] = useState<string>(
+    () => localStorage.getItem("chinnua_who_can_reply") || "anyone",
+  );
+  const [reviewReplies, setReviewReplies] = useState<boolean>(
+    () => localStorage.getItem("chinnua_review_replies") === "true",
+  );
   const [expandedPost, setExpandedPost] = useState<Post | null>(null);
   const [replyPost, setReplyPost] = useState<Post | null>(null);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
@@ -816,10 +823,29 @@ export default function FeedSlide({
         >
           {currentUser ? (
             <>
+              <input
+                value={postTopic}
+                onChange={(e) => setPostTopic(e.target.value)}
+                placeholder="📌 Add a topic (optional)"
+                data-ocid="feed.input"
+                style={{
+                  width: "100%",
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid rgba(212,168,83,0.25)",
+                  color: "#3D2B1F",
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontSize: "0.78rem",
+                  padding: "0.3rem 0",
+                  marginBottom: "0.6rem",
+                  outline: "none",
+                  letterSpacing: "0.03em",
+                }}
+              />
               <Textarea
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
-                placeholder="Write your poetry..."
+                placeholder="What's new? Share your poetry or thoughts..."
                 data-ocid="feed.textarea"
                 style={{
                   background: "transparent",
@@ -828,16 +854,127 @@ export default function FeedSlide({
                   fontFamily: "'Playfair Display', Georgia, serif",
                   fontSize: "0.95rem",
                   resize: "none",
-                  minHeight: 60,
+                  minHeight: 70,
                 }}
               />
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: "0.6rem",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  marginTop: "0.5rem",
+                  flexWrap: "wrap",
                 }}
               >
+                <button
+                  type="button"
+                  title="Photo (coming soon)"
+                  onClick={() => {
+                    const { toast: t } = require("sonner");
+                    t("Photo upload coming soon");
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    padding: "0.2rem",
+                  }}
+                >
+                  📷
+                </button>
+                <button
+                  type="button"
+                  title="Emoji (coming soon)"
+                  onClick={() => {
+                    const { toast: t } = require("sonner");
+                    t("Emoji picker coming soon");
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    padding: "0.2rem",
+                  }}
+                >
+                  😊
+                </button>
+                <button
+                  type="button"
+                  title="Poll (coming soon)"
+                  onClick={() => {
+                    const { toast: t } = require("sonner");
+                    t("Polls coming soon");
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    padding: "0.2rem",
+                  }}
+                >
+                  📊
+                </button>
+                <div
+                  style={{
+                    marginLeft: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <select
+                    value={whoCanReply}
+                    onChange={(e) => setWhoCanReply(e.target.value)}
+                    data-ocid="feed.select"
+                    style={{
+                      fontSize: "0.7rem",
+                      background: "rgba(245,236,215,0.8)",
+                      border: "1px solid rgba(212,168,83,0.25)",
+                      borderRadius: 6,
+                      padding: "0.2rem 0.4rem",
+                      color: "#5C3D2E",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <option value="anyone">👥 Anyone can reply</option>
+                    <option value="followers">👤 Followers only</option>
+                    <option value="following">✓ People I follow</option>
+                    <option value="mentioned">@ Mentioned only</option>
+                  </select>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginTop: "0.5rem",
+                }}
+              >
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
+                    cursor: "pointer",
+                    fontSize: "0.7rem",
+                    color: "rgba(61,43,31,0.65)",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    data-ocid="feed.checkbox"
+                    checked={reviewReplies}
+                    onChange={(e) => setReviewReplies(e.target.checked)}
+                    style={{ accentColor: "#D4A853" }}
+                  />
+                  Review replies before posting
+                </label>
                 <Button
                   onClick={handlePost}
                   disabled={!newPost.trim()}
@@ -847,6 +984,8 @@ export default function FeedSlide({
                     border: "none",
                     color: "#fff",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.8rem",
+                    padding: "0.35rem 0.9rem",
                   }}
                 >
                   Share

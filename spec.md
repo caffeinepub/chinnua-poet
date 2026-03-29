@@ -1,46 +1,41 @@
-# CHINNUA_POET
+# CHINNUA_POET — Version 44
 
 ## Current State
-The app uses a warm beige theme (WARM_BG=#FFF8EE, WARM_PAPER=#F5ECD7, WARM_GOLD=#D4A853, WARM_MOCHA=#5C3D2E, WARM_BROWN=#8B6F47, WARM_TEXT=#3D2B1F). However:
-- `AboutSlide.tsx` still uses old dark theme colors (rgba(26,20,16), #F5E6D3, rgba(200,169,106)) causing dark content on light background — effectively invisible/broken
-- `FeedSlide.tsx` still uses dark theme colors (rgba(16,24,38,0.85) card backgrounds, #F5E6D3 text) — feed cards appear dark on light page
-- `SettingsSlide.tsx` exists but needs complete redesign as emotional 'Your Space' with all new sections
-- No 'The Silent Listener' AI chat UI exists (the PoetryAssistant component exists but is different)
+A large slide-based poetry social platform with 16 slides (AboutSlide, FeedSlide, PoemsSlide, GallerySlide, MusicSlide, MessagesSlide, NotesSlide, InboxSlide, AdminSlide, SettingsSlide, UserProfileSlide, TermsSlide, PrivacySlide, HomeSlide, ContactSlide, CommunitySlide). Backend has `getAboutContent()` and `saveAboutContent()` (camelCase). Warm cream/beige design theme.
 
 ## Requested Changes (Diff)
 
 ### Add
-- Full 'Your Space' Settings page with sections: Profile, Privacy, Notifications, Appearance, Writing Preferences, AI Assistant (The Silent Listener), Messaging, Content Preferences, Language & Translator, Notes Settings, Help Centre, Security, Email & Notifications, Account Controls
-- 'The Silent Listener' floating AI chat component: gold quill ✒️ button (bottom-left), tooltip 'The Silent Listener is here…', slide-in chat panel with suggestion chips, settings-aware behavior
-- Settings page header: title 'Your Space', subtitle 'You don't need to be seen by everyone… just understood by the right ones.'
-- Smooth toggle components for notification/AI/messaging settings
-- AI mode selector: Soft Emotional / Deep Philosophical / Minimal
-- Voice settings: Male/Female voice, Slow/Normal/Expressive speed
-- Delete Account confirmation popup
+- Hash-based URL routing so each slide is accessible via URL hash (e.g., `#feed`, `#about`, `#poems`) and persists on refresh
+- Message privacy controls in settings: who can message (everyone/followers/no one), message requests inbox, user blocking system
+- Structured feed post creation box with topic input, textarea, photo/emoji buttons, who-can-reply dropdown, review-replies toggle
+- Explore page slide with trending posts in grid layout and search bar for users/poems
+- Notifications slide tracking likes, comments, follows, messages
+- Search functionality across users and poems
+- Message Requests inbox section (separate from main messages)
+- Blocking system: blocked users cannot message, interact with posts, or view profiles
 
 ### Modify
-- AboutSlide.tsx: Replace ALL dark theme colors with warm theme colors (WARM_BG, WARM_PAPER, WARM_BROWN, WARM_MOCHA, WARM_GOLD, WARM_TEXT). Keep all content/logic intact.
-- FeedSlide.tsx: Replace ALL dark theme colors with warm theme colors. Feed cards should use warm paper background (#F5ECD7), warm text (#3D2B1F), gold accents (#D4A853). Keep all functionality.
-- SettingsSlide.tsx: Complete redesign as described, replacing current dark-themed settings
+- **AboutSlide.tsx (CRITICAL FIX)**: Replace all hardcoded bio/story text in the display section with `{aboutFields.bio}` and `{aboutFields.story}` state values. Remove `(actor as any)` cast and use properly-typed `actor.getAboutContent()`. Add safe useEffect guard: `if (!actor || typeof actor.getAboutContent !== 'function') return;`. Add `.catch(() => {})`. Ensure fallback default values always populate fields so the section never appears blank.
+- FeedSlide: Redesign post creation box with topic input, "What's new?" textarea, emoji/photo buttons, who-can-reply dropdown, review-replies toggle. Integrate Silent Guardian moderation check before posting.
+- MessagesSlide: Add message requests tab, respect privacy settings from localStorage, add block/unblock option
+- SettingsSlide: Add message privacy section (who can message me), notes privacy defaults, add block list management
+- All slides: Fix any low-contrast text (replace `rgba(x,x,x,0.3)` colors with at minimum 0.6+ opacity on cream background)
+- App.tsx: Add hash-based URL routing (`window.location.hash` read on mount, update on nav click)
+- All feed/comment interactions: Check block list before rendering user content
 
 ### Remove
-- Dark theme color values from AboutSlide and FeedSlide
+- Hardcoded bio/story text that bypasses `aboutFields` state in AboutSlide display section
+- `(actor as any)` unsafe casts for `getAboutContent` and `saveAboutContent`
 
 ## Implementation Plan
-1. Fix AboutSlide.tsx - replace all dark colors with warm theme equivalents, keep all content and logic
-2. Fix FeedSlide.tsx - replace all dark colors with warm theme equivalents, keep all functionality
-3. Rewrite SettingsSlide.tsx as the full 'Your Space' emotional settings page with all sections
-4. Create new SilentListenerChat.tsx component (floating quill button + chat panel)
-5. Add SilentListenerChat to App.tsx alongside PoetryAssistant
-6. Validate build
-
-## Warm Theme Constants (use throughout)
-- BG: #FFF8EE
-- Paper: #F5ECD7
-- Brown: #8B6F47
-- Mocha: #5C3D2E
-- Gold: #D4A853
-- Text: #3D2B1F
-- Muted: rgba(92,61,46,0.5)
-- Border: rgba(139,111,71,0.25)
-- Fonts: Playfair Display (headings), Lora / Libre Baskerville (body)
+1. Fix AboutSlide.tsx: make display use `aboutFields` state, safe actor call, proper fallbacks
+2. Add hash routing in App.tsx (read hash on mount, update hash on slide change)
+3. Add Explore slide (new file ExploreSlide.tsx) with search + trending grid
+4. Add Notifications slide (new file NotificationsSlide.tsx)
+5. Improve MessagesSlide: add message requests tab + block system
+6. Improve FeedSlide post creation box
+7. Improve SettingsSlide: add privacy/messaging/block controls
+8. Fix low-contrast text across all slides
+9. Store notifications, blocks, message requests in localStorage
+10. Wire new slides into App.tsx nav
