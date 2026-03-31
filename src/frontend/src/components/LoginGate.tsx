@@ -19,11 +19,11 @@ interface LoginGateProps {
 }
 
 const inputStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.05)",
+  background: "rgba(255,248,238,0.9)",
   border: "1px solid rgba(200,169,106,0.25)",
   borderRadius: 8,
   padding: "0.65rem 1rem",
-  color: "#F5E6D3",
+  color: "#3D2B1F",
   fontFamily: "'Libre Baskerville', Georgia, serif",
   fontSize: "0.9rem",
   outline: "none",
@@ -185,7 +185,7 @@ export function LoginGate({ onLogin }: LoginGateProps) {
             fontFamily: "'Playfair Display', Georgia, serif",
             fontSize: "1.5rem",
             fontWeight: 700,
-            color: "#F5E6D3",
+            color: "#3D2B1F",
             margin: "0 0 0.5rem",
           }}
         >
@@ -195,7 +195,7 @@ export function LoginGate({ onLogin }: LoginGateProps) {
           style={{
             fontFamily: "'Libre Baskerville', Georgia, serif",
             fontSize: "0.88rem",
-            color: "rgba(229,231,235,0.5)",
+            color: "rgba(92,61,46,0.5)",
             margin: 0,
           }}
         >
@@ -269,7 +269,7 @@ export function LoginGate({ onLogin }: LoginGateProps) {
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "rgba(200,169,106,0.6)",
+              color: "#8B6F47",
               padding: 0,
               display: "flex",
               alignItems: "center",
@@ -307,7 +307,7 @@ export function LoginGate({ onLogin }: LoginGateProps) {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: "rgba(200,169,106,0.6)",
+                color: "#8B6F47",
                 padding: 0,
                 display: "flex",
                 alignItems: "center",
@@ -340,7 +340,7 @@ export function LoginGate({ onLogin }: LoginGateProps) {
             border: "none",
             borderRadius: 8,
             padding: "0.7rem 1rem",
-            color: "#fff",
+            color: "#3D2B1F",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             fontSize: "0.95rem",
             fontWeight: 600,
@@ -363,7 +363,7 @@ export function LoginGate({ onLogin }: LoginGateProps) {
           cursor: "pointer",
           fontFamily: "'Libre Baskerville', Georgia, serif",
           fontSize: "0.8rem",
-          color: "rgba(200,169,106,0.7)",
+          color: "#D4A853",
           textDecoration: "underline",
           padding: 0,
         }}
@@ -377,7 +377,7 @@ export function LoginGate({ onLogin }: LoginGateProps) {
         style={{
           fontFamily: "'Libre Baskerville', Georgia, serif",
           fontSize: "0.75rem",
-          color: "rgba(229,231,235,0.3)",
+          color: "rgba(92,61,46,0.4)",
           margin: 0,
           textAlign: "center",
         }}

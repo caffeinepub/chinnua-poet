@@ -113,7 +113,7 @@ const GoldBtn: React.CSSProperties = {
   border: "1px solid rgba(200,169,106,0.3)",
   borderRadius: 6,
   padding: "0.4rem 0.9rem",
-  color: "#C8A96A",
+  color: "#D4A853",
   fontFamily: "'Libre Baskerville', Georgia, serif",
   fontSize: "0.73rem",
   letterSpacing: "0.06em",
@@ -124,11 +124,11 @@ const GoldBtn: React.CSSProperties = {
 
 const inputSx: React.CSSProperties = {
   width: "100%",
-  background: "#0D0D0D",
+  background: "#FFF8EE",
   border: "1px solid rgba(200,169,106,0.22)",
   borderRadius: 6,
   padding: "0.55rem 0.8rem",
-  color: "#F5E6D3",
+  color: "#3D2B1F",
   fontFamily: "'Cormorant Garamond', Georgia, serif",
   fontSize: "1rem",
   outline: "none",
@@ -390,8 +390,8 @@ export default function UserProfileSlide({
     <div
       style={{
         minHeight: "100vh",
-        background: "#0D0D0D",
-        color: "#F5E6D3",
+        background: "#FFF8EE",
+        color: "#3D2B1F",
         display: "flex",
         flexDirection: "column",
       }}
@@ -420,7 +420,7 @@ export default function UserProfileSlide({
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "rgba(200,169,106,0.7)",
+            color: "#D4A853",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             fontSize: "0.8rem",
             display: "flex",
@@ -443,7 +443,7 @@ export default function UserProfileSlide({
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             fontSize: "0.8rem",
-            color: "rgba(245,230,211,0.5)",
+            color: "rgba(92,61,46,0.5)",
             letterSpacing: "0.05em",
           }}
         >
@@ -498,7 +498,7 @@ export default function UserProfileSlide({
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontSize: "2rem",
-                    color: "#C8A96A",
+                    color: "#D4A853",
                     fontWeight: 700,
                   }}
                 >
@@ -516,7 +516,7 @@ export default function UserProfileSlide({
                     position: "absolute",
                     bottom: 0,
                     right: 0,
-                    background: "#1A1410",
+                    background: "#F5ECD7",
                     border: "1px solid rgba(200,169,106,0.4)",
                     borderRadius: "50%",
                     width: 24,
@@ -525,7 +525,7 @@ export default function UserProfileSlide({
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
-                    color: "#C8A96A",
+                    color: "#D4A853",
                     fontSize: "0.65rem",
                   }}
                 >
@@ -547,7 +547,7 @@ export default function UserProfileSlide({
                     position: "absolute",
                     bottom: 0,
                     left: 0,
-                    background: "#1A1410",
+                    background: "#F5ECD7",
                     border: "1px solid rgba(200,169,106,0.4)",
                     borderRadius: "50%",
                     width: 24,
@@ -556,7 +556,7 @@ export default function UserProfileSlide({
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
-                    color: "#C8A96A",
+                    color: "#D4A853",
                     fontSize: "0.6rem",
                   }}
                 >
@@ -584,7 +584,7 @@ export default function UserProfileSlide({
                       fontSize: "0.65rem",
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
-                      color: "rgba(200,169,106,0.55)",
+                      color: "#D4A853",
                       display: "block",
                       marginBottom: "0.3rem",
                     }}
@@ -632,7 +632,7 @@ export default function UserProfileSlide({
                     type="button"
                     onClick={() => setEditMode(false)}
                     data-ocid="profile.cancel_button"
-                    style={{ ...GoldBtn, color: "rgba(245,230,211,0.5)" }}
+                    style={{ ...GoldBtn, color: "rgba(92,61,46,0.5)" }}
                   >
                     Cancel
                   </button>
@@ -655,7 +655,7 @@ export default function UserProfileSlide({
                       fontSize: "1.4rem",
                       fontWeight: 700,
                       color:
-                        viewUsername === "CHINNUA_POET" ? "#C8A96A" : "#F5E6D3",
+                        viewUsername === "CHINNUA_POET" ? "#C8A96A" : "#5C3D2E",
                       margin: 0,
                     }}
                   >
@@ -672,7 +672,7 @@ export default function UserProfileSlide({
                         background: "none",
                         border: "none",
                         cursor: "pointer",
-                        color: "rgba(200,169,106,0.5)",
+                        color: "#8B6F47",
                         fontSize: "0.85rem",
                         padding: 2,
                         transition: "color 0.2s",
@@ -689,7 +689,7 @@ export default function UserProfileSlide({
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontSize: "0.95rem",
-                      color: "rgba(245,230,211,0.65)",
+                      color: "#8B6F47",
                       lineHeight: 1.6,
                       marginBottom: "0.5rem",
                     }}
@@ -746,8 +746,7 @@ export default function UserProfileSlide({
                     : "2px solid transparent",
                 padding: "0.6rem 1.1rem",
                 cursor: "pointer",
-                color:
-                  activeTab === tab.key ? "#C8A96A" : "rgba(245,230,211,0.45)",
+                color: activeTab === tab.key ? "#C8A96A" : "#8B6F47",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 fontSize: "0.72rem",
                 letterSpacing: "0.08em",
@@ -798,7 +797,7 @@ export default function UserProfileSlide({
                     style={{
                       textAlign: "center",
                       padding: "3rem 0",
-                      color: "rgba(245,230,211,0.3)",
+                      color: "rgba(92,61,46,0.4)",
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontSize: "1rem",
@@ -833,7 +832,7 @@ export default function UserProfileSlide({
                             fontFamily: "'Playfair Display', Georgia, serif",
                             fontWeight: 700,
                             fontSize: "0.95rem",
-                            color: "#F5E6D3",
+                            color: "#3D2B1F",
                             marginBottom: "0.35rem",
                           }}
                         >
@@ -876,7 +875,7 @@ export default function UserProfileSlide({
                               data-ocid="profile.posts.cancel_button"
                               style={{
                                 ...GoldBtn,
-                                color: "rgba(245,230,211,0.45)",
+                                color: "rgba(92,61,46,0.5)",
                               }}
                             >
                               Cancel
@@ -897,7 +896,7 @@ export default function UserProfileSlide({
                                 "'Cormorant Garamond', Georgia, serif",
                               fontStyle: "italic",
                               fontSize: "0.9rem",
-                              color: "rgba(245,230,211,0.65)",
+                              color: "#8B6F47",
                               lineHeight: 1.7,
                               whiteSpace: "pre-line",
                               overflow: "hidden",
@@ -920,7 +919,7 @@ export default function UserProfileSlide({
                             <span
                               style={{
                                 fontSize: "0.65rem",
-                                color: "rgba(245,230,211,0.3)",
+                                color: "rgba(92,61,46,0.4)",
                                 fontFamily:
                                   "'Libre Baskerville', Georgia, serif",
                               }}
@@ -940,7 +939,7 @@ export default function UserProfileSlide({
                                     background: "none",
                                     border: "none",
                                     cursor: "pointer",
-                                    color: "rgba(200,169,106,0.45)",
+                                    color: "#D4A853",
                                     fontSize: "0.7rem",
                                     fontFamily:
                                       "'Libre Baskerville', Georgia, serif",
@@ -1020,7 +1019,7 @@ export default function UserProfileSlide({
                     style={{
                       textAlign: "center",
                       padding: "3rem 0",
-                      color: "rgba(245,230,211,0.3)",
+                      color: "rgba(92,61,46,0.4)",
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontSize: "1rem",
@@ -1066,7 +1065,7 @@ export default function UserProfileSlide({
                               fontFamily: "'Playfair Display', Georgia, serif",
                               fontSize: "0.9rem",
                               fontWeight: 700,
-                              color: "#F5E6D3",
+                              color: "#3D2B1F",
                               margin: 0,
                             }}
                           >
@@ -1084,7 +1083,7 @@ export default function UserProfileSlide({
                                 fontSize: "0.6rem",
                                 color: note.isPublic
                                   ? "rgba(200,169,106,0.6)"
-                                  : "rgba(245,230,211,0.25)",
+                                  : "#8B6F47",
                                 fontFamily:
                                   "'Libre Baskerville', Georgia, serif",
                                 letterSpacing: "0.08em",
@@ -1103,7 +1102,7 @@ export default function UserProfileSlide({
                                     background: "none",
                                     border: "none",
                                     cursor: "pointer",
-                                    color: "rgba(200,169,106,0.45)",
+                                    color: "#D4A853",
                                     fontSize: "0.7rem",
                                     fontFamily:
                                       "'Libre Baskerville', Georgia, serif",
@@ -1160,7 +1159,7 @@ export default function UserProfileSlide({
                             fontFamily: "'Cormorant Garamond', Georgia, serif",
                             fontStyle: "italic",
                             fontSize: "0.88rem",
-                            color: "rgba(245,230,211,0.6)",
+                            color: "#8B6F47",
                             lineHeight: 1.65,
                             whiteSpace: "pre-line",
                             overflow: "hidden",
@@ -1174,7 +1173,7 @@ export default function UserProfileSlide({
                         <p
                           style={{
                             fontSize: "0.62rem",
-                            color: "rgba(245,230,211,0.25)",
+                            color: "rgba(92,61,46,0.4)",
                             fontFamily: "'Libre Baskerville', Georgia, serif",
                             marginTop: "0.4rem",
                           }}
@@ -1203,7 +1202,7 @@ export default function UserProfileSlide({
                     style={{
                       textAlign: "center",
                       padding: "3rem 0",
-                      color: "rgba(245,230,211,0.3)",
+                      color: "rgba(92,61,46,0.4)",
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontSize: "1rem",
@@ -1249,7 +1248,7 @@ export default function UserProfileSlide({
                         <span
                           style={{
                             fontSize: "0.65rem",
-                            color: "rgba(200,169,106,0.5)",
+                            color: "#8B6F47",
                             fontFamily: "'Libre Baskerville', Georgia, serif",
                           }}
                         >
@@ -1258,7 +1257,7 @@ export default function UserProfileSlide({
                         <span
                           style={{
                             fontSize: "0.6rem",
-                            color: "rgba(245,230,211,0.25)",
+                            color: "rgba(92,61,46,0.4)",
                           }}
                         >
                           · ❤️ {post.likes}
@@ -1270,7 +1269,7 @@ export default function UserProfileSlide({
                             fontFamily: "'Playfair Display', Georgia, serif",
                             fontSize: "0.88rem",
                             fontWeight: 700,
-                            color: "#F5E6D3",
+                            color: "#3D2B1F",
                             marginBottom: "0.25rem",
                           }}
                         >
@@ -1282,7 +1281,7 @@ export default function UserProfileSlide({
                           fontFamily: "'Cormorant Garamond', Georgia, serif",
                           fontStyle: "italic",
                           fontSize: "0.85rem",
-                          color: "rgba(245,230,211,0.55)",
+                          color: "#8B6F47",
                           lineHeight: 1.65,
                           whiteSpace: "pre-line",
                           overflow: "hidden",
@@ -1316,7 +1315,7 @@ export default function UserProfileSlide({
                     fontFamily: "'Cormorant Garamond', Georgia, serif",
                     fontStyle: "italic",
                     fontSize: "1rem",
-                    color: "rgba(245,230,211,0.45)",
+                    color: "rgba(92,61,46,0.5)",
                   }}
                 >
                   View and manage all your private messages.
@@ -1344,8 +1343,8 @@ export default function UserProfileSlide({
       <Dialog open={!!expandedPost} onOpenChange={() => setExpandedPost(null)}>
         <DialogContent
           style={{
-            background: "#1A1410",
-            border: "1px solid rgba(200,169,106,0.2)",
+            background: "#F5ECD7",
+            border: "1px solid rgba(139,111,71,0.3)",
             maxWidth: 600,
             maxHeight: "80vh",
             overflowY: "auto",
@@ -1356,7 +1355,7 @@ export default function UserProfileSlide({
             <DialogTitle
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 fontSize: "1.2rem",
               }}
             >
@@ -1367,7 +1366,7 @@ export default function UserProfileSlide({
             style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: "italic",
-              color: "rgba(229,231,235,0.82)",
+              color: "#3D2B1F",
               fontSize: "0.95rem",
               lineHeight: 2,
               whiteSpace: "pre-wrap",
@@ -1386,8 +1385,8 @@ export default function UserProfileSlide({
       >
         <DialogContent
           style={{
-            background: "#1A1410",
-            border: "1px solid rgba(200,169,106,0.2)",
+            background: "#F5ECD7",
+            border: "1px solid rgba(139,111,71,0.3)",
             maxWidth: 380,
           }}
           data-ocid="profile.posts.dialog"
@@ -1396,7 +1395,7 @@ export default function UserProfileSlide({
             <DialogTitle
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 fontSize: "1.1rem",
               }}
             >
@@ -1407,7 +1406,7 @@ export default function UserProfileSlide({
             style={{
               fontFamily: "'Libre Baskerville', Georgia, serif",
               fontSize: "0.82rem",
-              color: "rgba(245,230,211,0.55)",
+              color: "#8B6F47",
               marginTop: "0.5rem",
             }}
           >
@@ -1425,7 +1424,7 @@ export default function UserProfileSlide({
               type="button"
               onClick={() => setConfirmDeletePost(null)}
               data-ocid="profile.posts.cancel_button"
-              style={{ ...GoldBtn, color: "rgba(245,230,211,0.45)" }}
+              style={{ ...GoldBtn, color: "rgba(92,61,46,0.5)" }}
             >
               Cancel
             </button>
@@ -1455,8 +1454,8 @@ export default function UserProfileSlide({
       >
         <DialogContent
           style={{
-            background: "#1A1410",
-            border: "1px solid rgba(200,169,106,0.2)",
+            background: "#F5ECD7",
+            border: "1px solid rgba(139,111,71,0.3)",
             maxWidth: 500,
           }}
           data-ocid="profile.notes.dialog"
@@ -1465,7 +1464,7 @@ export default function UserProfileSlide({
             <DialogTitle
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 fontSize: "1.1rem",
               }}
             >
@@ -1488,7 +1487,7 @@ export default function UserProfileSlide({
                   fontSize: "0.63rem",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  color: "rgba(200,169,106,0.55)",
+                  color: "#D4A853",
                   display: "block",
                   marginBottom: "0.3rem",
                 }}
@@ -1518,7 +1517,7 @@ export default function UserProfileSlide({
                   fontSize: "0.63rem",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  color: "rgba(200,169,106,0.55)",
+                  color: "#D4A853",
                   display: "block",
                   marginBottom: "0.3rem",
                 }}
@@ -1565,7 +1564,7 @@ export default function UserProfileSlide({
                 style={{
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   fontSize: "0.75rem",
-                  color: "rgba(245,230,211,0.6)",
+                  color: "#8B6F47",
                 }}
               >
                 Make this note public (visible on your profile)
@@ -1582,7 +1581,7 @@ export default function UserProfileSlide({
                 type="button"
                 onClick={() => setShowNoteForm(false)}
                 data-ocid="profile.notes.cancel_button"
-                style={{ ...GoldBtn, color: "rgba(245,230,211,0.45)" }}
+                style={{ ...GoldBtn, color: "rgba(92,61,46,0.5)" }}
               >
                 Cancel
               </button>
@@ -1617,7 +1616,7 @@ export default function UserProfileSlide({
         >
           <div
             style={{
-              background: "#1A1410",
+              background: "#F5ECD7",
               border: "1px solid rgba(200,169,106,0.25)",
               borderRadius: 14,
               padding: "1.5rem",
@@ -1631,7 +1630,7 @@ export default function UserProfileSlide({
             <h3
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "#C8A96A",
+                color: "#D4A853",
                 margin: 0,
               }}
             >
@@ -1672,7 +1671,7 @@ export default function UserProfileSlide({
                         alignItems: "center",
                         justifyContent: "center",
                         minHeight: 240,
-                        color: "rgba(245,230,211,0.4)",
+                        color: "rgba(92,61,46,0.5)",
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                         fontSize: "0.85rem",
                       }}
@@ -1687,7 +1686,7 @@ export default function UserProfileSlide({
                         alignItems: "center",
                         justifyContent: "center",
                         minHeight: 240,
-                        color: "#C8A96A",
+                        color: "#D4A853",
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                         fontSize: "0.85rem",
                       }}
@@ -1726,11 +1725,11 @@ export default function UserProfileSlide({
                     onClick={() => camera.switchCamera()}
                     data-ocid="profile.toggle"
                     style={{
-                      background: "rgba(255,255,255,0.06)",
+                      background: "rgba(255,248,238,0.9)",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: 7,
                       padding: "0.55rem 0.75rem",
-                      color: "rgba(245,230,211,0.65)",
+                      color: "#8B6F47",
                       fontFamily: "'Libre Baskerville', Georgia, serif",
                       fontSize: "0.82rem",
                       cursor: "pointer",
@@ -1765,11 +1764,11 @@ export default function UserProfileSlide({
                     onClick={() => setCapturedPhoto(null)}
                     data-ocid="profile.secondary_button"
                     style={{
-                      background: "rgba(255,255,255,0.06)",
+                      background: "rgba(255,248,238,0.9)",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: 7,
                       padding: "0.55rem 0.75rem",
-                      color: "rgba(245,230,211,0.65)",
+                      color: "#8B6F47",
                       fontFamily: "'Libre Baskerville', Georgia, serif",
                       fontSize: "0.82rem",
                       cursor: "pointer",
@@ -1788,7 +1787,7 @@ export default function UserProfileSlide({
                   border: "1px solid rgba(245,230,211,0.12)",
                   borderRadius: 7,
                   padding: "0.55rem 0.75rem",
-                  color: "rgba(245,230,211,0.45)",
+                  color: "rgba(92,61,46,0.5)",
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   fontSize: "0.82rem",
                   cursor: "pointer",

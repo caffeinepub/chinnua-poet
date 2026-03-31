@@ -130,7 +130,7 @@ export default function LanguageTranslator() {
           borderRadius: 6,
           padding: "0.28rem 0.55rem",
           cursor: "pointer",
-          color: "rgba(200,169,106,0.8)",
+          color: "#D4A853",
           display: "flex",
           alignItems: "center",
           gap: 5,
@@ -163,7 +163,7 @@ export default function LanguageTranslator() {
             position: "absolute",
             top: "calc(100% + 6px)",
             right: 0,
-            background: "#1A1410",
+            background: "#F5ECD7",
             border: "1px solid rgba(200,169,106,0.3)",
             borderRadius: 8,
             padding: "0.4rem 0",
@@ -190,10 +190,7 @@ export default function LanguageTranslator() {
                 padding: "0.45rem 1rem",
                 cursor: "pointer",
                 textAlign: "left",
-                color:
-                  currentLang === lang.code
-                    ? "#C8A96A"
-                    : "rgba(245,230,211,0.65)",
+                color: currentLang === lang.code ? "#C8A96A" : "#8B6F47",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 fontSize: "0.76rem",
                 transition: "all 0.15s",
@@ -209,9 +206,7 @@ export default function LanguageTranslator() {
                 (e.currentTarget as HTMLButtonElement).style.background =
                   currentLang === lang.code ? "rgba(200,169,106,0.1)" : "none";
                 (e.currentTarget as HTMLButtonElement).style.color =
-                  currentLang === lang.code
-                    ? "#C8A96A"
-                    : "rgba(245,230,211,0.65)";
+                  currentLang === lang.code ? "#C8A96A" : "#8B6F47";
               }}
             >
               {lang.name}

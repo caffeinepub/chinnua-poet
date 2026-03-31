@@ -238,7 +238,30 @@ export interface backendInterface {
     approveModeratedContent(id: bigint): Promise<void>;
     rejectModeratedContent(id: bigint, reason: string): Promise<void>;
     getModerationStats(): Promise<ModerationStats>;
+    sendDirectMessage(fromUsername: string, toUsername: string, text: string): Promise<SendMessageResult>;
+    getMessagesForUser(username: string): Promise<Array<DirectMessage>>;
+    getConversationByUsername(user1: string, user2: string): Promise<Array<DirectMessage>>;
+    markDirectMessageRead(msgId: bigint): Promise<void>;
 }
+
+
+// Direct Messages
+export interface DirectMessage {
+  id: bigint;
+  fromUser: Principal;
+  fromUsername: string;
+  toUser: Principal;
+  toUsername: string;
+  text: string;
+  timestamp: bigint;
+  read: boolean;
+}
+
+export type SendMessageResult =
+  | { success: DirectMessage }
+  | { textTooShort: null }
+  | { unauthorized: null };
+
 
 // About Content
 export interface AboutContent {

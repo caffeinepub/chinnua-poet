@@ -65,7 +65,7 @@ export default function CommunitySlide({
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "clamp(2rem, 5vw, 3.2rem)",
               fontWeight: 700,
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               letterSpacing: "0.08em",
               marginBottom: "1rem",
             }}
@@ -90,7 +90,7 @@ export default function CommunitySlide({
               fontFamily: "'Playfair Display', Georgia, serif",
               fontStyle: "italic",
               fontSize: "1.05rem",
-              color: "rgba(229,231,235,0.6)",
+              color: "#8B6F47",
               maxWidth: 480,
               margin: "0 auto",
               lineHeight: 1.8,
@@ -121,7 +121,7 @@ export default function CommunitySlide({
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
                 fontSize: "1.1rem",
-                color: "rgba(229,231,235,0.75)",
+                color: "#3D2B1F",
                 marginBottom: "1.25rem",
                 lineHeight: 1.7,
               }}
@@ -136,7 +136,7 @@ export default function CommunitySlide({
               style={{
                 background: "rgba(200,169,106,0.85)",
                 border: "none",
-                color: "#fff",
+                color: "#3D2B1F",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 padding: "0.65rem 2rem",
                 boxShadow: "0 0 20px rgba(200,169,106,0.25)",
@@ -154,7 +154,7 @@ export default function CommunitySlide({
             transition={{ delay: 0.5 }}
             style={{
               background: "rgba(200,169,106,0.08)",
-              border: "1px solid rgba(200,169,106,0.2)",
+              border: "1px solid rgba(139,111,71,0.3)",
               borderRadius: 10,
               padding: "1rem 1.5rem",
               marginBottom: "2rem",
@@ -175,7 +175,7 @@ export default function CommunitySlide({
                 justifyContent: "center",
                 fontWeight: 700,
                 fontSize: "0.85rem",
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 flexShrink: 0,
               }}
             >
@@ -184,7 +184,7 @@ export default function CommunitySlide({
             <div>
               <p
                 style={{
-                  color: "rgba(200,169,106,0.9)",
+                  color: "#D4A853",
                   fontWeight: 600,
                   fontSize: "0.9rem",
                   fontFamily: "'Libre Baskerville', Georgia, serif",
@@ -195,7 +195,7 @@ export default function CommunitySlide({
               </p>
               <p
                 style={{
-                  color: "rgba(229,231,235,0.5)",
+                  color: "rgba(92,61,46,0.5)",
                   fontSize: "0.78rem",
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   margin: 0,
@@ -218,7 +218,7 @@ export default function CommunitySlide({
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1.2rem",
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               marginBottom: "1rem",
               fontWeight: 700,
             }}
@@ -280,7 +280,7 @@ export default function CommunitySlide({
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontWeight: 600,
                     fontSize: "0.85rem",
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     margin: "0 0 0.25rem",
                   }}
                 >
@@ -290,7 +290,7 @@ export default function CommunitySlide({
                   style={{
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.78rem",
-                    color: "rgba(229,231,235,0.5)",
+                    color: "rgba(92,61,46,0.5)",
                     margin: 0,
                   }}
                 >
@@ -312,7 +312,7 @@ export default function CommunitySlide({
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: "1.2rem",
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 marginBottom: "1rem",
                 fontWeight: 700,
               }}
@@ -353,14 +353,14 @@ export default function CommunitySlide({
                         width: 28,
                         height: 28,
                         borderRadius: "50%",
-                        background: "rgba(255,255,255,0.1)",
+                        background: "rgba(245,236,215,0.8)",
                         border: "1px solid rgba(255,255,255,0.15)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         fontSize: "0.65rem",
                         fontWeight: 700,
-                        color: "#F5E6D3",
+                        color: "#3D2B1F",
                         flexShrink: 0,
                       }}
                     >
@@ -371,7 +371,7 @@ export default function CommunitySlide({
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                         fontSize: "0.8rem",
                         fontWeight: 600,
-                        color: "#F5E6D3",
+                        color: "#3D2B1F",
                       }}
                     >
                       {post.username}
@@ -380,7 +380,7 @@ export default function CommunitySlide({
                       style={{
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                         fontSize: "0.72rem",
-                        color: "rgba(229,231,235,0.4)",
+                        color: "rgba(92,61,46,0.5)",
                         marginLeft: "auto",
                       }}
                     >
@@ -391,7 +391,7 @@ export default function CommunitySlide({
                     style={{
                       fontFamily: "'Playfair Display', Georgia, serif",
                       fontStyle: "italic",
-                      color: "rgba(229,231,235,0.7)",
+                      color: "#8B6F47",
                       fontSize: "0.88rem",
                       lineHeight: 1.75,
                       whiteSpace: "pre-line",
@@ -429,7 +429,7 @@ export default function CommunitySlide({
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
                 fontSize: "1rem",
-                color: "rgba(229,231,235,0.4)",
+                color: "rgba(92,61,46,0.5)",
                 lineHeight: 1.8,
               }}
             >

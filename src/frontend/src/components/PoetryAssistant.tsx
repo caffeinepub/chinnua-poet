@@ -127,7 +127,6 @@ export default function PoetryAssistant() {
   const inputRef = useRef<HTMLInputElement>(null);
   const initialized = useRef(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: open is the only trigger needed
   useEffect(() => {
     if (open && !initialized.current) {
       initialized.current = true;
@@ -190,9 +189,9 @@ export default function PoetryAssistant() {
           data-ocid="poetry_assistant.open_modal_button"
           className="relative flex items-center gap-2 px-4 py-3 rounded-full shadow-2xl cursor-pointer"
           style={{
-            background: "linear-gradient(135deg, #1A1410 0%, #0D0D0D 100%)",
+            background: "linear-gradient(135deg, #F5ECD7 0%, #FFF8EE 100%)",
             border: "1px solid #C8A96A",
-            color: "#C8A96A",
+            color: "#D4A853",
           }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -239,7 +238,7 @@ export default function PoetryAssistant() {
             style={{
               width: "min(380px, calc(100vw - 40px))",
               height: "min(500px, calc(100vh - 200px))",
-              background: "#0D0D0D",
+              background: "#FFF8EE",
               border: "1px solid #C8A96A40",
             }}
           >
@@ -247,16 +246,16 @@ export default function PoetryAssistant() {
             <div
               className="flex items-center justify-between px-4 py-3 shrink-0"
               style={{
-                background: "#1A1410",
+                background: "#F5ECD7",
                 borderBottom: "1px solid #C8A96A40",
               }}
             >
               <div className="flex items-center gap-2">
-                <Sparkles size={16} style={{ color: "#C8A96A" }} />
+                <Sparkles size={16} style={{ color: "#D4A853" }} />
                 <span
                   style={{
                     fontFamily: "'Playfair Display', serif",
-                    color: "#C8A96A",
+                    color: "#D4A853",
                     fontSize: "0.85rem",
                     letterSpacing: "0.08em",
                   }}
@@ -269,7 +268,7 @@ export default function PoetryAssistant() {
                 onClick={() => setOpen(false)}
                 data-ocid="poetry_assistant.close_button"
                 className="p-1 rounded-full transition-opacity opacity-60 hover:opacity-100"
-                style={{ color: "#F5E6D3" }}
+                style={{ color: "#3D2B1F" }}
               >
                 <X size={16} />
               </button>
@@ -301,7 +300,7 @@ export default function PoetryAssistant() {
                         background:
                           msg.role === "user" ? "#C8A96A20" : "#1A1410",
                         border: `1px solid ${msg.role === "user" ? "#C8A96A50" : "#C8A96A20"}`,
-                        color: msg.role === "user" ? "#C8A96A" : "#F5E6D3",
+                        color: msg.role === "user" ? "#C8A96A" : "#5C3D2E",
                       }}
                     >
                       <FormatText text={msg.text} />
@@ -326,7 +325,7 @@ export default function PoetryAssistant() {
                             fontSize: "0.75rem",
                             background: "transparent",
                             border: "1px solid #C8A96A60",
-                            color: "#C8A96A",
+                            color: "#D4A853",
                           }}
                           onMouseEnter={(e) => {
                             (
@@ -357,7 +356,7 @@ export default function PoetryAssistant() {
                     className="px-4 py-3 rounded-xl"
                     data-ocid="poetry_assistant.loading_state"
                     style={{
-                      background: "#1A1410",
+                      background: "#F5ECD7",
                       border: "1px solid #C8A96A20",
                     }}
                   >
@@ -387,7 +386,7 @@ export default function PoetryAssistant() {
               className="shrink-0 px-3 py-3 flex gap-2 items-center"
               style={{
                 borderTop: "1px solid #C8A96A20",
-                background: "#0D0D0D",
+                background: "#FFF8EE",
               }}
             >
               <input
@@ -403,7 +402,7 @@ export default function PoetryAssistant() {
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "0.875rem",
-                  color: "#F5E6D3",
+                  color: "#3D2B1F",
                   border: "1px solid #C8A96A30",
                   caretColor: "#C8A96A",
                 }}

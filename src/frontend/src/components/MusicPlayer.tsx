@@ -407,7 +407,7 @@ export default function MusicPlayer() {
             <p
               className="text-xs uppercase tracking-widest"
               style={{
-                color: "#C8A96A",
+                color: "#D4A853",
                 fontFamily: "'Playfair Display', serif",
               }}
             >
@@ -458,7 +458,7 @@ export default function MusicPlayer() {
                 {activeMood === mood.id && playing && (
                   <span
                     className="ml-auto text-xs"
-                    style={{ color: "#C8A96A" }}
+                    style={{ color: "#D4A853" }}
                   >
                     ▶
                   </span>

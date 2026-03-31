@@ -534,7 +534,7 @@ export default function SettingsSlide({
                       borderRadius: 8,
                       background: colors.gold,
                       border: "none",
-                      color: "white",
+                      color: "#3D2B1F",
                       cursor: "pointer",
                     }}
                   >
@@ -608,7 +608,7 @@ export default function SettingsSlide({
                 borderRadius: 10,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "1rem",
                 cursor: "pointer",
@@ -680,7 +680,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -733,7 +733,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -829,7 +829,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -876,7 +876,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1044,7 +1044,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1107,7 +1107,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1175,7 +1175,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1265,7 +1265,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1319,7 +1319,7 @@ export default function SettingsSlide({
                   borderRadius: 8,
                   background: colors.gold,
                   border: "none",
-                  color: "white",
+                  color: "#3D2B1F",
                   cursor: "pointer",
                   fontFamily: "'Lora', serif",
                   fontSize: "0.85rem",
@@ -1474,7 +1474,7 @@ export default function SettingsSlide({
                       borderRadius: 8,
                       background: colors.gold,
                       border: "none",
-                      color: "white",
+                      color: "#3D2B1F",
                       cursor: "pointer",
                       fontFamily: "'Lora', serif",
                     }}
@@ -1730,7 +1730,7 @@ export default function SettingsSlide({
                           borderRadius: 8,
                           background: colors.gold,
                           border: "none",
-                          color: "white",
+                          color: "#3D2B1F",
                           cursor: "pointer",
                           fontFamily: "'Lora', serif",
                         }}
@@ -1798,7 +1798,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "white",
+                color: "#3D2B1F",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1948,7 +1948,7 @@ export default function SettingsSlide({
                           borderRadius: 8,
                           background: colors.brown,
                           border: "none",
-                          color: "white",
+                          color: "#3D2B1F",
                           cursor: "pointer",
                           fontFamily: "'Lora', serif",
                         }}
@@ -2058,7 +2058,7 @@ export default function SettingsSlide({
                               ? "#c0392b"
                               : "rgba(192,57,43,0.4)",
                           border: "none",
-                          color: "white",
+                          color: "#3D2B1F",
                           cursor:
                             deleteText === "DELETE" ? "pointer" : "not-allowed",
                           fontFamily: "'Lora', serif",

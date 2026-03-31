@@ -959,9 +959,7 @@ export default function AboutSlide() {
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontStyle: "italic",
-                    color: poetsNote
-                      ? "rgba(61,43,31,0.65)"
-                      : "rgba(229,231,235,0.35)",
+                    color: poetsNote ? "rgba(61,43,31,0.65)" : "#8B6F47",
                     fontSize: "0.88rem",
                     lineHeight: 1.7,
                     whiteSpace: "pre-line",

@@ -509,7 +509,7 @@ export default function SilentListenerChat() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "white",
+                  color: "#3D2B1F",
                   fontSize: "1rem",
                   flexShrink: 0,
                   transition: "background 0.2s",

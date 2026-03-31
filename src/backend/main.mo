@@ -149,6 +149,26 @@ actor {
     allowCalls : Bool;
   };
 
+  public type MessageId = Nat;
+
+  public type DirectMessage = {
+    id : MessageId;
+    fromUser : Principal;
+    fromUsername : Text;
+    toUser : Principal;
+    toUsername : Text;
+    text : Text;
+    timestamp : Time.Time;
+    read : Bool;
+  };
+
+  public type SendMessageResult = {
+    #success : DirectMessage;
+    #textTooShort;
+    #unauthorized;
+  };
+
+
   // Result Types
   public type PoemResult = {
     #success : CommunityPoem;
@@ -255,6 +275,8 @@ actor {
   var nextReplyId = 1;
   var nextSignalId = 1;
   var nextModerationId = 1;
+  let directMessages = Map.empty<MessageId, DirectMessage>();
+  var nextMessageId = 1;
 
   // Helper Functions
   func comparePoemsByTimestamp(a : CommunityPoem, b : CommunityPoem) : Order.Order {
@@ -1041,4 +1063,56 @@ actor {
   public query ({ caller }) func getDisplayName(user : Principal) : async ?Text {
     displayNames.get(user);
   };
+  // ── Direct Messaging (username-based, no Principal auth required) ─────────
+
+  public shared func sendDirectMessage(
+    fromUsername : Text,
+    toUsername : Text,
+    text : Text
+  ) : async SendMessageResult {
+    if (text.size() < 1) { return #textTooShort };
+    if (fromUsername.size() < 1) { return #unauthorized };
+    let msgId = nextMessageId;
+    nextMessageId += 1;
+    let msg : DirectMessage = {
+      id = msgId;
+      fromUser = Principal.fromText("aaaaa-aa");
+      fromUsername = fromUsername;
+      toUser = Principal.fromText("aaaaa-aa");
+      toUsername = toUsername;
+      text = text;
+      timestamp = Time.now();
+      read = false;
+    };
+    directMessages.add(msgId, msg);
+    #success(msg)
+  };
+
+  public query func getMessagesForUser(username : Text) : async [DirectMessage] {
+    directMessages.values()
+      .filter(func(m : DirectMessage) : Bool {
+        m.fromUsername == username or m.toUsername == username
+      })
+      .toArray()
+  };
+
+  public query func getConversationByUsername(user1 : Text, user2 : Text) : async [DirectMessage] {
+    directMessages.values()
+      .filter(func(m : DirectMessage) : Bool {
+        (m.fromUsername == user1 and m.toUsername == user2) or
+        (m.fromUsername == user2 and m.toUsername == user1)
+      })
+      .toArray()
+  };
+
+  public shared func markDirectMessageRead(msgId : MessageId) : async () {
+    switch (directMessages.get(msgId)) {
+      case (?msg) {
+        directMessages.add(msgId, { msg with read = true });
+      };
+      case (null) {};
+    };
+  };
+
+
 };

@@ -32,7 +32,7 @@ interface GalleryPhoto {
 const WARM_GOLD = "#D4A853";
 const WARM_BROWN = "#8B6F47";
 const WARM_MOCHA = "#5C3D2E";
-const WARM_PAPER = "#F5ECD7";
+const _WARM_PAPER = "#F5ECD7";
 const WARM_TEXT = "#3D2B1F";
 const WARM_MUTED = "#9E8070";
 
@@ -179,7 +179,7 @@ function DailyLettersTab() {
                     border: "none",
                     borderRadius: 6,
                     padding: "0.3rem 0.8rem",
-                    color: WARM_PAPER,
+                    color: "#3D2B1F",
                     cursor: "pointer",
                     fontSize: "0.78rem",
                     fontFamily: "'Lora', Georgia, serif",
@@ -381,7 +381,7 @@ function DailyLettersTab() {
             border: "none",
             borderRadius: 8,
             padding: "0.5rem 1.25rem",
-            color: WARM_PAPER,
+            color: "#3D2B1F",
             fontFamily: "'Lora', Georgia, serif",
             fontSize: "0.85rem",
             cursor: "pointer",
@@ -563,7 +563,7 @@ function InkRepliesTab() {
                     border: "none",
                     borderRadius: 8,
                     padding: "0.4rem 1rem",
-                    color: WARM_PAPER,
+                    color: "#3D2B1F",
                     fontFamily: "'Lora', Georgia, serif",
                     fontSize: "0.82rem",
                     cursor: "pointer",
@@ -757,11 +757,11 @@ export default function AdminSlide() {
   };
 
   const inputStyle = {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(200,169,106,0.2)",
+    background: "rgba(255,248,238,0.9)",
+    border: "1px solid rgba(139,111,71,0.3)",
     borderRadius: 8,
     padding: "0.6rem 0.9rem",
-    color: "#F5E6D3",
+    color: "#3D2B1F",
     fontFamily: "'Libre Baskerville', Georgia, serif",
     fontSize: "0.9rem",
     outline: "none",
@@ -804,7 +804,7 @@ export default function AdminSlide() {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1.4rem",
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               marginBottom: "0.5rem",
             }}
           >
@@ -812,7 +812,7 @@ export default function AdminSlide() {
           </h2>
           <p
             style={{
-              color: "rgba(229,231,235,0.4)",
+              color: "rgba(92,61,46,0.5)",
               fontFamily: "'Libre Baskerville', Georgia, serif",
               fontSize: "0.85rem",
               marginBottom: "1.5rem",
@@ -843,7 +843,7 @@ export default function AdminSlide() {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: "rgba(229,231,235,0.5)",
+                color: "rgba(92,61,46,0.5)",
               }}
             >
               {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -856,7 +856,7 @@ export default function AdminSlide() {
               width: "100%",
               background: "rgba(200,169,106,0.85)",
               border: "none",
-              color: "#fff",
+              color: "#3D2B1F",
             }}
           >
             Enter
@@ -868,7 +868,7 @@ export default function AdminSlide() {
               marginTop: "0.5rem",
               background: "none",
               border: "none",
-              color: "rgba(200,169,106,0.6)",
+              color: "#8B6F47",
               fontSize: "0.75rem",
               cursor: "pointer",
               fontFamily: "'Libre Baskerville', Georgia, serif",
@@ -904,7 +904,7 @@ export default function AdminSlide() {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1.6rem",
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               fontWeight: 700,
             }}
           >
@@ -914,9 +914,9 @@ export default function AdminSlide() {
             onClick={lockAdmin}
             data-ocid="admin.secondary_button"
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(255,248,238,0.9)",
               border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(229,231,235,0.7)",
+              color: "#8B6F47",
               fontSize: "0.82rem",
             }}
           >
@@ -926,7 +926,7 @@ export default function AdminSlide() {
         <Tabs defaultValue="poems">
           <TabsList
             style={{
-              background: "rgba(255,255,255,0.05)",
+              background: "rgba(255,248,238,0.9)",
               border: "1px solid rgba(200,169,106,0.15)",
               marginBottom: "1.5rem",
               display: "flex",
@@ -964,7 +964,7 @@ export default function AdminSlide() {
           <TabsContent value="poems">
             <p
               style={{
-                color: "rgba(229,231,235,0.4)",
+                color: "rgba(92,61,46,0.5)",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 fontSize: "0.82rem",
                 marginBottom: "1rem",
@@ -997,7 +997,7 @@ export default function AdminSlide() {
                     style={{
                       fontFamily: "'Libre Baskerville', Georgia, serif",
                       fontSize: "0.88rem",
-                      color: "#F5E6D3",
+                      color: "#3D2B1F",
                       flex: 1,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -1046,7 +1046,7 @@ export default function AdminSlide() {
               {feedPosts.length === 0 ? (
                 <p
                   style={{
-                    color: "rgba(229,231,235,0.4)",
+                    color: "rgba(92,61,46,0.5)",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                   }}
                   data-ocid="admin.empty_state"
@@ -1070,7 +1070,7 @@ export default function AdminSlide() {
                         style={{
                           fontFamily: "'Libre Baskerville', Georgia, serif",
                           fontSize: "0.82rem",
-                          color: "rgba(200,169,106,0.8)",
+                          color: "#D4A853",
                           marginRight: "0.5rem",
                         }}
                       >
@@ -1080,7 +1080,7 @@ export default function AdminSlide() {
                         style={{
                           fontFamily: "'Libre Baskerville', Georgia, serif",
                           fontSize: "0.85rem",
-                          color: "rgba(229,231,235,0.7)",
+                          color: "#8B6F47",
                         }}
                       >
                         {(post.preview || "").slice(0, 60)}
@@ -1110,7 +1110,7 @@ export default function AdminSlide() {
               {users.length === 0 ? (
                 <p
                   style={{
-                    color: "rgba(229,231,235,0.4)",
+                    color: "rgba(92,61,46,0.5)",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                   }}
                   data-ocid="admin.empty_state"
@@ -1134,7 +1134,7 @@ export default function AdminSlide() {
                         style={{
                           fontFamily: "'Libre Baskerville', Georgia, serif",
                           fontSize: "0.9rem",
-                          color: "#F5E6D3",
+                          color: "#3D2B1F",
                           fontWeight: 600,
                         }}
                       >
@@ -1145,7 +1145,7 @@ export default function AdminSlide() {
                           style={{
                             fontFamily: "'Libre Baskerville', Georgia, serif",
                             fontSize: "0.78rem",
-                            color: "rgba(229,231,235,0.4)",
+                            color: "rgba(92,61,46,0.5)",
                           }}
                         >
                           {user.bio.slice(0, 60)}
@@ -1169,7 +1169,7 @@ export default function AdminSlide() {
             {gallery.length === 0 ? (
               <p
                 style={{
-                  color: "rgba(229,231,235,0.4)",
+                  color: "rgba(92,61,46,0.5)",
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                 }}
                 data-ocid="admin.empty_state"
@@ -1205,7 +1205,7 @@ export default function AdminSlide() {
                         style={{
                           fontFamily: "'Libre Baskerville', Georgia, serif",
                           fontSize: "0.75rem",
-                          color: "rgba(229,231,235,0.5)",
+                          color: "rgba(92,61,46,0.5)",
                           marginBottom: "0.25rem",
                         }}
                       >
@@ -1244,7 +1244,7 @@ export default function AdminSlide() {
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.9rem",
                     fontWeight: 600,
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     marginBottom: "0.75rem",
                   }}
                 >
@@ -1265,7 +1265,7 @@ export default function AdminSlide() {
                     style={{
                       background: "rgba(200,169,106,0.85)",
                       border: "none",
-                      color: "#fff",
+                      color: "#3D2B1F",
                     }}
                   >
                     Save
@@ -1278,7 +1278,7 @@ export default function AdminSlide() {
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.9rem",
                     fontWeight: 600,
-                    color: "#F5E6D3",
+                    color: "#3D2B1F",
                     marginBottom: "0.75rem",
                   }}
                 >
@@ -1290,9 +1290,9 @@ export default function AdminSlide() {
                   placeholder="Announcement visible to all users..."
                   data-ocid="admin.textarea"
                   style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(200,169,106,0.2)",
-                    color: "#F5E6D3",
+                    background: "rgba(255,248,238,0.9)",
+                    border: "1px solid rgba(139,111,71,0.3)",
+                    color: "#3D2B1F",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     minHeight: 80,
                   }}
@@ -1307,7 +1307,7 @@ export default function AdminSlide() {
                     marginTop: "0.5rem",
                     background: "rgba(200,169,106,0.85)",
                     border: "none",
-                    color: "#fff",
+                    color: "#3D2B1F",
                   }}
                 >
                   Save Announcement
@@ -1323,7 +1323,7 @@ export default function AdminSlide() {
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   fontSize: "0.9rem",
                   fontWeight: 600,
-                  color: "#F5E6D3",
+                  color: "#3D2B1F",
                   marginBottom: "0.75rem",
                 }}
               >
@@ -1334,9 +1334,9 @@ export default function AdminSlide() {
                 onChange={(e) => setRules(e.target.value)}
                 data-ocid="admin.textarea"
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(200,169,106,0.2)",
-                  color: "#F5E6D3",
+                  background: "rgba(255,248,238,0.9)",
+                  border: "1px solid rgba(139,111,71,0.3)",
+                  color: "#3D2B1F",
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   minHeight: 200,
                 }}
@@ -1351,7 +1351,7 @@ export default function AdminSlide() {
                   marginTop: "0.75rem",
                   background: "rgba(200,169,106,0.85)",
                   border: "none",
-                  color: "#fff",
+                  color: "#3D2B1F",
                 }}
               >
                 Save Rules
@@ -1374,7 +1374,7 @@ export default function AdminSlide() {
                   <h3
                     style={{
                       fontFamily: "'Playfair Display', Georgia, serif",
-                      color: "#C8A96A",
+                      color: "#D4A853",
                       margin: 0,
                       fontSize: "1.1rem",
                       fontWeight: 600,
@@ -1385,7 +1385,7 @@ export default function AdminSlide() {
                   <p
                     style={{
                       fontFamily: "'Libre Baskerville', Georgia, serif",
-                      color: "rgba(229,231,235,0.45)",
+                      color: "rgba(92,61,46,0.5)",
                       fontSize: "0.78rem",
                       margin: 0,
                       fontStyle: "italic",
@@ -1401,7 +1401,7 @@ export default function AdminSlide() {
                     marginLeft: "auto",
                     background: "rgba(200,169,106,0.12)",
                     border: "1px solid rgba(200,169,106,0.25)",
-                    color: "#C8A96A",
+                    color: "#D4A853",
                     fontSize: "0.78rem",
                   }}
                 >
@@ -1423,7 +1423,7 @@ export default function AdminSlide() {
                     {
                       label: "Pending",
                       count: moderationStats.pendingCount,
-                      color: "rgba(200,169,106,0.8)",
+                      color: "#D4A853",
                     },
                     {
                       label: "Approved",
@@ -1462,7 +1462,7 @@ export default function AdminSlide() {
                         style={{
                           fontFamily: "'Libre Baskerville', Georgia, serif",
                           fontSize: "0.72rem",
-                          color: "rgba(229,231,235,0.4)",
+                          color: "rgba(92,61,46,0.5)",
                           margin: 0,
                           textTransform: "uppercase",
                           letterSpacing: "0.1em",
@@ -1485,7 +1485,7 @@ export default function AdminSlide() {
                     style={{
                       fontFamily: "'Playfair Display', Georgia, serif",
                       fontStyle: "italic",
-                      color: "rgba(200,169,106,0.6)",
+                      color: "#8B6F47",
                       fontSize: "0.95rem",
                     }}
                   >
@@ -1533,20 +1533,18 @@ export default function AdminSlide() {
                             style={{
                               fontFamily: "'Libre Baskerville', Georgia, serif",
                               fontSize: "0.78rem",
-                              color: "rgba(200,169,106,0.7)",
+                              color: "#D4A853",
                               textTransform: "capitalize",
                             }}
                           >
                             {entry.contentType}
                           </span>
-                          <span style={{ color: "rgba(245,230,211,0.3)" }}>
-                            ·
-                          </span>
+                          <span style={{ color: "rgba(92,61,46,0.4)" }}>·</span>
                           <span
                             style={{
                               fontFamily: "'Libre Baskerville', Georgia, serif",
                               fontSize: "0.78rem",
-                              color: "rgba(245,230,211,0.5)",
+                              color: "rgba(92,61,46,0.5)",
                             }}
                           >
                             by {entry.authorName}
@@ -1571,7 +1569,7 @@ export default function AdminSlide() {
                           style={{
                             fontFamily: "'Playfair Display', Georgia, serif",
                             fontStyle: "italic",
-                            color: "rgba(229,231,235,0.7)",
+                            color: "#8B6F47",
                             fontSize: "0.88rem",
                             lineHeight: 1.6,
                             margin: "0 0 0.5rem",
@@ -1589,7 +1587,7 @@ export default function AdminSlide() {
                             style={{
                               fontFamily: "'Libre Baskerville', Georgia, serif",
                               fontSize: "0.75rem",
-                              color: "rgba(200,169,106,0.5)",
+                              color: "#8B6F47",
                               margin: "0 0 0.75rem",
                               fontStyle: "italic",
                             }}
@@ -1637,11 +1635,11 @@ export default function AdminSlide() {
                                 style={{
                                   flex: 1,
                                   minWidth: 140,
-                                  background: "rgba(255,255,255,0.05)",
-                                  border: "1px solid rgba(200,169,106,0.2)",
+                                  background: "rgba(255,248,238,0.9)",
+                                  border: "1px solid rgba(139,111,71,0.3)",
                                   borderRadius: 6,
                                   padding: "0.3rem 0.6rem",
-                                  color: "#F5E6D3",
+                                  color: "#3D2B1F",
                                   fontFamily:
                                     "'Libre Baskerville', Georgia, serif",
                                   fontSize: "0.78rem",
@@ -1680,7 +1678,7 @@ export default function AdminSlide() {
                                   border: "1px solid rgba(245,230,211,0.1)",
                                   borderRadius: 6,
                                   padding: "0.3rem 0.7rem",
-                                  color: "rgba(245,230,211,0.4)",
+                                  color: "rgba(92,61,46,0.5)",
                                   fontFamily:
                                     "'Libre Baskerville', Georgia, serif",
                                   fontSize: "0.78rem",

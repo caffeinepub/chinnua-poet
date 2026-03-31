@@ -47,12 +47,10 @@ interface User {
   createdAt: string;
 }
 
+// Base nav: Home, Poems, Messages, Explore, About
 const BASE_NAV_ITEMS: { slide: Slide; label: string }[] = [
   { slide: "home", label: "Home" },
-  { slide: "feed", label: "Feed" },
   { slide: "poems", label: "Poems" },
-  { slide: "gallery", label: "Gallery" },
-  { slide: "music", label: "Music" },
   { slide: "messages", label: "Messages" },
   { slide: "explore", label: "Explore" },
   { slide: "about", label: "About" },
@@ -65,10 +63,6 @@ const NOTIFICATIONS_NAV_ITEM: { slide: Slide; label: string } = {
 const NOTES_NAV_ITEM: { slide: Slide; label: string } = {
   slide: "notes",
   label: "My Notes",
-};
-const INBOX_NAV_ITEM: { slide: Slide; label: string } = {
-  slide: "inbox",
-  label: "Inbox",
 };
 
 function UserIcon({ color }: { color: string }) {
@@ -156,7 +150,6 @@ export default function App() {
         ...BASE_NAV_ITEMS,
         NOTES_NAV_ITEM,
         NOTIFICATIONS_NAV_ITEM,
-        INBOX_NAV_ITEM,
         PROFILE_NAV_ITEM,
         SETTINGS_NAV_ITEM,
       ]
@@ -241,6 +234,9 @@ export default function App() {
           <HomeSlide
             goToFeed={() => setActiveSlide("feed")}
             currentUser={currentUser}
+            onJoin={() => setShowUserSetup(true)}
+            onLogin={handleLogin}
+            onViewProfile={handleViewProfile}
           />
         );
       case "feed":
@@ -263,6 +259,7 @@ export default function App() {
           <MessagesSlide
             currentUser={currentUser}
             onJoin={() => setShowUserSetup(true)}
+            onLogin={() => setShowLoginModal(true)}
           />
         );
       case "about":
@@ -320,6 +317,9 @@ export default function App() {
           <HomeSlide
             goToFeed={() => setActiveSlide("feed")}
             currentUser={currentUser}
+            onJoin={() => setShowUserSetup(true)}
+            onLogin={handleLogin}
+            onViewProfile={handleViewProfile}
           />
         );
       default:
@@ -327,6 +327,9 @@ export default function App() {
           <HomeSlide
             goToFeed={() => setActiveSlide("feed")}
             currentUser={currentUser}
+            onJoin={() => setShowUserSetup(true)}
+            onLogin={handleLogin}
+            onViewProfile={handleViewProfile}
           />
         );
     }
@@ -345,7 +348,7 @@ export default function App() {
     >
       <Toaster />
 
-      {/* ── Desktop Sidebar ── */}
+      {/* Desktop Sidebar */}
       {!isMobile && (
         <nav
           style={{
@@ -595,7 +598,7 @@ export default function App() {
         </nav>
       )}
 
-      {/* ── Main content ── */}
+      {/* Main content */}
       <main
         style={{
           marginLeft: isMobile ? 0 : sidebarWidth,
@@ -623,7 +626,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* ── Mobile Bottom Nav ── */}
+      {/* Mobile Bottom Nav */}
       {isMobile && (
         <nav
           style={{
@@ -790,7 +793,7 @@ export default function App() {
         </nav>
       )}
 
-      {/* ── Login Modal ── */}
+      {/* Login Modal */}
       <AnimatePresence>
         {showLoginModal && (
           <motion.div
@@ -847,7 +850,7 @@ export default function App() {
                   padding: "0.25rem",
                 }}
               >
-                ×
+                x
               </button>
               <LoginGate onLogin={handleLogin} />
             </motion.div>

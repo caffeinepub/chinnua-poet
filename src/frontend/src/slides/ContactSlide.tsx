@@ -34,7 +34,7 @@ export default function ContactSlide() {
     el.style.borderColor = hover
       ? "rgba(200,169,106,0.4)"
       : "rgba(200,169,106,0.2)";
-    el.style.color = hover ? "rgba(200,169,106,0.9)" : "rgba(229,231,235,0.7)";
+    el.style.color = hover ? "rgba(200,169,106,0.9)" : "#8B6F47";
     el.style.boxShadow = hover ? "0 0 12px rgba(200,169,106,0.2)" : "none";
   };
 
@@ -60,7 +60,7 @@ export default function ContactSlide() {
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "clamp(2rem, 5vw, 3.2rem)",
               fontWeight: 700,
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               letterSpacing: "0.08em",
               marginBottom: "1rem",
             }}
@@ -85,7 +85,7 @@ export default function ContactSlide() {
               fontFamily: "'Playfair Display', Georgia, serif",
               fontStyle: "italic",
               fontSize: "1rem",
-              color: "rgba(229,231,235,0.55)",
+              color: "rgba(92,61,46,0.5)",
               lineHeight: 1.8,
             }}
           >
@@ -100,7 +100,7 @@ export default function ContactSlide() {
           transition={{ delay: 0.5 }}
           style={{
             background: "rgba(16,24,38,0.8)",
-            border: "1px solid rgba(200,169,106,0.2)",
+            border: "1px solid rgba(139,111,71,0.3)",
             borderRadius: 14,
             padding: "1.75rem",
             marginBottom: "2rem",
@@ -113,7 +113,7 @@ export default function ContactSlide() {
                 fontSize: "0.72rem",
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
-                color: "rgba(200,169,106,0.6)",
+                color: "#8B6F47",
                 marginBottom: "0.4rem",
               }}
             >
@@ -125,7 +125,7 @@ export default function ContactSlide() {
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: "1rem",
-                color: "#F5E6D3",
+                color: "#3D2B1F",
                 textDecoration: "none",
                 transition: "color 0.2s",
               }}
@@ -145,7 +145,7 @@ export default function ContactSlide() {
                 fontSize: "0.72rem",
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
-                color: "rgba(200,169,106,0.6)",
+                color: "#8B6F47",
                 marginBottom: "0.75rem",
               }}
             >
@@ -176,12 +176,12 @@ export default function ContactSlide() {
                     width: 44,
                     height: 44,
                     borderRadius: 10,
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(200,169,106,0.2)",
+                    background: "rgba(255,248,238,0.9)",
+                    border: "1px solid rgba(139,111,71,0.3)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "rgba(229,231,235,0.7)",
+                    color: "#8B6F47",
                     fontSize: "1.1rem",
                     textDecoration: "none",
                     transition: "all 0.2s",
@@ -205,7 +205,7 @@ export default function ContactSlide() {
           data-ocid="contact.panel"
           style={{
             background: "rgba(16,24,38,0.8)",
-            border: "1px solid rgba(200,169,106,0.2)",
+            border: "1px solid rgba(139,111,71,0.3)",
             borderRadius: 14,
             padding: "1.75rem",
             display: "flex",
@@ -217,7 +217,7 @@ export default function ContactSlide() {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1.1rem",
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               fontWeight: 700,
               margin: 0,
             }}
@@ -237,7 +237,7 @@ export default function ContactSlide() {
                 padding: "0.75rem 1rem",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 fontSize: "0.85rem",
-                color: "rgba(200,169,106,0.9)",
+                color: "#D4A853",
                 textAlign: "center",
               }}
             >
@@ -255,7 +255,7 @@ export default function ContactSlide() {
                 fontSize: "0.72rem",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
-                color: "rgba(229,231,235,0.45)",
+                color: "rgba(92,61,46,0.5)",
               }}
             >
               Name
@@ -269,8 +269,8 @@ export default function ContactSlide() {
               data-ocid="contact.input"
               style={{
                 background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(200,169,106,0.2)",
-                color: "#F5E6D3",
+                border: "1px solid rgba(139,111,71,0.3)",
+                color: "#3D2B1F",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
               }}
             />
@@ -286,7 +286,7 @@ export default function ContactSlide() {
                 fontSize: "0.72rem",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
-                color: "rgba(229,231,235,0.45)",
+                color: "rgba(92,61,46,0.5)",
               }}
             >
               Email
@@ -303,8 +303,8 @@ export default function ContactSlide() {
               data-ocid="contact.input"
               style={{
                 background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(200,169,106,0.2)",
-                color: "#F5E6D3",
+                border: "1px solid rgba(139,111,71,0.3)",
+                color: "#3D2B1F",
                 fontFamily: "'Libre Baskerville', Georgia, serif",
               }}
             />
@@ -320,7 +320,7 @@ export default function ContactSlide() {
                 fontSize: "0.72rem",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
-                color: "rgba(229,231,235,0.45)",
+                color: "rgba(92,61,46,0.5)",
               }}
             >
               Message
@@ -337,8 +337,8 @@ export default function ContactSlide() {
               rows={5}
               style={{
                 background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(200,169,106,0.2)",
-                color: "#F5E6D3",
+                border: "1px solid rgba(139,111,71,0.3)",
+                color: "#3D2B1F",
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
                 fontSize: "0.92rem",
@@ -353,7 +353,7 @@ export default function ContactSlide() {
             style={{
               background: "rgba(200,169,106,0.85)",
               border: "none",
-              color: "#fff",
+              color: "#3D2B1F",
               fontFamily: "'Libre Baskerville', Georgia, serif",
               fontWeight: 600,
               boxShadow: "0 0 20px rgba(200,169,106,0.25)",

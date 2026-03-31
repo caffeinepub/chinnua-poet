@@ -982,7 +982,7 @@ export default function FeedSlide({
                   style={{
                     background: "rgba(212,168,83,0.85)",
                     border: "none",
-                    color: "#fff",
+                    color: "#3D2B1F",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     fontSize: "0.8rem",
                     padding: "0.35rem 0.9rem",
@@ -1010,7 +1010,7 @@ export default function FeedSlide({
                 style={{
                   background: "rgba(212,168,83,0.85)",
                   border: "none",
-                  color: "#fff",
+                  color: "#3D2B1F",
                 }}
               >
                 Join the Community
@@ -1056,7 +1056,7 @@ export default function FeedSlide({
       <Dialog open={!!expandedPost} onOpenChange={() => setExpandedPost(null)}>
         <DialogContent
           style={{
-            background: "#1A1410",
+            background: "#F5ECD7",
             border: "1px solid rgba(212,168,83,0.2)",
             maxWidth: 600,
             maxHeight: "80vh",
@@ -1110,7 +1110,7 @@ export default function FeedSlide({
           <Dialog open={!!replyPost} onOpenChange={() => setReplyPost(null)}>
             <DialogContent
               style={{
-                background: "#1A1410",
+                background: "#F5ECD7",
                 border: "1px solid rgba(212,168,83,0.2)",
                 maxWidth: 480,
               }}
@@ -1162,7 +1162,7 @@ export default function FeedSlide({
                       style={{
                         background: "rgba(212,168,83,0.8)",
                         border: "none",
-                        color: "#fff",
+                        color: "#3D2B1F",
                       }}
                     >
                       Reply
@@ -1183,7 +1183,7 @@ export default function FeedSlide({
                         <span
                           style={{
                             fontWeight: 600,
-                            color: "rgba(229,231,235,0.8)",
+                            color: "#3D2B1F",
                             fontSize: "0.8rem",
                             fontFamily: "'Libre Baskerville', Georgia, serif",
                           }}
@@ -1223,7 +1223,7 @@ export default function FeedSlide({
                     style={{
                       background: "rgba(212,168,83,0.85)",
                       border: "none",
-                      color: "#fff",
+                      color: "#3D2B1F",
                     }}
                   >
                     Join

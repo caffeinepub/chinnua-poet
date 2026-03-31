@@ -92,7 +92,7 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
             gap: "0.4rem",
             background: "none",
             border: "none",
-            color: "rgba(200,169,106,0.7)",
+            color: "#D4A853",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             fontSize: "0.82rem",
             cursor: "pointer",
@@ -109,7 +109,7 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
             style={{
               fontFamily: "'Libre Baskerville', Georgia, serif",
               fontSize: "0.72rem",
-              color: "rgba(200,169,106,0.5)",
+              color: "#8B6F47",
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               marginBottom: "0.5rem",
@@ -121,7 +121,7 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: "1.6rem",
-              color: "#F5E6D3",
+              color: "#3D2B1F",
               fontWeight: 700,
               lineHeight: 1.3,
               marginBottom: "0.75rem",
@@ -133,7 +133,7 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontStyle: "italic",
-              color: "rgba(200,169,106,0.7)",
+              color: "#D4A853",
               fontSize: "0.95rem",
               letterSpacing: "0.05em",
             }}
@@ -164,7 +164,7 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
                   fontSize: "1rem",
-                  color: "rgba(200,169,106,0.9)",
+                  color: "#D4A853",
                   fontWeight: 600,
                   marginBottom: "0.6rem",
                 }}
@@ -175,7 +175,7 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
                 style={{
                   fontFamily: "'Libre Baskerville', Georgia, serif",
                   fontSize: "0.88rem",
-                  color: "rgba(229,231,235,0.72)",
+                  color: "#8B6F47",
                   lineHeight: 1.85,
                   whiteSpace: "pre-line",
                   margin: 0,
@@ -203,7 +203,7 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontStyle: "italic",
-              color: "rgba(200,169,106,0.6)",
+              color: "#8B6F47",
               fontSize: "0.95rem",
               lineHeight: 1.7,
             }}

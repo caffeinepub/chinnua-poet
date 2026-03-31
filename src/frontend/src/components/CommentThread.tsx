@@ -39,11 +39,11 @@ function timeAgo(ts: number): string {
 }
 
 const inputSx: React.CSSProperties = {
-  background: "#1A1410",
-  border: "1px solid rgba(200,169,106,0.2)",
+  background: "#F5ECD7",
+  border: "1px solid rgba(139,111,71,0.3)",
   borderRadius: 6,
   padding: "0.38rem 0.65rem",
-  color: "#F5E6D3",
+  color: "#3D2B1F",
   fontFamily: "'Libre Baskerville', Georgia, serif",
   fontSize: "0.8rem",
   outline: "none",
@@ -61,7 +61,7 @@ const avatarSx = (size: number, gold = 0.15): React.CSSProperties => ({
   alignItems: "center",
   justifyContent: "center",
   fontSize: size * 0.35,
-  color: "#C8A96A",
+  color: "#D4A853",
   flexShrink: 0,
   fontFamily: "'Playfair Display', Georgia, serif",
   fontWeight: 700,
@@ -106,7 +106,7 @@ export default function CommentThread({
         style={{
           fontFamily: "'Libre Baskerville', Georgia, serif",
           fontSize: "0.66rem",
-          color: "rgba(200,169,106,0.5)",
+          color: "#8B6F47",
           letterSpacing: "0.1em",
           textTransform: "uppercase",
           marginBottom: "0.7rem",
@@ -158,7 +158,7 @@ export default function CommentThread({
               border: "1px solid rgba(200,169,106,0.28)",
               borderRadius: 6,
               padding: "0.38rem 0.7rem",
-              color: "#C8A96A",
+              color: "#D4A853",
               cursor: text.trim() ? "pointer" : "default",
               opacity: text.trim() ? 1 : 0.4,
               fontSize: "0.72rem",
@@ -175,7 +175,7 @@ export default function CommentThread({
           style={{
             fontFamily: "'Libre Baskerville', Georgia, serif",
             fontSize: "0.76rem",
-            color: "rgba(245,230,211,0.35)",
+            color: "rgba(92,61,46,0.5)",
             fontStyle: "italic",
             marginBottom: "0.7rem",
           }}
@@ -218,7 +218,7 @@ export default function CommentThread({
                         fontSize: "0.76rem",
                         fontWeight: 700,
                         color:
-                          c.username === "CHINNUA_POET" ? "#C8A96A" : "#F5E6D3",
+                          c.username === "CHINNUA_POET" ? "#C8A96A" : "#5C3D2E",
                       }}
                     >
                       {c.username}
@@ -226,7 +226,7 @@ export default function CommentThread({
                     <span
                       style={{
                         fontSize: "0.62rem",
-                        color: "rgba(245,230,211,0.3)",
+                        color: "rgba(92,61,46,0.4)",
                         fontFamily: "'Libre Baskerville', Georgia, serif",
                       }}
                     >
@@ -237,7 +237,7 @@ export default function CommentThread({
                     style={{
                       fontFamily: "'Libre Baskerville', Georgia, serif",
                       fontSize: "0.8rem",
-                      color: "rgba(245,230,211,0.72)",
+                      color: "#8B6F47",
                       lineHeight: 1.55,
                       margin: "0.18rem 0 0.3rem",
                     }}
@@ -260,7 +260,7 @@ export default function CommentThread({
                           background: "none",
                           border: "none",
                           cursor: "pointer",
-                          color: "rgba(200,169,106,0.45)",
+                          color: "#D4A853",
                           fontSize: "0.68rem",
                           fontFamily: "'Libre Baskerville', Georgia, serif",
                           padding: 0,
@@ -342,7 +342,7 @@ export default function CommentThread({
                           border: "1px solid rgba(200,169,106,0.22)",
                           borderRadius: 5,
                           padding: "0.35rem 0.55rem",
-                          color: "#C8A96A",
+                          color: "#D4A853",
                           cursor: "pointer",
                           fontSize: "0.7rem",
                           fontFamily: "'Libre Baskerville', Georgia, serif",
@@ -357,7 +357,7 @@ export default function CommentThread({
                           background: "none",
                           border: "none",
                           cursor: "pointer",
-                          color: "rgba(245,230,211,0.3)",
+                          color: "rgba(92,61,46,0.4)",
                           fontSize: "0.8rem",
                           padding: 0,
                         }}
@@ -409,7 +409,7 @@ export default function CommentThread({
                                   color:
                                     r.username === "CHINNUA_POET"
                                       ? "#C8A96A"
-                                      : "#F5E6D3",
+                                      : "#5C3D2E",
                                 }}
                               >
                                 {r.username}
@@ -417,7 +417,7 @@ export default function CommentThread({
                               <span
                                 style={{
                                   fontSize: "0.58rem",
-                                  color: "rgba(245,230,211,0.28)",
+                                  color: "rgba(92,61,46,0.4)",
                                 }}
                               >
                                 {timeAgo(r.timestamp)}
@@ -428,7 +428,7 @@ export default function CommentThread({
                                 fontFamily:
                                   "'Libre Baskerville', Georgia, serif",
                                 fontSize: "0.76rem",
-                                color: "rgba(245,230,211,0.6)",
+                                color: "#8B6F47",
                                 lineHeight: 1.45,
                                 marginTop: "0.12rem",
                               }}

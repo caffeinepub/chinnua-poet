@@ -20,11 +20,12 @@ const WARM_BROWN = "#8B6F47";
 const WARM_GOLD = "#D4A853";
 const WARM_TEXT = "#3D2B1F";
 const WARM_MUTED = "#9E8070";
+const WARM_BORDER = "rgba(139,111,71,0.25)";
 
 const MORNING_LETTERS = [
   "The sun rose today, and so did you. That alone is something worth celebrating.",
   "Before the world asks anything of you, let this letter remind you — you are enough.",
-  "Open your eyes slowly. There’s no rush. Today belongs to you.",
+  "Open your eyes slowly. There's no rush. Today belongs to you.",
   "The morning mist clears, and in its place — a day written just for you.",
   "Today may hold a thousand moments. Let the first one be quiet, and yours.",
   "Good morning, dear heart. May today be gentle on you.",
@@ -33,12 +34,12 @@ const MORNING_LETTERS = [
 
 const NIGHT_LETTERS = [
   "The day is done. Whatever it held, you held it too. Rest now.",
-  "Stars don’t need to shine brightly every night. Neither do you.",
+  "Stars don't need to shine brightly every night. Neither do you.",
   "Let the weight of today dissolve. Tomorrow will be lighter.",
   "Close your eyes, dear soul. You did enough.",
   "The moon is watching over you tonight. Sleep in peace.",
   "In the silence of this night, your story continues. Rest well.",
-  "Another day loved, survived, breathed through. That’s everything.",
+  "Another day loved, survived, breathed through. That's everything.",
 ];
 
 interface Letter {
@@ -53,7 +54,7 @@ interface Letter {
 
 function getLetterForToday(username: string): Letter[] {
   const now = new Date();
-  const dayIndex = now.getDay(); // 0-6
+  const dayIndex = now.getDay();
   const hour = now.getHours();
   const dateStr = now.toLocaleDateString("en-US", {
     weekday: "long",
@@ -62,7 +63,6 @@ function getLetterForToday(username: string): Letter[] {
     day: "numeric",
   });
 
-  // Load admin-customized letters if any
   let adminMorning: string[] = [];
   let adminNight: string[] = [];
   try {
@@ -88,7 +88,6 @@ function getLetterForToday(username: string): Letter[] {
 
   const letters: Letter[] = [];
 
-  // Load read status and admin replies
   let readStatus: Record<string, boolean> = {};
   let inkReplies: Array<{ id: string; adminReply?: string }> = [];
   try {
@@ -106,7 +105,6 @@ function getLetterForToday(username: string): Letter[] {
   const morningReply = inkReplies.find((r) => r.id === morningId)?.adminReply;
   const nightReply = inkReplies.find((r) => r.id === nightId)?.adminReply;
 
-  // Morning letter (show 5am - 11pm)
   letters.push({
     id: morningId,
     type: "morning",
@@ -117,7 +115,6 @@ function getLetterForToday(username: string): Letter[] {
     adminReply: morningReply,
   });
 
-  // Night letter (show 8pm+)
   if (hour >= 20 || hour < 5) {
     letters.push({
       id: nightId,
@@ -170,7 +167,7 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
     return (
       <div
         style={{
-          minHeight: "100vh",
+          minHeight: "60vh",
           background: WARM_BG,
           display: "flex",
           flexDirection: "column",
@@ -180,7 +177,22 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
           textAlign: "center",
         }}
       >
-        <div style={{ fontSize: "3rem", marginBottom: "1.5rem" }}>📧</div>
+        <div
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: "50%",
+            border: `1px solid ${WARM_BORDER}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "1.5rem",
+            color: WARM_GOLD,
+            fontSize: "1.5rem",
+          }}
+        >
+          &#9993;
+        </div>
         <h2
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
@@ -210,11 +222,11 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
           onClick={onLogin}
           data-ocid="inbox.primary_button"
           style={{
-            background: "linear-gradient(135deg, #D4A853, #8B6F47)",
+            background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
             border: "none",
             borderRadius: 10,
             padding: "0.75rem 2rem",
-            color: WARM_PAPER,
+            color: "#3D2B1F",
             fontFamily: "'Lora', Georgia, serif",
             fontSize: "0.9rem",
             cursor: "pointer",
@@ -231,9 +243,9 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "60vh",
         background: WARM_BG,
-        padding: "3rem 2rem 5rem",
+        padding: "2rem 2rem 5rem",
       }}
     >
       {/* Header */}
@@ -243,11 +255,26 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
         transition={{ duration: 0.8 }}
         style={{ maxWidth: 640, margin: "0 auto 3rem", textAlign: "center" }}
       >
-        <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>📧</div>
+        <div
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            border: `1px solid ${WARM_BORDER}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 0.75rem",
+            color: WARM_GOLD,
+            fontSize: "1.3rem",
+          }}
+        >
+          &#9993;
+        </div>
         <h1
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "2rem",
+            fontSize: "1.8rem",
             color: WARM_MOCHA,
             margin: "0 0 0.5rem",
             fontWeight: 700,
@@ -295,10 +322,25 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
               padding: "4rem 2rem",
               background: WARM_PAPER,
               borderRadius: 16,
-              border: "1px solid rgba(139,111,71,0.2)",
+              border: `1px solid ${WARM_BORDER}`,
             }}
           >
-            <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🌙</div>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                border: `1px solid ${WARM_BORDER}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 1rem",
+                color: WARM_MOCHA,
+                fontSize: "1.1rem",
+              }}
+            >
+              )
+            </div>
             <p
               style={{
                 fontFamily: "'Lora', Georgia, serif",
@@ -308,7 +350,7 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                 lineHeight: 1.8,
               }}
             >
-              Your morning letter is being written…
+              Your morning letter is being written...
               <br />
               <span style={{ fontSize: "0.85rem", color: WARM_MUTED }}>
                 Evening letters arrive after 8pm.
@@ -343,7 +385,6 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                     display: "flex",
                     gap: "1rem",
                     alignItems: "flex-start",
-                    transition: "box-shadow 0.3s",
                   }}
                 >
                   {/* Image preview */}
@@ -355,20 +396,17 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                       background: letter.imageGradient,
                       flexShrink: 0,
                       boxShadow: "0 2px 10px rgba(92,61,46,0.15)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#3D2B1F",
+                      fontSize: "0.7rem",
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      fontFamily: "'Playfair Display', Georgia, serif",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "1.8rem",
-                      }}
-                    >
-                      {letter.type === "morning" ? "☀️" : "🌙"}
-                    </div>
+                    {letter.type === "morning" ? "AM" : "PM"}
                   </div>
 
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -398,8 +436,8 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                         }}
                       >
                         {letter.type === "morning"
-                          ? "☀️ Morning Letter"
-                          : "🌙 Evening Letter"}
+                          ? "Morning Letter"
+                          : "Evening Letter"}
                       </span>
                       {!letter.read && (
                         <span
@@ -410,6 +448,7 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                             background: WARM_GOLD,
                             flexShrink: 0,
                             boxShadow: "0 0 6px rgba(212,168,83,0.6)",
+                            display: "inline-block",
                           }}
                         />
                       )}
@@ -450,7 +489,7 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                           fontStyle: "italic",
                         }}
                       >
-                        Reply received 💬
+                        Reply received
                       </div>
                     )}
                   </div>
@@ -512,7 +551,6 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "3.5rem",
                   position: "relative",
                 }}
               >
@@ -525,8 +563,19 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                     borderRadius: "20px 20px 0 0",
                   }}
                 />
-                <span style={{ position: "relative", zIndex: 1 }}>
-                  {openLetter.type === "morning" ? "☀️" : "🌙"}
+                <span
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    color: "#3D2B1F",
+                    textShadow: "0 1px 4px rgba(92,61,46,0.5)",
+                  }}
+                >
+                  {openLetter.type === "morning" ? "Morning" : "Evening"}
                 </span>
               </div>
 
@@ -553,7 +602,7 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                     fontWeight: 700,
                   }}
                 >
-                  ×
+                  x
                 </button>
 
                 <div style={{ marginBottom: "1.5rem" }}>
@@ -608,7 +657,6 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                   {openLetter.date}
                 </p>
 
-                {/* Admin reply */}
                 {openLetter.adminReply && (
                   <div
                     style={{
@@ -629,7 +677,7 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                         margin: 0,
                       }}
                     >
-                      “{openLetter.adminReply}”
+                      &ldquo;{openLetter.adminReply}&rdquo;
                     </p>
                     <p
                       style={{
@@ -645,7 +693,6 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                   </div>
                 )}
 
-                {/* Ink & Pen button */}
                 <button
                   type="button"
                   onClick={() => handleInkPen(openLetter)}
@@ -669,7 +716,7 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
                     gap: "0.5rem",
                   }}
                 >
-                  ✒️ <span>Ink & Pen — Reply with your heart</span>
+                  <span>Ink &amp; Pen — Reply with your heart</span>
                 </button>
               </div>
             </motion.div>
@@ -677,7 +724,6 @@ export default function InboxSlide({ currentUser, onLogin }: InboxSlideProps) {
         )}
       </AnimatePresence>
 
-      {/* Ink & Pen Modal */}
       <AnimatePresence>
         {showInkModal && inkLetter && (
           <InkAndPenModal

@@ -5,13 +5,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { Comment, CommentReply } from "../components/CommentThread";
 import CommentThread from "../components/CommentThread";
 import { LoginGate } from "../components/LoginGate";
 import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
+import GallerySlide from "./GallerySlide";
+import MusicSlide from "./MusicSlide";
+
+const WARM_BG = "#FFF8EE";
+const WARM_PAPER = "#F5ECD7";
+const WARM_MOCHA = "#5C3D2E";
+const WARM_BROWN = "#8B6F47";
+const WARM_GOLD = "#D4A853";
+const WARM_TEXT = "#3D2B1F";
+const WARM_BORDER = "rgba(139,111,71,0.25)";
+const WARM_MUTED = "rgba(92,61,46,0.5)";
 
 const CATEGORIES = [
   "All",
@@ -33,7 +44,7 @@ function getCategoryGradient(category: string): string {
     case "hopeful":
     case "spiritual":
     case "nature":
-      return "linear-gradient(135deg, #D4A853 0%, #8B6F47 40%, #3D2B1F 100%)";
+      return "linear-gradient(135deg, #D4A853 0%, #8B6F47 40%, #5C3D2E 100%)";
     case "romantic":
     case "love":
       return "linear-gradient(135deg, #F5ECD7 0%, #D4A853 50%, #8B6F47 100%)";
@@ -200,35 +211,9 @@ function assignCategory(poem: PoemType): string {
       "forever",
       "precious",
       "beautiful",
-      "soul",
     ])
   )
     return "Love";
-  if (
-    check([
-      "sad",
-      "cry",
-      "tears",
-      "weep",
-      "grief",
-      "sorrow",
-      "pain",
-      "hurt",
-      "ache",
-      "broken",
-      "darkness",
-      "lonely",
-      "alone",
-      "empty",
-      "lost",
-      "numb",
-      "silent",
-      "silence",
-      "suffer",
-      "wound",
-    ])
-  )
-    return "Sad";
   return "Sad";
 }
 
@@ -240,6 +225,59 @@ interface PoemsSlideProps {
     email?: string;
     createdAt: string;
   }) => void;
+}
+
+type Tab = "poems" | "gallery" | "music";
+
+function TabBar({
+  active,
+  onChange,
+}: { active: Tab; onChange: (t: Tab) => void }) {
+  const tabs: { key: Tab; label: string }[] = [
+    { key: "poems", label: "Poems" },
+    { key: "gallery", label: "Gallery" },
+    { key: "music", label: "Music" },
+  ];
+  return (
+    <div
+      style={{
+        display: "flex",
+        borderBottom: `1px solid ${WARM_BORDER}`,
+        background: WARM_PAPER,
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+      }}
+    >
+      {tabs.map((t) => (
+        <button
+          key={t.key}
+          type="button"
+          onClick={() => onChange(t.key)}
+          data-ocid={`poems.${t.key}.tab`}
+          style={{
+            background:
+              active === t.key ? "rgba(212,168,83,0.12)" : "transparent",
+            border: "none",
+            borderBottom:
+              active === t.key
+                ? `2px solid ${WARM_GOLD}`
+                : "2px solid transparent",
+            color: active === t.key ? WARM_MOCHA : WARM_BROWN,
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: "0.85rem",
+            letterSpacing: "0.08em",
+            padding: "0.75rem 2rem",
+            cursor: "pointer",
+            transition: "all 0.2s",
+            textTransform: "uppercase",
+          }}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 function CategoryFilterRow({
@@ -264,13 +302,10 @@ function CategoryFilterRow({
           style={{
             padding: "0.35rem 0.9rem",
             borderRadius: 20,
-            border: `1px solid ${active === cat ? "rgba(200,169,106,0.7)" : "rgba(200,169,106,0.2)"}`,
+            border: `1px solid ${active === cat ? "rgba(212,168,83,0.7)" : WARM_BORDER}`,
             background:
-              active === cat ? "rgba(200,169,106,0.2)" : "transparent",
-            color:
-              active === cat
-                ? "rgba(200,169,106,0.95)"
-                : "rgba(229,231,235,0.6)",
+              active === cat ? "rgba(212,168,83,0.15)" : "transparent",
+            color: active === cat ? WARM_MOCHA : WARM_BROWN,
             fontFamily: "'Libre Baskerville', Georgia, serif",
             fontSize: "0.82rem",
             cursor: "pointer",
@@ -301,7 +336,7 @@ function PoemGrid({
         style={{
           textAlign: "center",
           padding: "3rem",
-          color: "rgba(229,231,235,0.4)",
+          color: WARM_MUTED,
           fontFamily: "'Libre Baskerville', Georgia, serif",
         }}
         data-ocid={emptyOcid}
@@ -335,9 +370,9 @@ function PoemGrid({
               style={{
                 fontSize: "0.7rem",
                 padding: "2px 8px",
-                background: "rgba(200,169,106,0.12)",
+                background: "rgba(212,168,83,0.12)",
                 borderRadius: 4,
-                color: "rgba(200,169,106,0.8)",
+                color: WARM_GOLD,
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 marginBottom: "0.5rem",
                 display: "inline-block",
@@ -350,7 +385,7 @@ function PoemGrid({
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: "1rem",
                 fontWeight: 700,
-                color: "#F5E6D3",
+                color: WARM_MOCHA,
                 marginBottom: "0.5rem",
                 lineHeight: 1.4,
               }}
@@ -361,7 +396,7 @@ function PoemGrid({
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
-                color: "rgba(229,231,235,0.55)",
+                color: WARM_MUTED,
                 fontSize: "0.85rem",
                 lineHeight: 1.7,
                 whiteSpace: "pre-line",
@@ -374,11 +409,11 @@ function PoemGrid({
                 marginTop: "0.75rem",
                 display: "block",
                 fontSize: "0.78rem",
-                color: "rgba(200,169,106,0.8)",
+                color: WARM_GOLD,
                 fontFamily: "'Libre Baskerville', Georgia, serif",
               }}
             >
-              Read poem →
+              Read poem
             </span>
           </motion.div>
         );
@@ -388,6 +423,7 @@ function PoemGrid({
 }
 
 export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
+  const [tab, setTab] = useState<Tab>("poems");
   const [search1, setSearch1] = useState("");
   const [category1, setCategory1] = useState("All");
   const [search2, setSearch2] = useState("");
@@ -550,283 +586,277 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
   return (
     <div
       className="slide-container"
-      style={{ overflowY: "auto", paddingBottom: "2rem" }}
+      style={{ background: WARM_BG, overflowY: "auto" }}
     >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.4 }}
-        style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 1rem" }}
-      >
-        {/* === SECTION 1: Poetry Collection === */}
-        <h2
-          style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "1.6rem",
-            color: "#F5E6D3",
-            marginBottom: "1.25rem",
-            fontWeight: 700,
-          }}
-        >
-          Poetry Collection
-        </h2>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <Input
-            value={search1}
-            onChange={(e) => setSearch1(e.target.value)}
-            placeholder="Search poems..."
-            data-ocid="poems.search_input"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(200,169,106,0.2)",
-              color: "#F5E6D3",
-              maxWidth: 400,
-            }}
-          />
-          <CategoryFilterRow
-            categories={CATEGORIES}
-            active={category1}
-            onChange={setCategory1}
-            ocidPrefix="poems"
-          />
-        </div>
-        <PoemGrid
-          poems={filtered1}
-          onSelect={setSelected}
-          emptyOcid="poems.empty_state"
-          itemOcidPrefix="poems"
-        />
+      <TabBar active={tab} onChange={setTab} />
 
-        {/* === Gold Divider === */}
-        <div
-          style={{
-            margin: "3rem 0",
-            height: 1,
-            background:
-              "linear-gradient(to right, transparent, rgba(200,169,106,0.4), transparent)",
-          }}
-        />
-
-        {/* === SECTION 2: Echoes of My Heart === */}
-        <h2
-          style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "1.6rem",
-            color: "#F5E6D3",
-            marginBottom: "0.4rem",
-            fontWeight: 700,
-          }}
-        >
-          Echoes of My Heart
-        </h2>
-        <p
-          style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontStyle: "italic",
-            color: "rgba(200,169,106,0.65)",
-            fontSize: "0.88rem",
-            marginBottom: "1.25rem",
-          }}
-        >
-          A special collection
-        </p>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <Input
-            value={search2}
-            onChange={(e) => setSearch2(e.target.value)}
-            placeholder="Search Echoes of My Heart..."
-            data-ocid="echoes.search_input"
+      <AnimatePresence mode="wait">
+        {tab === "gallery" && (
+          <motion.div
+            key="gallery"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <GallerySlide currentUser={currentUser} />
+          </motion.div>
+        )}
+        {tab === "music" && (
+          <motion.div
+            key="music"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <MusicSlide />
+          </motion.div>
+        )}
+        {tab === "poems" && (
+          <motion.div
+            key="poems"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
             style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(200,169,106,0.2)",
-              color: "#F5E6D3",
-              maxWidth: 400,
-            }}
-          />
-          <CategoryFilterRow
-            categories={CATEGORIES}
-            active={category2}
-            onChange={setCategory2}
-            ocidPrefix="echoes"
-          />
-        </div>
-        <PoemGrid
-          poems={filtered2}
-          onSelect={setSelected}
-          emptyOcid="echoes.empty_state"
-          itemOcidPrefix="echoes"
-        />
-
-        {/* === Final Page Farewell Message === */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          style={{
-            marginTop: "4rem",
-            marginBottom: "2rem",
-            textAlign: "center",
-            padding: "3rem 2rem",
-            borderTop: "1px solid rgba(200,169,106,0.15)",
-            borderBottom: "1px solid rgba(200,169,106,0.15)",
-            position: "relative",
-          }}
-        >
-          {/* Decorative top ornament */}
-          <div
-            style={{
-              marginBottom: "2rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "1rem",
+              maxWidth: 1100,
+              margin: "0 auto",
+              padding: "1.5rem 1rem",
+              paddingBottom: "2rem",
             }}
           >
-            <div
+            {/* Section 1 */}
+            <h2
               style={{
-                height: 1,
-                width: 60,
-                background:
-                  "linear-gradient(to right, transparent, rgba(200,169,106,0.5))",
-              }}
-            />
-            <span
-              style={{
-                color: "rgba(200,169,106,0.6)",
-                fontSize: "1.1rem",
-                letterSpacing: "0.3em",
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "1.6rem",
+                color: WARM_MOCHA,
+                marginBottom: "1.25rem",
+                fontWeight: 700,
               }}
             >
-              ✦
-            </span>
+              Poetry Collection
+            </h2>
             <div
               style={{
-                height: 1,
-                width: 60,
-                background:
-                  "linear-gradient(to left, transparent, rgba(200,169,106,0.5))",
-              }}
-            />
-          </div>
-
-          <p
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontStyle: "italic",
-              color: "rgba(245,230,211,0.55)",
-              fontSize: "0.72rem",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              marginBottom: "1.5rem",
-            }}
-          >
-            A Note from the Poet
-          </p>
-
-          <p
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontStyle: "italic",
-              color: "rgba(245,230,211,0.75)",
-              fontSize: "1.05rem",
-              lineHeight: 2,
-              maxWidth: 640,
-              margin: "0 auto 2rem",
-            }}
-          >
-            Dear Reader, As you reach the final page, may these poems linger in
-            your heart, like whispers of forgotten dreams and silent hopes. Each
-            verse is a window into a world of feelings—love, loss, wonder, and
-            discovery. Carry them with you, and let your soul wander in their
-            echoes.
-          </p>
-
-          <p
-            style={{
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              color: "rgba(200,169,106,0.7)",
-              fontSize: "1.4rem",
-              letterSpacing: "0.15em",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Thank you
-          </p>
-
-          <p
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontStyle: "italic",
-              color: "rgba(200,169,106,0.45)",
-              fontSize: "0.88rem",
-              letterSpacing: "0.08em",
-            }}
-          >
-            — CHINNUA_POET
-          </p>
-
-          {/* Decorative bottom ornament */}
-          <div
-            style={{
-              marginTop: "2rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "1rem",
-            }}
-          >
-            <div
-              style={{
-                height: 1,
-                width: 40,
-                background:
-                  "linear-gradient(to right, transparent, rgba(200,169,106,0.3))",
-              }}
-            />
-            <span
-              style={{
-                color: "rgba(200,169,106,0.35)",
-                fontSize: "0.6rem",
-                letterSpacing: "0.4em",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                marginBottom: "1.5rem",
               }}
             >
-              ✦ ✦ ✦
-            </span>
+              <Input
+                value={search1}
+                onChange={(e) => setSearch1(e.target.value)}
+                placeholder="Search poems..."
+                data-ocid="poems.search_input"
+                style={{
+                  background: "rgba(255,248,238,0.8)",
+                  border: `1px solid ${WARM_BORDER}`,
+                  color: WARM_TEXT,
+                  maxWidth: 400,
+                }}
+              />
+              <CategoryFilterRow
+                categories={CATEGORIES}
+                active={category1}
+                onChange={setCategory1}
+                ocidPrefix="poems"
+              />
+            </div>
+            <PoemGrid
+              poems={filtered1}
+              onSelect={setSelected}
+              emptyOcid="poems.empty_state"
+              itemOcidPrefix="poems"
+            />
+
             <div
               style={{
+                margin: "3rem 0",
                 height: 1,
-                width: 40,
                 background:
-                  "linear-gradient(to left, transparent, rgba(200,169,106,0.3))",
+                  "linear-gradient(to right, transparent, rgba(212,168,83,0.4), transparent)",
               }}
             />
-          </div>
-        </motion.div>
-      </motion.div>
 
+            {/* Section 2 */}
+            <h2
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "1.6rem",
+                color: WARM_MOCHA,
+                marginBottom: "0.4rem",
+                fontWeight: 700,
+              }}
+            >
+              Echoes of My Heart
+            </h2>
+            <p
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontStyle: "italic",
+                color: WARM_BROWN,
+                fontSize: "0.88rem",
+                marginBottom: "1.25rem",
+              }}
+            >
+              A special collection
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                marginBottom: "1.5rem",
+              }}
+            >
+              <Input
+                value={search2}
+                onChange={(e) => setSearch2(e.target.value)}
+                placeholder="Search Echoes of My Heart..."
+                data-ocid="echoes.search_input"
+                style={{
+                  background: "rgba(255,248,238,0.8)",
+                  border: `1px solid ${WARM_BORDER}`,
+                  color: WARM_TEXT,
+                  maxWidth: 400,
+                }}
+              />
+              <CategoryFilterRow
+                categories={CATEGORIES}
+                active={category2}
+                onChange={setCategory2}
+                ocidPrefix="echoes"
+              />
+            </div>
+            <PoemGrid
+              poems={filtered2}
+              onSelect={setSelected}
+              emptyOcid="echoes.empty_state"
+              itemOcidPrefix="echoes"
+            />
+
+            {/* Farewell */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              style={{
+                marginTop: "4rem",
+                marginBottom: "2rem",
+                textAlign: "center",
+                padding: "3rem 2rem",
+                borderTop: `1px solid ${WARM_BORDER}`,
+                borderBottom: `1px solid ${WARM_BORDER}`,
+              }}
+            >
+              <div
+                style={{
+                  marginBottom: "2rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "1rem",
+                }}
+              >
+                <div
+                  style={{
+                    height: 1,
+                    width: 60,
+                    background:
+                      "linear-gradient(to right, transparent, rgba(212,168,83,0.5))",
+                  }}
+                />
+                <span
+                  style={{
+                    color: WARM_GOLD,
+                    fontSize: "1.1rem",
+                    letterSpacing: "0.3em",
+                  }}
+                >
+                  +
+                </span>
+                <div
+                  style={{
+                    height: 1,
+                    width: 60,
+                    background:
+                      "linear-gradient(to left, transparent, rgba(212,168,83,0.5))",
+                  }}
+                />
+              </div>
+
+              <p
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontStyle: "italic",
+                  color: WARM_MUTED,
+                  fontSize: "0.72rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  marginBottom: "1.5rem",
+                }}
+              >
+                A Note from the Poet
+              </p>
+
+              <p
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontStyle: "italic",
+                  color: WARM_BROWN,
+                  fontSize: "1.05rem",
+                  lineHeight: 2,
+                  maxWidth: 640,
+                  margin: "0 auto 2rem",
+                }}
+              >
+                Dear Reader, As you reach the final page, may these poems linger
+                in your heart, like whispers of forgotten dreams and silent
+                hopes. Each verse is a window into a world of feelings—love,
+                loss, wonder, and discovery. Carry them with you, and let your
+                soul wander in their echoes.
+              </p>
+
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  color: WARM_GOLD,
+                  fontSize: "1.4rem",
+                  letterSpacing: "0.15em",
+                  marginBottom: "1.5rem",
+                }}
+              >
+                Thank you
+              </p>
+
+              <p
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontStyle: "italic",
+                  color: WARM_BROWN,
+                  fontSize: "0.88rem",
+                  letterSpacing: "0.08em",
+                }}
+              >
+                — CHINNUA_POET
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Poem Detail Dialog */}
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
         <DialogContent
           style={{
-            background: "#1A1410",
-            border: "1px solid rgba(200,169,106,0.2)",
+            background: WARM_PAPER,
+            border: `1px solid ${WARM_BORDER}`,
             maxWidth: 600,
             maxHeight: "80vh",
             overflowY: "auto",
+            color: WARM_TEXT,
           }}
           data-ocid="poems.dialog"
         >
@@ -834,14 +864,13 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
             <DialogTitle
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                color: "#F5E6D3",
+                color: WARM_MOCHA,
                 fontSize: "1.3rem",
               }}
             >
               {selected?.title}
             </DialogTitle>
           </DialogHeader>
-          {/* Category gradient image */}
           {selected && (
             <div
               style={{
@@ -861,7 +890,7 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(180deg, transparent 40%, rgba(26,20,16,0.7) 100%)",
+                    "linear-gradient(180deg, transparent 40%, rgba(245,236,215,0.7) 100%)",
                 }}
               />
               <span
@@ -869,7 +898,7 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
                   fontStyle: "italic",
                   fontSize: "0.85rem",
-                  color: "rgba(212,168,83,0.9)",
+                  color: WARM_GOLD,
                   position: "relative",
                   zIndex: 1,
                   letterSpacing: "0.06em",
@@ -884,9 +913,9 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
               style={{
                 fontSize: "0.75rem",
                 padding: "2px 8px",
-                background: "rgba(200,169,106,0.12)",
+                background: "rgba(212,168,83,0.12)",
                 borderRadius: 4,
-                color: "rgba(200,169,106,0.8)",
+                color: WARM_GOLD,
                 fontFamily: "'Libre Baskerville', Georgia, serif",
               }}
             >
@@ -898,7 +927,7 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
-                color: "rgba(229,231,235,0.85)",
+                color: WARM_TEXT,
                 fontSize: "0.95rem",
                 lineHeight: 2,
                 whiteSpace: "pre-wrap",
@@ -929,16 +958,12 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                 }}
               >
                 <div
-                  style={{
-                    flex: 1,
-                    height: 1,
-                    background: "rgba(200,169,106,0.18)",
-                  }}
+                  style={{ flex: 1, height: 1, background: `${WARM_BORDER}` }}
                 />
                 <span
                   style={{
                     fontSize: "0.7rem",
-                    color: "rgba(200,169,106,0.7)",
+                    color: WARM_GOLD,
                     fontFamily: "'Libre Baskerville', Georgia, serif",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
@@ -947,11 +972,7 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                   Reflections
                 </span>
                 <div
-                  style={{
-                    flex: 1,
-                    height: 1,
-                    background: "rgba(200,169,106,0.18)",
-                  }}
+                  style={{ flex: 1, height: 1, background: `${WARM_BORDER}` }}
                 />
               </div>
               <CommentThread

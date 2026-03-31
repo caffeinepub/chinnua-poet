@@ -1,34 +1,38 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 
+const WARM_BG = "#FFF8EE";
+const _WARM_PAPER = "#F5ECD7";
+const WARM_MOCHA = "#5C3D2E";
+const WARM_BROWN = "#8B6F47";
+const _WARM_GOLD = "#D4A853";
+const WARM_TEXT = "#3D2B1F";
+const WARM_BORDER = "rgba(139,111,71,0.25)";
+const WARM_MUTED = "rgba(92,61,46,0.5)";
+
 const MOODS = [
   {
     name: "Melancholy",
-    emoji: "🌧️",
     desc: "Gentle rain, soft piano — for when the heart is heavy",
     playlist: "https://open.spotify.com/embed/playlist/37i9dQZF1DX3YSRoSdA634",
   },
   {
     name: "Romantic",
-    emoji: "🌹",
     desc: "Warm strings and tender melodies — for when love speaks",
     playlist: "https://open.spotify.com/embed/playlist/37i9dQZF1DXbvABJXBIyiY",
   },
   {
     name: "Peaceful",
-    emoji: "🌿",
     desc: "Ambient sounds and stillness — for quiet reflection",
     playlist: "https://open.spotify.com/embed/playlist/37i9dQZF1DX1s9knjP51Oa",
   },
   {
     name: "Energetic",
-    emoji: "⚡",
     desc: "Upbeat rhythms to fuel your creative fire",
     playlist: "https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP",
   },
   {
     name: "Mystical",
-    emoji: "🌙",
     desc: "Ethereal sounds for deep poetic exploration",
     playlist: "https://open.spotify.com/embed/playlist/37i9dQZF1DWXe9gFZP0gtP",
   },
@@ -38,7 +42,7 @@ export default function MusicSlide() {
   const [activeMood, setActiveMood] = useState(MOODS[0]);
 
   return (
-    <div className="slide-container" style={{ overflowY: "auto" }}>
+    <div style={{ background: WARM_BG, overflowY: "auto", minHeight: "100vh" }}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -47,15 +51,14 @@ export default function MusicSlide() {
         style={{
           maxWidth: 800,
           margin: "0 auto",
-          padding: "1.5rem 1rem",
-          paddingBottom: "2rem",
+          padding: "1.5rem 1rem 2rem",
         }}
       >
         <h2
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             fontSize: "1.6rem",
-            color: "#F5E6D3",
+            color: WARM_MOCHA,
             marginBottom: "0.5rem",
             fontWeight: 700,
           }}
@@ -64,14 +67,16 @@ export default function MusicSlide() {
         </h2>
         <p
           style={{
-            color: "rgba(229,231,235,0.5)",
+            color: WARM_MUTED,
             fontFamily: "'Libre Baskerville', Georgia, serif",
             fontSize: "0.9rem",
             marginBottom: "2rem",
+            fontStyle: "italic",
           }}
         >
           Choose your mood and let the music carry your words
         </p>
+
         <div
           style={{
             display: "flex",
@@ -89,29 +94,28 @@ export default function MusicSlide() {
               style={{
                 padding: "0.6rem 1.25rem",
                 borderRadius: 24,
-                border: `1px solid ${activeMood.name === mood.name ? "rgba(200,169,106,0.7)" : "rgba(200,169,106,0.2)"}`,
+                border: `1px solid ${
+                  activeMood.name === mood.name
+                    ? "rgba(212,168,83,0.7)"
+                    : WARM_BORDER
+                }`,
                 background:
                   activeMood.name === mood.name
-                    ? "rgba(200,169,106,0.2)"
+                    ? "rgba(212,168,83,0.15)"
                     : "transparent",
-                color:
-                  activeMood.name === mood.name
-                    ? "rgba(200,169,106,0.95)"
-                    : "rgba(229,231,235,0.6)",
+                color: activeMood.name === mood.name ? WARM_MOCHA : WARM_BROWN,
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 fontSize: "0.88rem",
                 cursor: "pointer",
                 transition: "all 0.2s",
-                boxShadow:
-                  activeMood.name === mood.name
-                    ? "0 0 15px rgba(200,169,106,0.2)"
-                    : "none",
+                fontWeight: activeMood.name === mood.name ? 600 : 400,
               }}
             >
-              {mood.emoji} {mood.name}
+              {mood.name}
             </button>
           ))}
         </div>
+
         <motion.div
           key={activeMood.name}
           initial={{ opacity: 0, y: 10 }}
@@ -122,7 +126,7 @@ export default function MusicSlide() {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontStyle: "italic",
-              color: "rgba(229,231,235,0.6)",
+              color: WARM_TEXT,
               marginBottom: "1.25rem",
               fontSize: "0.95rem",
             }}
@@ -133,7 +137,8 @@ export default function MusicSlide() {
             style={{
               borderRadius: 12,
               overflow: "hidden",
-              border: "1px solid rgba(200,169,106,0.15)",
+              border: `1px solid ${WARM_BORDER}`,
+              boxShadow: "0 4px 20px rgba(92,61,46,0.1)",
             }}
           >
             <iframe

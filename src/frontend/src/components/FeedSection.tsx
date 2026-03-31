@@ -434,7 +434,7 @@ export function FeedSection({
       id="feed"
       className="py-20 px-4 sm:px-8"
       style={{
-        background: "linear-gradient(180deg, #0D0D0D 0%, #0f0b08 100%)",
+        background: "#FFF8EE",
         borderTop: "1px solid rgba(200,169,106,0.15)",
       }}
     >
