@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useCamera } from "../camera/useCamera";
 
 interface Props {
@@ -22,7 +23,7 @@ interface UserSettings {
   notifyReplies: boolean;
   notifyMessages: boolean;
   notifyCommunity: boolean;
-  theme: "light" | "warm-dark";
+  theme: "warm-cream" | "midnight" | "forest" | "ocean" | "rose" | "ink";
   fontStyle: "classic" | "soft";
   textSize: "small" | "medium" | "large";
   writingMode: "free" | "structured";
@@ -65,7 +66,7 @@ const defaultSettings: UserSettings = {
   notifyReplies: true,
   notifyMessages: true,
   notifyCommunity: true,
-  theme: "light",
+  theme: "warm-cream",
   fontStyle: "classic",
   textSize: "medium",
   writingMode: "free",
@@ -93,6 +94,86 @@ const defaultSettings: UserSettings = {
   communityHighlights: false,
   twoFactor: false,
 };
+
+export const THEME_PALETTES = {
+  "warm-cream": {
+    bg: "#FFF8EE",
+    paper: "#F5ECD7",
+    text: "#3D2B1F",
+    muted: "#8B6F47",
+    gold: "#D4A853",
+    mocha: "#5C3D2E",
+    border: "rgba(139,111,71,0.25)",
+    name: "Warm Cream",
+  },
+  midnight: {
+    bg: "#0D0D14",
+    paper: "#1A1A2E",
+    text: "#E8E0D5",
+    muted: "#9E8070",
+    gold: "#D4A853",
+    mocha: "#C4A882",
+    border: "rgba(200,170,120,0.2)",
+    name: "Midnight Dark",
+  },
+  forest: {
+    bg: "#F0F4EE",
+    paper: "#E3EDE0",
+    text: "#1E3A2F",
+    muted: "#4A7C59",
+    gold: "#7DAF6E",
+    mocha: "#2D5A3E",
+    border: "rgba(74,124,89,0.25)",
+    name: "Forest Green",
+  },
+  ocean: {
+    bg: "#EEF4FA",
+    paper: "#E0EBF5",
+    text: "#1A2E4A",
+    muted: "#4A6E8C",
+    gold: "#5BA3CC",
+    mocha: "#2A4F73",
+    border: "rgba(74,110,140,0.25)",
+    name: "Ocean Blue",
+  },
+  rose: {
+    bg: "#FDF0F3",
+    paper: "#F8E0E6",
+    text: "#3A1A22",
+    muted: "#8C4A5A",
+    gold: "#CC7A8A",
+    mocha: "#6B2D3E",
+    border: "rgba(140,74,90,0.25)",
+    name: "Rose Petal",
+  },
+  ink: {
+    bg: "#F5F0E8",
+    paper: "#EDE8DC",
+    text: "#1A1510",
+    muted: "#5C5040",
+    gold: "#8B7355",
+    mocha: "#3D3020",
+    border: "rgba(92,80,64,0.25)",
+    name: "Ink & Paper",
+  },
+};
+
+export function applyTheme(theme: keyof typeof THEME_PALETTES) {
+  const p = THEME_PALETTES[theme] || THEME_PALETTES["warm-cream"];
+  const root = document.documentElement;
+  root.style.setProperty("--theme-bg", p.bg);
+  root.style.setProperty("--theme-paper", p.paper);
+  root.style.setProperty("--theme-text", p.text);
+  root.style.setProperty("--theme-muted", p.muted);
+  root.style.setProperty("--theme-gold", p.gold);
+  root.style.setProperty("--theme-mocha", p.mocha);
+  root.style.setProperty("--theme-border", p.border);
+  document.body.style.background = p.bg;
+  document.body.style.color = p.text;
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("chinnua_theme", theme);
+  window.dispatchEvent(new CustomEvent("themeChanged", { detail: p }));
+}
 
 const SECTIONS = [
   { id: "profile", icon: "👤", label: "Profile" },
@@ -293,6 +374,8 @@ export default function SettingsSlide({
   const cameraRef = useRef<HTMLInputElement>(null);
   const { startCamera, stopCamera, capturePhoto, videoRef } = useCamera();
   const [showCamera, setShowCamera] = useState(false);
+  const [twoFACode, setTwoFACode] = useState("");
+  const [showTwoFAModal, setShowTwoFAModal] = useState(false);
 
   const update = <K extends keyof UserSettings>(
     key: K,
@@ -303,7 +386,13 @@ export default function SettingsSlide({
 
   const saveAll = () => {
     localStorage.setItem("chinnua_user_settings", JSON.stringify(settings));
+    localStorage.setItem("chinnua_settings", JSON.stringify(settings));
+    applyTheme(settings.theme as keyof typeof THEME_PALETTES);
+    window.dispatchEvent(
+      new CustomEvent("settingsChanged", { detail: settings }),
+    );
     setSaved(true);
+    toast.success("Settings saved");
     setTimeout(() => setSaved(false), 2500);
   };
 
@@ -748,13 +837,75 @@ export default function SettingsSlide({
         return (
           <SectionCard title="Appearance Settings" icon="🎨">
             <p style={labelStyle}>Theme</p>
-            <div style={radioGroupStyle}>
-              {radioOption("light", settings.theme, "☀️ Light", () =>
-                update("theme", "light"),
-              )}
-              {radioOption("warm-dark", settings.theme, "🌙 Warm Dark", () =>
-                update("theme", "warm-dark"),
-              )}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: "0.75rem",
+                marginBottom: "1rem",
+              }}
+            >
+              {(
+                Object.entries(THEME_PALETTES) as [
+                  string,
+                  (typeof THEME_PALETTES)["warm-cream"],
+                ][]
+              ).map(([key, palette]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => {
+                    update("theme", key as any);
+                    applyTheme(key as keyof typeof THEME_PALETTES);
+                  }}
+                  style={{
+                    padding: "0.75rem",
+                    borderRadius: 10,
+                    border:
+                      settings.theme === key
+                        ? `2px solid ${palette.gold}`
+                        : `1px solid ${palette.border}`,
+                    background: palette.paper,
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: 24,
+                      borderRadius: 6,
+                      background: palette.bg,
+                      marginBottom: "0.4rem",
+                      border: `1px solid ${palette.border}`,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "'Lora', serif",
+                      fontSize: "0.8rem",
+                      color: palette.text,
+                      fontWeight: settings.theme === key ? 700 : 400,
+                      display: "block",
+                    }}
+                  >
+                    {palette.name}
+                  </span>
+                  {settings.theme === key && (
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "0.65rem",
+                        color: palette.gold,
+                        marginTop: 2,
+                      }}
+                    >
+                      Active
+                    </span>
+                  )}
+                </button>
+              ))}
             </div>
             <p style={labelStyle}>Font Style</p>
             <div style={radioGroupStyle}>
@@ -1512,22 +1663,6 @@ export default function SettingsSlide({
               }}
             >
               <a
-                href="https://www.instagram.com/chinnua_07_/"
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  padding: "0.4rem 0.9rem",
-                  borderRadius: 20,
-                  border: "1px solid rgba(139,111,71,0.25)",
-                  color: colors.mocha,
-                  textDecoration: "none",
-                  fontFamily: "'Lora', serif",
-                  fontSize: "0.85rem",
-                }}
-              >
-                📷 Instagram
-              </a>
-              <a
                 href="https://www.youtube.com/@ChinnuaPoetofficial"
                 target="_blank"
                 rel="noreferrer"
@@ -1629,9 +1764,131 @@ export default function SettingsSlide({
             <Toggle
               id="twoFactor"
               checked={settings.twoFactor}
-              onChange={(v) => update("twoFactor", v)}
-              label="Two-Factor Authentication (coming soon)"
+              onChange={(v) => {
+                update("twoFactor", v);
+                if (v) {
+                  const code = Math.floor(
+                    100000 + Math.random() * 900000,
+                  ).toString();
+                  localStorage.setItem("chinnua_2fa_code", code);
+                  setTwoFACode(code);
+                  setShowTwoFAModal(true);
+                } else {
+                  localStorage.removeItem("chinnua_2fa_code");
+                  toast.success("Two-factor authentication disabled");
+                }
+              }}
+              label="Two-Factor Authentication"
             />
+            {/* 2FA Modal */}
+            <AnimatePresence>
+              {showTwoFAModal && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  style={{
+                    position: "fixed",
+                    inset: 0,
+                    background: "rgba(0,0,0,0.4)",
+                    zIndex: 300,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "1rem",
+                  }}
+                  data-ocid="settings.dialog"
+                >
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    style={{
+                      background: colors.paper,
+                      borderRadius: 16,
+                      padding: "2rem",
+                      maxWidth: 360,
+                      width: "100%",
+                      boxShadow: "0 8px 40px rgba(0,0,0,0.2)",
+                      border: `1px solid ${colors.border}`,
+                    }}
+                  >
+                    <h3
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        color: colors.text,
+                        fontSize: "1.1rem",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      Two-Factor Authentication Enabled
+                    </h3>
+                    <p
+                      style={{
+                        fontFamily: "'Lora', serif",
+                        color: colors.muted,
+                        fontSize: "0.85rem",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      Save this backup code. You'll need it when logging in as
+                      admin.
+                    </p>
+                    <div
+                      style={{
+                        background: colors.bg,
+                        border: `2px solid ${colors.gold}`,
+                        borderRadius: 10,
+                        padding: "1rem",
+                        textAlign: "center",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "'Playfair Display', serif",
+                          fontSize: "1.8rem",
+                          letterSpacing: "0.3em",
+                          color: colors.text,
+                          fontWeight: 700,
+                        }}
+                      >
+                        {twoFACode}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: "'Lora', serif",
+                        color: colors.muted,
+                        fontSize: "0.78rem",
+                        marginBottom: "1rem",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Keep this code private. Do not share it with anyone.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setShowTwoFAModal(false)}
+                      data-ocid="settings.confirm_button"
+                      style={{
+                        width: "100%",
+                        padding: "0.6rem",
+                        background: colors.gold,
+                        border: "none",
+                        borderRadius: 8,
+                        color: "#3D2B1F",
+                        fontFamily: "'Lora', serif",
+                        cursor: "pointer",
+                        fontWeight: 600,
+                      }}
+                    >
+                      I've saved my code
+                    </button>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Change Password Modal */}
             <AnimatePresence>

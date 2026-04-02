@@ -13,7 +13,9 @@ import CommentThread, {
   type Comment,
   type CommentReply,
 } from "../components/CommentThread";
+import EmojiPicker from "../components/EmojiPicker";
 import { LoginGate } from "../components/LoginGate";
+import { AI_BOTS, BOT_POSTS, seedBotData } from "../data/ai-bots";
 import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
 
@@ -111,6 +113,8 @@ function PostCard({
   onLike,
   onExpand,
   onReply,
+  onBookmark,
+  bookmarked,
   currentUser,
   onViewProfile,
   idx,
@@ -120,6 +124,8 @@ function PostCard({
   onLike: (id: string) => void;
   onExpand: (post: Post) => void;
   onReply: (post: Post) => void;
+  onBookmark: (id: string) => void;
+  bookmarked: boolean;
   currentUser: User | null;
   onViewProfile?: (username: string) => void;
   idx: number;
@@ -405,7 +411,7 @@ function PostCard({
                   : "rgba(212,168,83,0.1)",
               borderRadius: 4,
               fontSize: "0.65rem",
-              color: "rgba(212,168,83,0.9)",
+              color: "#8B6000",
               fontFamily: "'Libre Baskerville', Georgia, serif",
               flexShrink: 0,
             }}
@@ -482,7 +488,7 @@ function PostCard({
             background: "none",
             border: "none",
             fontSize: "0.72rem",
-            color: "rgba(212,168,83,0.7)",
+            color: "#8B6F47",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             flex: 1,
             cursor: "pointer",
@@ -503,7 +509,7 @@ function PostCard({
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: liked ? "#f43f5e" : "rgba(61,43,31,0.5)",
+            color: liked ? "#f43f5e" : "#8B6F47",
             fontSize: "0.8rem",
             fontFamily: "'Libre Baskerville', Georgia, serif",
             display: "flex",
@@ -534,6 +540,27 @@ function PostCard({
           }}
         >
           💬 {post.replies.length}
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onBookmark(post.id);
+          }}
+          data-ocid="feed.toggle"
+          title={bookmarked ? "Unsave" : "Save"}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: bookmarked ? "#D4A853" : "rgba(61,43,31,0.4)",
+            fontSize: "0.9rem",
+            display: "flex",
+            alignItems: "center",
+            transition: "color 0.2s",
+          }}
+        >
+          {bookmarked ? "🔖" : "🏷"}
         </button>
         {/* Comments toggle */}
         <button
@@ -610,8 +637,35 @@ export default function FeedSlide({
   const [replyPost, setReplyPost] = useState<Post | null>(null);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [replyText, setReplyText] = useState("");
+  const [postImage, setPostImage] = useState<string | null>(null);
+  const [savedPosts, setSavedPosts] = useState<Set<string>>(() => {
+    try {
+      const items = JSON.parse(
+        localStorage.getItem("chinnua_saved_items") || "[]",
+      );
+      return new Set(
+        items.filter((i: any) => i.type === "post").map((i: any) => i.itemId),
+      );
+    } catch {
+      return new Set();
+    }
+  });
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showPoll, setShowPoll] = useState(false);
+  const [pollOptionA, setPollOptionA] = useState("");
+  const [pollOptionB, setPollOptionB] = useState("");
+  const photoInputRef = { current: null as HTMLInputElement | null };
 
   useEffect(() => {
+    seedBotData();
+    // Seed bot posts into localStorage if not already done
+    const botPostsKey = "chinnua_bot_posts";
+    if (!localStorage.getItem(botPostsKey)) {
+      localStorage.setItem(botPostsKey, JSON.stringify(BOT_POSTS));
+    }
+    const botPosts: Post[] = JSON.parse(
+      localStorage.getItem(botPostsKey) || "[]",
+    );
     const poemPosts = buildFeedPosts();
     const stored: Post[] = JSON.parse(
       localStorage.getItem("chinnua_posts") || "[]",
@@ -633,7 +687,34 @@ export default function FeedSlide({
     const notePost = getPoetsNotePost();
     const extraPosts = notePost ? [notePost] : [];
 
-    const all = [...extraPosts, ...stored, ...poemPosts]
+    // Load admin-published custom poems
+    const customPoems: {
+      id: string;
+      title: string;
+      category: string;
+      full: string;
+      imageUrl?: string;
+      timestamp: string;
+    }[] = JSON.parse(localStorage.getItem("chinnua_custom_poems") || "[]");
+    const customPosts: Post[] = customPoems.map((p) => ({
+      id: `custom_${p.id}`,
+      username: "CHINNUA_POET",
+      title: p.title,
+      preview: p.full.split("\n").filter(Boolean).slice(0, 3).join("\n"),
+      fullContent: p.full,
+      category: p.category || "New Poem",
+      timestamp: p.timestamp || new Date().toISOString(),
+      likes: 0,
+      replies: [],
+    }));
+
+    const all = [
+      ...extraPosts,
+      ...customPosts,
+      ...botPosts,
+      ...stored,
+      ...poemPosts,
+    ]
       .filter((p) => !deletedIds.has(p.id))
       .map((p) => ({
         ...p,
@@ -649,16 +730,24 @@ export default function FeedSlide({
 
   const handlePost = () => {
     if (!currentUser || !newPost.trim()) return;
-    const post: Post = {
+    let fullContent = newPost.trim();
+    if (showPoll && pollOptionA && pollOptionB) {
+      fullContent += `\n\n[POLL]\nA: ${pollOptionA}\nB: ${pollOptionB}`;
+    }
+    const post: Post & { image?: string; pollOptions?: string[] } = {
       id: `user_${Date.now()}`,
       username: currentUser.username,
-      title: "",
+      title: postTopic.trim() || "",
       preview: newPost.trim(),
-      fullContent: newPost.trim(),
-      category: "Community",
+      fullContent,
+      category: postTopic.trim() ? postTopic.trim() : "Community",
       timestamp: new Date().toISOString(),
       likes: 0,
       replies: [],
+      ...(postImage ? { image: postImage } : {}),
+      ...(showPoll && pollOptionA && pollOptionB
+        ? { pollOptions: [pollOptionA, pollOptionB] }
+        : {}),
     };
     const stored: Post[] = JSON.parse(
       localStorage.getItem("chinnua_posts") || "[]",
@@ -667,6 +756,40 @@ export default function FeedSlide({
     localStorage.setItem("chinnua_posts", JSON.stringify(stored));
     setPosts((prev) => [post, ...prev]);
     setNewPost("");
+    setPostImage(null);
+    setShowPoll(false);
+    setPollOptionA("");
+    setPollOptionB("");
+  };
+
+  const handleBookmark = (postId: string) => {
+    if (!currentUser) return;
+    const items: {
+      id: string;
+      type: string;
+      itemId: string;
+      savedAt: string;
+      userId: string;
+    }[] = JSON.parse(localStorage.getItem("chinnua_saved_items") || "[]");
+    const newSaved = new Set(savedPosts);
+    if (newSaved.has(postId)) {
+      newSaved.delete(postId);
+      const filtered = items.filter(
+        (i) => !(i.type === "post" && i.itemId === postId),
+      );
+      localStorage.setItem("chinnua_saved_items", JSON.stringify(filtered));
+    } else {
+      newSaved.add(postId);
+      items.push({
+        id: `save_${Date.now()}`,
+        type: "post",
+        itemId: postId,
+        savedAt: new Date().toISOString(),
+        userId: currentUser.username,
+      });
+      localStorage.setItem("chinnua_saved_items", JSON.stringify(items));
+    }
+    setSavedPosts(newSaved);
   };
 
   const handleLike = (postId: string) => {
@@ -857,6 +980,85 @@ export default function FeedSlide({
                   minHeight: 70,
                 }}
               />
+              {postImage && (
+                <div style={{ position: "relative", marginTop: "0.5rem" }}>
+                  <img
+                    src={postImage}
+                    alt="Preview"
+                    style={{
+                      maxHeight: 120,
+                      borderRadius: 8,
+                      maxWidth: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setPostImage(null)}
+                    style={{
+                      position: "absolute",
+                      top: 4,
+                      right: 4,
+                      background: "rgba(0,0,0,0.5)",
+                      border: "none",
+                      borderRadius: "50%",
+                      color: "white",
+                      width: 20,
+                      height: 20,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "0.7rem",
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+              {showPoll && (
+                <div
+                  style={{
+                    marginTop: "0.5rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.4rem",
+                  }}
+                >
+                  <input
+                    value={pollOptionA}
+                    onChange={(e) => setPollOptionA(e.target.value)}
+                    placeholder="Option A"
+                    data-ocid="feed.input"
+                    style={{
+                      background: "rgba(245,236,215,0.7)",
+                      border: "1px solid rgba(212,168,83,0.3)",
+                      borderRadius: 6,
+                      padding: "0.35rem 0.6rem",
+                      color: "#3D2B1F",
+                      fontFamily: "'Lora', serif",
+                      fontSize: "0.85rem",
+                      outline: "none",
+                    }}
+                  />
+                  <input
+                    value={pollOptionB}
+                    onChange={(e) => setPollOptionB(e.target.value)}
+                    placeholder="Option B"
+                    data-ocid="feed.input"
+                    style={{
+                      background: "rgba(245,236,215,0.7)",
+                      border: "1px solid rgba(212,168,83,0.3)",
+                      borderRadius: 6,
+                      padding: "0.35rem 0.6rem",
+                      color: "#3D2B1F",
+                      fontFamily: "'Lora', serif",
+                      fontSize: "0.85rem",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+              )}
               <div
                 style={{
                   display: "flex",
@@ -866,54 +1068,88 @@ export default function FeedSlide({
                   flexWrap: "wrap",
                 }}
               >
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  ref={(el) => {
+                    photoInputRef.current = el;
+                  }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) =>
+                      setPostImage(ev.target?.result as string);
+                    reader.readAsDataURL(file);
+                  }}
+                />
                 <button
                   type="button"
-                  title="Photo (coming soon)"
-                  onClick={() => {
-                    const { toast: t } = require("sonner");
-                    t("Photo upload coming soon");
-                  }}
+                  title="Add photo"
+                  onClick={() => photoInputRef.current?.click()}
                   style={{
-                    background: "none",
+                    background: postImage ? "rgba(212,168,83,0.15)" : "none",
                     border: "none",
                     cursor: "pointer",
                     fontSize: "1rem",
                     padding: "0.2rem",
+                    borderRadius: 4,
                   }}
+                  data-ocid="feed.upload_button"
                 >
                   📷
                 </button>
+                <div style={{ position: "relative" }}>
+                  <button
+                    type="button"
+                    title="Add emoji"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    style={{
+                      background: showEmojiPicker
+                        ? "rgba(212,168,83,0.15)"
+                        : "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "1rem",
+                      padding: "0.2rem",
+                      borderRadius: 4,
+                    }}
+                    data-ocid="feed.toggle"
+                  >
+                    😊
+                  </button>
+                  {showEmojiPicker && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "2.5rem",
+                        left: 0,
+                        zIndex: 50,
+                      }}
+                    >
+                      <EmojiPicker
+                        onSelect={(emoji) => {
+                          setNewPost((prev) => prev + emoji);
+                        }}
+                        onClose={() => setShowEmojiPicker(false)}
+                      />
+                    </div>
+                  )}
+                </div>
                 <button
                   type="button"
-                  title="Emoji (coming soon)"
-                  onClick={() => {
-                    const { toast: t } = require("sonner");
-                    t("Emoji picker coming soon");
-                  }}
+                  title="Add poll"
+                  onClick={() => setShowPoll(!showPoll)}
                   style={{
-                    background: "none",
+                    background: showPoll ? "rgba(212,168,83,0.15)" : "none",
                     border: "none",
                     cursor: "pointer",
                     fontSize: "1rem",
                     padding: "0.2rem",
+                    borderRadius: 4,
                   }}
-                >
-                  😊
-                </button>
-                <button
-                  type="button"
-                  title="Poll (coming soon)"
-                  onClick={() => {
-                    const { toast: t } = require("sonner");
-                    t("Polls coming soon");
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "1rem",
-                    padding: "0.2rem",
-                  }}
+                  data-ocid="feed.toggle"
                 >
                   📊
                 </button>
@@ -1042,6 +1278,8 @@ export default function FeedSlide({
               post={post}
               liked={likedPosts.has(post.id)}
               onLike={handleLike}
+              onBookmark={handleBookmark}
+              bookmarked={savedPosts.has(post.id)}
               onExpand={setExpandedPost}
               onReply={setReplyPost}
               currentUser={currentUser}

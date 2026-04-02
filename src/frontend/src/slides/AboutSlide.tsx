@@ -1,7 +1,7 @@
 import { Check, Edit2, Mail, Pencil, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { SiInstagram, SiX, SiYoutube } from "react-icons/si";
+import { SiX, SiYoutube } from "react-icons/si";
 import { toast } from "sonner";
 import { useActor } from "../hooks/useActor";
 
@@ -770,11 +770,6 @@ export default function AboutSlide() {
                 Connect
               </h4>
               {[
-                {
-                  Icon: SiInstagram,
-                  href: "https://www.instagram.com/chinnua_07_/",
-                  label: "@chinnua_07_",
-                },
                 {
                   Icon: SiYoutube,
                   href: "https://www.youtube.com/@ChinnuaPoetofficial",

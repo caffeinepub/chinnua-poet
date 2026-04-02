@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { AI_BOTS } from "../data/ai-bots";
 import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
 
@@ -43,6 +44,498 @@ interface InkReply {
   adminReply?: string;
   submittedAt: string;
   repliedAt?: string;
+}
+
+function AiUsersTab() {
+  const WARM_MOCHA = "#5C3D2E";
+  const WARM_BROWN = "#8B6F47";
+  const WARM_PAPER = "#F5ECD7";
+  const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_TEXT = "#3D2B1F";
+
+  const [passwords, setPasswords] = useState<Record<string, string>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("chinnua_bot_passwords") || "{}");
+    } catch {
+      return {};
+    }
+  });
+  const [editPw, setEditPw] = useState<string | null>(null);
+  const [pwValue, setPwValue] = useState("");
+
+  const savePw = (username: string) => {
+    const updated = { ...passwords, [username]: pwValue };
+    localStorage.setItem("chinnua_bot_passwords", JSON.stringify(updated));
+    setPasswords(updated);
+    setEditPw(null);
+    setPwValue("");
+  };
+
+  return (
+    <div>
+      <h3
+        style={{
+          fontFamily: "'Playfair Display', Georgia, serif",
+          color: WARM_MOCHA,
+          marginBottom: "1rem",
+        }}
+      >
+        AI Bot Users
+      </h3>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: "1rem",
+        }}
+      >
+        {AI_BOTS.map((bot) => (
+          <div
+            key={bot.username}
+            style={{
+              background: WARM_PAPER,
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 12,
+              padding: "1rem",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
+                marginBottom: "0.6rem",
+              }}
+            >
+              <img
+                src={bot.photo}
+                alt={bot.displayName}
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+              <div>
+                <div
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontWeight: 700,
+                    color: WARM_MOCHA,
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  {bot.displayName}
+                </div>
+                <div style={{ fontSize: "0.72rem", color: WARM_BROWN }}>
+                  @{bot.username}
+                </div>
+              </div>
+            </div>
+            <p
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontStyle: "italic",
+                fontSize: "0.78rem",
+                color: WARM_BROWN,
+                marginBottom: "0.8rem",
+              }}
+            >
+              {bot.bio}
+            </p>
+            <div
+              style={{
+                fontSize: "0.72rem",
+                color: WARM_BROWN,
+                marginBottom: "0.5rem",
+              }}
+            >
+              Password:{" "}
+              <strong style={{ color: WARM_MOCHA }}>
+                {passwords[bot.username] ?? "bot2026"}
+              </strong>
+            </div>
+            {editPw === bot.username ? (
+              <div style={{ display: "flex", gap: "0.4rem" }}>
+                <input
+                  type="text"
+                  value={pwValue}
+                  onChange={(e) => setPwValue(e.target.value)}
+                  placeholder="New password"
+                  style={{
+                    flex: 1,
+                    padding: "0.3rem 0.5rem",
+                    border: `1px solid ${WARM_BORDER}`,
+                    borderRadius: 6,
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.78rem",
+                    background: "white",
+                    color: WARM_TEXT,
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => savePw(bot.username)}
+                  style={{
+                    padding: "0.3rem 0.6rem",
+                    background: "rgba(212,168,83,0.15)",
+                    border: `1px solid ${WARM_BORDER}`,
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    fontSize: "0.75rem",
+                    color: WARM_MOCHA,
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditPw(null);
+                    setPwValue("");
+                  }}
+                  style={{
+                    padding: "0.3rem 0.5rem",
+                    background: "none",
+                    border: `1px solid ${WARM_BORDER}`,
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    fontSize: "0.75rem",
+                    color: WARM_BROWN,
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditPw(bot.username);
+                  setPwValue(passwords[bot.username] ?? "bot2026");
+                }}
+                style={{
+                  padding: "0.3rem 0.8rem",
+                  background: "rgba(139,111,71,0.1)",
+                  border: `1px solid ${WARM_BORDER}`,
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontSize: "0.75rem",
+                  color: WARM_BROWN,
+                }}
+              >
+                Change Password
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MusicManagementTab() {
+  const WARM_MOCHA = "#5C3D2E";
+  const WARM_BROWN = "#8B6F47";
+  const WARM_PAPER = "#F5ECD7";
+  const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_GOLD = "#D4A853";
+  const WARM_TEXT = "#3D2B1F";
+
+  interface Track {
+    id: string;
+    title: string;
+    artist: string;
+    mood: string;
+    spotifyUrl: string;
+  }
+  const DEFAULT_TRACKS: Track[] = [
+    {
+      id: "default_1",
+      title: "Autumn Letters",
+      artist: "The Cinematic Orchestra",
+      mood: "Sad",
+      spotifyUrl:
+        "https://open.spotify.com/search/autumn+letters+cinematic+orchestra",
+    },
+    {
+      id: "default_2",
+      title: "Experience",
+      artist: "Ludovico Einaudi",
+      mood: "Peaceful",
+      spotifyUrl: "https://open.spotify.com/search/experience+ludovico+einaudi",
+    },
+    {
+      id: "default_3",
+      title: "River Flows in You",
+      artist: "Yiruma",
+      mood: "Romantic",
+      spotifyUrl: "https://open.spotify.com/search/river+flows+in+you+yiruma",
+    },
+    {
+      id: "default_4",
+      title: "Night in the Forest",
+      artist: "Max Richter",
+      mood: "Dark",
+      spotifyUrl: "https://open.spotify.com/search/max+richter+night",
+    },
+    {
+      id: "default_5",
+      title: "Golden Hour",
+      artist: "JVKE",
+      mood: "Hopeful",
+      spotifyUrl: "https://open.spotify.com/search/golden+hour+jvke",
+    },
+  ];
+
+  const [tracks, setTracks] = useState<Track[]>(() => {
+    try {
+      const stored = JSON.parse(
+        localStorage.getItem("chinnua_music_library") || "null",
+      );
+      return stored ?? DEFAULT_TRACKS;
+    } catch {
+      return DEFAULT_TRACKS;
+    }
+  });
+  const [newTrack, setNewTrack] = useState({
+    title: "",
+    artist: "",
+    mood: "Peaceful",
+    spotifyUrl: "",
+  });
+
+  const addTrack = () => {
+    if (!newTrack.title.trim() || !newTrack.artist.trim()) return;
+    const updated = [...tracks, { ...newTrack, id: `track_${Date.now()}` }];
+    setTracks(updated);
+    localStorage.setItem("chinnua_music_library", JSON.stringify(updated));
+    setNewTrack({ title: "", artist: "", mood: "Peaceful", spotifyUrl: "" });
+  };
+
+  const deleteTrack = (id: string) => {
+    const updated = tracks.filter((t) => t.id !== id);
+    setTracks(updated);
+    localStorage.setItem("chinnua_music_library", JSON.stringify(updated));
+  };
+
+  const moods = ["Sad", "Romantic", "Dark", "Hopeful", "Peaceful", "Energetic"];
+
+  return (
+    <div>
+      <h3
+        style={{
+          fontFamily: "'Playfair Display', Georgia, serif",
+          color: WARM_MOCHA,
+          marginBottom: "1rem",
+        }}
+      >
+        Music Library
+      </h3>
+      <div
+        style={{
+          background: WARM_PAPER,
+          border: `1px solid ${WARM_BORDER}`,
+          borderRadius: 12,
+          padding: "1.2rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <h4
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            marginBottom: "0.8rem",
+            fontSize: "0.9rem",
+          }}
+        >
+          Add New Track
+        </h4>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "0.75rem",
+            marginBottom: "0.75rem",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Track title"
+            value={newTrack.title}
+            onChange={(e) =>
+              setNewTrack((p) => ({ ...p, title: e.target.value }))
+            }
+            style={{
+              padding: "0.5rem 0.75rem",
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 8,
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.85rem",
+              color: WARM_TEXT,
+              background: "white",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Artist name"
+            value={newTrack.artist}
+            onChange={(e) =>
+              setNewTrack((p) => ({ ...p, artist: e.target.value }))
+            }
+            style={{
+              padding: "0.5rem 0.75rem",
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 8,
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.85rem",
+              color: WARM_TEXT,
+              background: "white",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Spotify URL"
+            value={newTrack.spotifyUrl}
+            onChange={(e) =>
+              setNewTrack((p) => ({ ...p, spotifyUrl: e.target.value }))
+            }
+            style={{
+              padding: "0.5rem 0.75rem",
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 8,
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.85rem",
+              color: WARM_TEXT,
+              background: "white",
+            }}
+          />
+          <select
+            value={newTrack.mood}
+            onChange={(e) =>
+              setNewTrack((p) => ({ ...p, mood: e.target.value }))
+            }
+            style={{
+              padding: "0.5rem 0.75rem",
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 8,
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.85rem",
+              color: WARM_TEXT,
+              background: "white",
+            }}
+          >
+            {moods.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button
+          type="button"
+          onClick={addTrack}
+          data-ocid="admin.primary_button"
+          style={{
+            padding: "0.5rem 1.5rem",
+            background: "rgba(212,168,83,0.15)",
+            border: "1px solid rgba(212,168,83,0.4)",
+            borderRadius: 8,
+            cursor: "pointer",
+            fontFamily: "'Lora', Georgia, serif",
+            fontSize: "0.85rem",
+            color: WARM_MOCHA,
+            fontWeight: 600,
+          }}
+        >
+          Add Track
+        </button>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        {tracks.map((track) => (
+          <div
+            key={track.id}
+            style={{
+              background: WARM_PAPER,
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 10,
+              padding: "0.9rem 1rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <span
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontWeight: 700,
+                  color: WARM_MOCHA,
+                  fontSize: "0.9rem",
+                }}
+              >
+                {track.title}
+              </span>
+              <span
+                style={{
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontSize: "0.8rem",
+                  color: WARM_BROWN,
+                  marginLeft: "0.5rem",
+                }}
+              >
+                — {track.artist}
+              </span>
+            </div>
+            <span
+              style={{
+                padding: "0.2rem 0.6rem",
+                background: "rgba(212,168,83,0.12)",
+                borderRadius: 12,
+                fontSize: "0.7rem",
+                color: WARM_BROWN,
+                flexShrink: 0,
+              }}
+            >
+              {track.mood}
+            </span>
+            {track.spotifyUrl && (
+              <a
+                href={track.spotifyUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  fontSize: "0.75rem",
+                  color: WARM_GOLD,
+                  textDecoration: "none",
+                  flexShrink: 0,
+                }}
+              >
+                Spotify
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={() => deleteTrack(track.id)}
+              data-ocid="admin.delete_button"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "rgba(248,113,113,0.7)",
+                fontSize: "1rem",
+                flexShrink: 0,
+              }}
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function DailyLettersTab() {
@@ -581,6 +1074,332 @@ function InkRepliesTab() {
   );
 }
 
+function AdminInboxTab() {
+  const WARM_MOCHA = "#5C3D2E";
+  const WARM_BROWN = "#8B6F47";
+  const WARM_PAPER = "#F5ECD7";
+  const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_TEXT = "#3D2B1F";
+
+  interface InboxMsg {
+    id: string;
+    from: string;
+    to: string;
+    text: string;
+    timestamp: string;
+  }
+
+  const [msgs, setMsgs] = React.useState<InboxMsg[]>([]);
+
+  React.useEffect(() => {
+    // Collect all messages sent to CHINNUA_POET
+    const allKeys = Object.keys(localStorage).filter((k) =>
+      k.startsWith("chinnua_conv_"),
+    );
+    const collected: InboxMsg[] = [];
+    for (const key of allKeys) {
+      try {
+        const convMsgs = JSON.parse(localStorage.getItem(key) || "[]");
+        for (const m of convMsgs) {
+          if (m.to === "CHINNUA_POET" || key.includes("CHINNUA_POET")) {
+            collected.push(m);
+          }
+        }
+      } catch {}
+    }
+    collected.sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    );
+    setMsgs(collected);
+  }, []);
+
+  return (
+    <div>
+      <h3
+        style={{
+          fontFamily: "'Playfair Display', Georgia, serif",
+          color: WARM_MOCHA,
+          marginBottom: "1rem",
+        }}
+      >
+        Admin Inbox
+      </h3>
+      <p
+        style={{
+          fontFamily: "'Lora', Georgia, serif",
+          fontStyle: "italic",
+          color: WARM_BROWN,
+          fontSize: "0.82rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        All messages sent to CHINNUA_POET from users.
+      </p>
+      {msgs.length === 0 ? (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "3rem 1rem",
+            color: WARM_BROWN,
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+          }}
+        >
+          No messages yet.
+        </div>
+      ) : (
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+        >
+          {msgs.slice(0, 50).map((m, i) => (
+            <div
+              key={m.id || i}
+              style={{
+                background: WARM_PAPER,
+                border: `1px solid ${WARM_BORDER}`,
+                borderRadius: 10,
+                padding: "0.85rem 1rem",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "0.4rem",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontWeight: 700,
+                    color: WARM_MOCHA,
+                    fontSize: "0.88rem",
+                  }}
+                >
+                  {m.from}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.7rem",
+                    color: "rgba(61,43,31,0.45)",
+                  }}
+                >
+                  {new Date(m.timestamp).toLocaleString()}
+                </span>
+              </div>
+              <p
+                style={{
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.85rem",
+                  color: WARM_TEXT,
+                  margin: 0,
+                  lineHeight: 1.6,
+                }}
+              >
+                {m.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminAboutTab() {
+  const WARM_MOCHA = "#5C3D2E";
+  const WARM_BROWN = "#8B6F47";
+  const WARM_PAPER = "#F5ECD7";
+  const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_TEXT = "#3D2B1F";
+
+  const [bio, setBio] = React.useState("");
+  const [story, setStory] = React.useState("");
+  const [saved, setSaved] = React.useState(false);
+
+  React.useEffect(() => {
+    try {
+      const about = JSON.parse(
+        localStorage.getItem("chinnua_about_content") || "{}",
+      );
+      setBio(about.bio || "");
+      setStory(about.story || "");
+    } catch {}
+  }, []);
+
+  const handleDocUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      // Parse the document: first paragraph = bio, rest = story
+      const lines = text.split("\n").filter((l) => l.trim());
+      const bioText = lines.slice(0, 3).join(" ");
+      const storyText = lines.slice(3).join("\n");
+      setBio(bioText);
+      setStory(storyText);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleSave = () => {
+    const about = { bio, story, poetName: "CHINNUA_POET" };
+    localStorage.setItem("chinnua_about_content", JSON.stringify(about));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  return (
+    <div>
+      <h3
+        style={{
+          fontFamily: "'Playfair Display', Georgia, serif",
+          color: WARM_MOCHA,
+          marginBottom: "1rem",
+        }}
+      >
+        About Page Editor
+      </h3>
+
+      {/* Document Upload */}
+      <div
+        style={{
+          background: WARM_PAPER,
+          border: `1px solid ${WARM_BORDER}`,
+          borderRadius: 10,
+          padding: "1rem 1.25rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            fontWeight: 600,
+            marginBottom: "0.5rem",
+            fontSize: "0.88rem",
+          }}
+        >
+          Upload Document (.txt)
+        </p>
+        <p
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+            fontSize: "0.78rem",
+            color: WARM_BROWN,
+            marginBottom: "0.75rem",
+          }}
+        >
+          Upload a text file to auto-populate the About page with its content.
+        </p>
+        <input
+          type="file"
+          accept=".txt"
+          data-ocid="admin.upload_button"
+          onChange={handleDocUpload}
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontSize: "0.8rem",
+            color: WARM_TEXT,
+          }}
+        />
+      </div>
+
+      {/* Bio */}
+      <div style={{ marginBottom: "1.25rem" }}>
+        <div
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            fontSize: "0.88rem",
+            fontWeight: 600,
+            display: "block",
+            marginBottom: "0.5rem",
+          }}
+        >
+          Bio
+        </div>
+        <textarea
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          rows={4}
+          data-ocid="admin.textarea"
+          style={{
+            width: "100%",
+            padding: "0.75rem",
+            border: `1px solid ${WARM_BORDER}`,
+            borderRadius: 8,
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontSize: "0.85rem",
+            color: WARM_TEXT,
+            background: WARM_PAPER,
+            resize: "vertical",
+            outline: "none",
+          }}
+        />
+      </div>
+
+      {/* Story */}
+      <div style={{ marginBottom: "1.5rem" }}>
+        <div
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            fontSize: "0.88rem",
+            fontWeight: 600,
+            display: "block",
+            marginBottom: "0.5rem",
+          }}
+        >
+          Full Story / About Content
+        </div>
+        <textarea
+          value={story}
+          onChange={(e) => setStory(e.target.value)}
+          rows={10}
+          data-ocid="admin.textarea"
+          style={{
+            width: "100%",
+            padding: "0.75rem",
+            border: `1px solid ${WARM_BORDER}`,
+            borderRadius: 8,
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontSize: "0.85rem",
+            color: WARM_TEXT,
+            background: WARM_PAPER,
+            resize: "vertical",
+            outline: "none",
+          }}
+        />
+      </div>
+
+      <button
+        type="button"
+        onClick={handleSave}
+        data-ocid="admin.save_button"
+        style={{
+          background: saved ? "rgba(92,180,92,0.15)" : "rgba(212,168,83,0.85)",
+          border: "none",
+          borderRadius: 8,
+          padding: "0.6rem 1.5rem",
+          cursor: "pointer",
+          fontFamily: "'Libre Baskerville', Georgia, serif",
+          fontSize: "0.85rem",
+          color: "#3D2B1F",
+          fontWeight: 600,
+          transition: "all 0.2s",
+        }}
+      >
+        {saved ? "Saved!" : "Save About Content"}
+      </button>
+    </div>
+  );
+}
+
 export default function AdminSlide() {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState("");
@@ -591,6 +1410,13 @@ export default function AdminSlide() {
   const [gallery, setGallery] = useState<GalleryPhoto[]>([]);
   const [newPassword, setNewPassword] = useState("");
   const [announcement, setAnnouncement] = useState("");
+  const [showNewPoemModal, setShowNewPoemModal] = useState(false);
+  const [newPoemTitle, setNewPoemTitle] = useState("");
+  const [newPoemCategory, setNewPoemCategory] = useState("Identity");
+  const [newPoemText, setNewPoemText] = useState("");
+  const [newPoemImageUrl, setNewPoemImageUrl] = useState("");
+  const [twoFAStep, setTwoFAStep] = useState(false);
+  const [twoFAInput, setTwoFAInput] = useState("");
   const [rules, setRules] = useState(
     "1. Be respectful to all community members.\n2. No hate speech or harassment.\n3. Share only original content or give proper credit.\n4. Keep discussions poetry-related.\n5. No spam or promotional content.\n6. Respect privacy of others.",
   );
@@ -676,25 +1502,76 @@ export default function AdminSlide() {
   }, []);
 
   const checkPassword = async () => {
+    let passwordOk = false;
     try {
       if (actor) {
         const ok = await (actor as any).checkAdminPassword(password);
-        if (ok) {
-          setAuthed(true);
-          localStorage.setItem("chinnua_admin_authed", "true");
-        } else {
+        if (ok) passwordOk = true;
+        else {
           toast.error("Incorrect password");
+          return;
         }
+      } else {
+        if (password === "chinnua2025") passwordOk = true;
+        else {
+          toast.error("Incorrect password");
+          return;
+        }
+      }
+    } catch {
+      if (password === "chinnua2025") passwordOk = true;
+      else {
+        toast.error("Incorrect password");
         return;
       }
-    } catch {}
-    // Fallback: always use default password, never stale localStorage
-    if (password === "chinnua2025") {
+    }
+
+    if (passwordOk) {
+      const storedCode = localStorage.getItem("chinnua_2fa_code");
+      if (storedCode) {
+        setTwoFAStep(true);
+      } else {
+        setAuthed(true);
+        localStorage.setItem("chinnua_admin_authed", "true");
+      }
+    }
+  };
+
+  const checkTwoFA = () => {
+    const storedCode = localStorage.getItem("chinnua_2fa_code");
+    if (twoFAInput === storedCode) {
       setAuthed(true);
+      setTwoFAStep(false);
       localStorage.setItem("chinnua_admin_authed", "true");
     } else {
-      toast.error("Incorrect password");
+      toast.error("Invalid 2FA code");
     }
+  };
+
+  const publishNewPoem = () => {
+    if (!newPoemTitle.trim() || !newPoemText.trim()) {
+      toast.error("Title and poem text are required");
+      return;
+    }
+    const customPoems = JSON.parse(
+      localStorage.getItem("chinnua_custom_poems") || "[]",
+    );
+    const newPoem = {
+      id: `custom_${Date.now()}`,
+      title: newPoemTitle.trim(),
+      category: newPoemCategory,
+      full: newPoemText.trim(),
+      imageUrl: newPoemImageUrl.trim() || null,
+      author: "CHINNUA_POET",
+      timestamp: new Date().toISOString(),
+    };
+    customPoems.unshift(newPoem);
+    localStorage.setItem("chinnua_custom_poems", JSON.stringify(customPoems));
+    setNewPoemTitle("");
+    setNewPoemText("");
+    setNewPoemImageUrl("");
+    setShowNewPoemModal(false);
+    toast.success("Poem published successfully");
   };
 
   const emergencyReset = () => {
@@ -882,6 +1759,106 @@ export default function AdminSlide() {
     );
   }
 
+  if (twoFAStep) {
+    return (
+      <div
+        className="slide-container"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="feed-card"
+          style={{
+            padding: "2.5rem",
+            width: "100%",
+            maxWidth: 380,
+            textAlign: "center",
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "1.2rem",
+              color: WARM_TEXT,
+              marginBottom: "0.5rem",
+            }}
+          >
+            Two-Factor Authentication
+          </h2>
+          <p
+            style={{
+              color: WARM_MUTED,
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.85rem",
+              marginBottom: "1.5rem",
+            }}
+          >
+            Enter your 6-digit backup code
+          </p>
+          <input
+            type="text"
+            value={twoFAInput}
+            onChange={(e) => setTwoFAInput(e.target.value)}
+            placeholder="000000"
+            maxLength={6}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") checkTwoFA();
+            }}
+            style={{
+              background: "rgba(255,248,238,0.9)",
+              border: "1px solid rgba(139,111,71,0.3)",
+              borderRadius: 8,
+              padding: "0.6rem 0.9rem",
+              color: WARM_TEXT,
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "1.2rem",
+              outline: "none",
+              width: "100%",
+              letterSpacing: "0.3em",
+              textAlign: "center",
+              marginBottom: "1rem",
+              boxSizing: "border-box",
+            }}
+            data-ocid="admin.input"
+          />
+          <Button
+            onClick={checkTwoFA}
+            data-ocid="admin.submit_button"
+            style={{
+              width: "100%",
+              background: "rgba(200,169,106,0.85)",
+              border: "none",
+              color: WARM_TEXT,
+            }}
+          >
+            Verify
+          </Button>
+          <button
+            type="button"
+            onClick={() => setTwoFAStep(false)}
+            style={{
+              marginTop: "0.5rem",
+              background: "none",
+              border: "none",
+              color: WARM_BROWN,
+              fontSize: "0.75rem",
+              cursor: "pointer",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              textDecoration: "underline",
+            }}
+          >
+            Back to password
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="slide-container"
@@ -945,6 +1922,10 @@ export default function AdminSlide() {
               "guardian",
               "letters",
               "replies",
+              "ai-users",
+              "music",
+              "inbox",
+              "about",
             ].map((tab) => (
               <TabsTrigger
                 key={tab}
@@ -962,16 +1943,156 @@ export default function AdminSlide() {
           </TabsList>
 
           <TabsContent value="poems">
-            <p
+            <div
               style={{
-                color: "rgba(92,61,46,0.5)",
-                fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontSize: "0.82rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
                 marginBottom: "1rem",
               }}
             >
-              {POEMS.length} poems · {deletedPoems.size} hidden
-            </p>
+              <p
+                style={{
+                  color: "rgba(92,61,46,0.5)",
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.82rem",
+                  margin: 0,
+                }}
+              >
+                {POEMS.length} poems · {deletedPoems.size} hidden
+              </p>
+              <Button
+                onClick={() => setShowNewPoemModal(true)}
+                data-ocid="admin.primary_button"
+                style={{
+                  background: "rgba(212,168,83,0.85)",
+                  border: "none",
+                  color: "#3D2B1F",
+                  fontFamily: "'Lora', serif",
+                  fontSize: "0.82rem",
+                }}
+              >
+                + Write New Poem
+              </Button>
+            </div>
+            {/* New Poem Modal */}
+            {showNewPoemModal && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  background: "rgba(0,0,0,0.4)",
+                  zIndex: 200,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "1rem",
+                }}
+                data-ocid="admin.modal"
+              >
+                <motion.div
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  style={{
+                    background: "#F5ECD7",
+                    borderRadius: 16,
+                    padding: "2rem",
+                    maxWidth: 520,
+                    width: "100%",
+                    maxHeight: "85vh",
+                    overflowY: "auto",
+                    boxShadow: "0 8px 40px rgba(0,0,0,0.2)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      color: WARM_TEXT,
+                      fontSize: "1.2rem",
+                      marginBottom: "1.25rem",
+                    }}
+                  >
+                    Write New Poem
+                  </h3>
+                  <input
+                    value={newPoemTitle}
+                    onChange={(e) => setNewPoemTitle(e.target.value)}
+                    placeholder="Poem title"
+                    style={{ ...inputStyle, marginBottom: "0.75rem" }}
+                    data-ocid="admin.input"
+                  />
+                  <select
+                    value={newPoemCategory}
+                    onChange={(e) => setNewPoemCategory(e.target.value)}
+                    style={{ ...inputStyle, marginBottom: "0.75rem" }}
+                    data-ocid="admin.select"
+                  >
+                    {[
+                      "Sad",
+                      "Romantic",
+                      "Dark",
+                      "Hopeful",
+                      "Love",
+                      "Loss",
+                      "Nature",
+                      "Spiritual",
+                      "Identity",
+                      "Other",
+                    ].map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                  <Textarea
+                    value={newPoemText}
+                    onChange={(e) => setNewPoemText(e.target.value)}
+                    placeholder="Write your poem here…"
+                    rows={10}
+                    style={{
+                      ...inputStyle,
+                      resize: "vertical",
+                      marginBottom: "0.75rem",
+                    }}
+                    data-ocid="admin.textarea"
+                  />
+                  <input
+                    value={newPoemImageUrl}
+                    onChange={(e) => setNewPoemImageUrl(e.target.value)}
+                    placeholder="Optional image URL"
+                    style={{ ...inputStyle, marginBottom: "1rem" }}
+                  />
+                  <div style={{ display: "flex", gap: "0.75rem" }}>
+                    <Button
+                      onClick={publishNewPoem}
+                      data-ocid="admin.confirm_button"
+                      style={{
+                        flex: 1,
+                        background: "rgba(212,168,83,0.85)",
+                        border: "none",
+                        color: "#3D2B1F",
+                      }}
+                    >
+                      Publish Poem
+                    </Button>
+                    <Button
+                      onClick={() => setShowNewPoemModal(false)}
+                      data-ocid="admin.cancel_button"
+                      style={{
+                        flex: 1,
+                        background: "rgba(139,111,71,0.15)",
+                        border: "1px solid rgba(139,111,71,0.3)",
+                        color: WARM_TEXT,
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
             <div
               style={{
                 display: "flex",
@@ -1727,6 +2848,18 @@ export default function AdminSlide() {
 
           <TabsContent value="replies">
             <InkRepliesTab />
+          </TabsContent>
+          <TabsContent value="ai-users">
+            <AiUsersTab />
+          </TabsContent>
+          <TabsContent value="music">
+            <MusicManagementTab />
+          </TabsContent>
+          <TabsContent value="inbox">
+            <AdminInboxTab />
+          </TabsContent>
+          <TabsContent value="about">
+            <AdminAboutTab />
           </TabsContent>
         </Tabs>
       </motion.div>

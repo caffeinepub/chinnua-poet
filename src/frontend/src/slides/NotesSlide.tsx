@@ -1,5 +1,11 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import {
+  getAiSettings,
+  getAutoSuggestLine,
+  getWritingSuggestions,
+  speakText,
+} from "../utils/aiFeatures";
 
 interface Note {
   id: string;
@@ -82,6 +88,27 @@ function NoteFormModal({
   const [isPublic, setIsPublic] = useState(note?.isPublic ?? false);
   const [titleFocused, setTitleFocused] = useState(false);
   const [contentFocused, setContentFocused] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [autoSuggest, setAutoSuggest] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const aiSettings = getAiSettings();
+
+  // Auto-suggest debounce
+  const handleContentChange = (val: string) => {
+    setContent(val);
+    if (aiSettings.aiAutoSuggest) {
+      const lines = val.split("\n");
+      const lastLine = lines[lines.length - 1] || "";
+      if (lastLine.length > 5) {
+        setAutoSuggest(getAutoSuggestLine(lastLine));
+      } else {
+        setAutoSuggest("");
+      }
+    }
+    if (aiSettings.aiWritingSuggestions && val.length > 20) {
+      setSuggestions(getWritingSuggestions(val));
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,7 +231,7 @@ function NoteFormModal({
               id="note-content"
               data-ocid="notes.textarea"
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => handleContentChange(e.target.value)}
               onFocus={() => setContentFocused(true)}
               onBlur={() => setContentFocused(false)}
               placeholder="Pour your thoughts here..."
@@ -223,6 +250,156 @@ function NoteFormModal({
             />
           </div>
 
+          {/* AI Writing Tools */}
+          {(aiSettings.aiAutoSuggest ||
+            aiSettings.aiWritingSuggestions ||
+            aiSettings.aiAudioGen) && (
+            <div
+              style={{
+                display: "flex",
+                gap: "0.5rem",
+                flexWrap: "wrap",
+                marginTop: "-0.25rem",
+              }}
+            >
+              {aiSettings.aiAudioGen && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    speakText(
+                      content,
+                      aiSettings.defaultVoice,
+                      aiSettings.playbackSpeed,
+                    )
+                  }
+                  data-ocid="notes.secondary_button"
+                  style={{
+                    padding: "0.25rem 0.7rem",
+                    background: "transparent",
+                    border: "1px solid rgba(139,111,71,0.3)",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.72rem",
+                    color: "#8B6F47",
+                  }}
+                >
+                  🔊 Listen
+                </button>
+              )}
+              {aiSettings.aiWritingSuggestions && content.length > 20 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSuggestions(getWritingSuggestions(content));
+                    setShowSuggestions((s) => !s);
+                  }}
+                  data-ocid="notes.toggle"
+                  style={{
+                    padding: "0.25rem 0.7rem",
+                    background: "transparent",
+                    border: "1px solid rgba(139,111,71,0.3)",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.72rem",
+                    color: "#8B6F47",
+                  }}
+                >
+                  ✨ Suggestions
+                </button>
+              )}
+            </div>
+          )}
+          {/* Auto-suggest ghost text */}
+          {aiSettings.aiAutoSuggest && autoSuggest && (
+            <div
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontStyle: "italic",
+                fontSize: "0.82rem",
+                color: "rgba(139,111,71,0.45)",
+                padding: "0.25rem 0.5rem",
+                borderLeft: "2px solid rgba(212,168,83,0.3)",
+              }}
+            >
+              {autoSuggest}
+              <button
+                type="button"
+                onClick={() => {
+                  setContent(
+                    (c) => c + (c.endsWith("\n") ? "" : "\n") + autoSuggest,
+                  );
+                  setAutoSuggest("");
+                }}
+                style={{
+                  marginLeft: "0.5rem",
+                  fontSize: "0.65rem",
+                  color: "rgba(212,168,83,0.7)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                ↵ Add
+              </button>
+            </div>
+          )}
+          {/* Writing suggestions */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div
+              style={{
+                background: "rgba(212,168,83,0.06)",
+                border: "1px solid rgba(212,168,83,0.2)",
+                borderRadius: 8,
+                padding: "0.75rem",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.7rem",
+                  color: "#8B6F47",
+                  marginBottom: "0.4rem",
+                  fontFamily: "'Lora', Georgia, serif",
+                }}
+              >
+                Suggested next lines:
+              </p>
+              {suggestions.map((s) => (
+                <button
+                  key={s.slice(0, 30)}
+                  type="button"
+                  onClick={() => {
+                    setContent((c) => c + (c.endsWith("\n") ? "" : "\n") + s);
+                    setShowSuggestions(false);
+                  }}
+                  data-ocid="notes.item.1"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "left",
+                    padding: "0.3rem 0.5rem",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontStyle: "italic",
+                    fontSize: "0.82rem",
+                    color: "#5C3D2E",
+                    borderRadius: 4,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(212,168,83,0.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
           {/* Privacy toggle */}
           <div
             style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}

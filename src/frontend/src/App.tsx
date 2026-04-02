@@ -6,6 +6,7 @@ import { LoginGate } from "./components/LoginGate";
 import PoetryAssistant from "./components/PoetryAssistant";
 import SilentListenerChat from "./components/SilentListenerChat";
 import { UserSetupModal } from "./components/UserSetupModal";
+import { seedBotData } from "./data/ai-bots";
 import AboutSlide from "./slides/AboutSlide";
 import AdminSlide from "./slides/AdminSlide";
 import ExploreSlide from "./slides/ExploreSlide";
@@ -19,7 +20,7 @@ import NotesSlide from "./slides/NotesSlide";
 import NotificationsSlide from "./slides/NotificationsSlide";
 import PoemsSlide from "./slides/PoemsSlide";
 import PrivacySlide from "./slides/PrivacySlide";
-import SettingsSlide from "./slides/SettingsSlide";
+import SettingsSlide, { applyTheme } from "./slides/SettingsSlide";
 import TermsSlide from "./slides/TermsSlide";
 import UserProfileSlide from "./slides/UserProfileSlide";
 
@@ -135,6 +136,109 @@ export default function App() {
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // AI enabled state
+  const [aiEnabled, setAiEnabled] = useState(() => {
+    try {
+      const s = localStorage.getItem("chinnua_settings");
+      if (s) return JSON.parse(s).aiEnabled !== false;
+    } catch {}
+    return true;
+  });
+
+  const [aiTranslationEnabled, setAiTranslationEnabled] = useState(() => {
+    try {
+      const s = localStorage.getItem("chinnua_settings");
+      if (s) return JSON.parse(s).aiTranslation !== false;
+    } catch {}
+    return true;
+  });
+
+  useEffect(() => {
+    // Apply saved theme on load
+    const PALETTES: Record<string, any> = {
+      "warm-cream": {
+        bg: "#FFF8EE",
+        paper: "#F5ECD7",
+        text: "#3D2B1F",
+        muted: "#8B6F47",
+        gold: "#D4A853",
+        mocha: "#5C3D2E",
+        border: "rgba(139,111,71,0.25)",
+      },
+      midnight: {
+        bg: "#0D0D14",
+        paper: "#1A1A2E",
+        text: "#E8E0D5",
+        muted: "#9E8070",
+        gold: "#D4A853",
+        mocha: "#C4A882",
+        border: "rgba(200,170,120,0.2)",
+      },
+      forest: {
+        bg: "#F0F4EE",
+        paper: "#E3EDE0",
+        text: "#1E3A2F",
+        muted: "#4A7C59",
+        gold: "#7DAF6E",
+        mocha: "#2D5A3E",
+        border: "rgba(74,124,89,0.25)",
+      },
+      ocean: {
+        bg: "#EEF4FA",
+        paper: "#E0EBF5",
+        text: "#1A2E4A",
+        muted: "#4A6E8C",
+        gold: "#5BA3CC",
+        mocha: "#2A4F73",
+        border: "rgba(74,110,140,0.25)",
+      },
+      rose: {
+        bg: "#FDF0F3",
+        paper: "#F8E0E6",
+        text: "#3A1A22",
+        muted: "#8C4A5A",
+        gold: "#CC7A8A",
+        mocha: "#6B2D3E",
+        border: "rgba(140,74,90,0.25)",
+      },
+      ink: {
+        bg: "#F5F0E8",
+        paper: "#EDE8DC",
+        text: "#1A1510",
+        muted: "#5C5040",
+        gold: "#8B7355",
+        mocha: "#3D3020",
+        border: "rgba(92,80,64,0.25)",
+      },
+    };
+    const saved = localStorage.getItem("chinnua_theme") as any;
+    if (saved && PALETTES[saved]) {
+      applyTheme(saved);
+    }
+
+    // Seed bot user data on startup
+    seedBotData();
+    // Also set data-theme attribute for CSS theme support
+    if (saved && PALETTES[saved]) {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+
+    // Listen for settings changes
+    const handleSettings = (e: CustomEvent) => {
+      const s = e.detail;
+      if (s) {
+        setAiEnabled(s.aiEnabled !== false);
+        setAiTranslationEnabled(s.aiTranslation !== false);
+      }
+    };
+    window.addEventListener("settingsChanged", handleSettings as EventListener);
+    return () =>
+      window.removeEventListener(
+        "settingsChanged",
+        handleSettings as EventListener,
+      );
   }, []);
 
   const PROFILE_NAV_ITEM: { slide: Slide; label: string } = {
@@ -414,7 +518,7 @@ export default function App() {
 
           {/* Translator */}
           <div style={{ padding: "0 1.5rem", marginBottom: "1.25rem" }}>
-            <LanguageTranslator />
+            {aiTranslationEnabled && <LanguageTranslator />}
           </div>
 
           {/* Divider */}
@@ -859,7 +963,7 @@ export default function App() {
       </AnimatePresence>
 
       <PoetryAssistant />
-      <SilentListenerChat />
+      {aiEnabled && <SilentListenerChat />}
       <UserSetupModal open={showUserSetup} onClose={handleUserSetupClose} />
     </div>
   );

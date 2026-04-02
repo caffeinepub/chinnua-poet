@@ -13196,5 +13196,262 @@ Holds the world in brilliant view. Every ending
 every start
 Keeps the dreams within the heart.`,
   },
+
+  {
+    id: 461,
+    title: "An Unread Chapter",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `I get lost within myself,
+as if my whole existence
+is a search for something
+I've never truly known.
+
+I keep trying…
+to find the one I've hidden,
+somewhere between silence
+and the noise of being someone else.
+
+Sometimes it feels like
+nature calls my name—
+like the wind knows me better
+than people ever tried to.
+
+I don't remember
+when I last shared
+my whole truth with anyone…
+except the stars.
+
+Those quiet witnesses above—
+they listen without answers,
+too far to reach,
+too silent to respond,
+yet close enough
+to see how many nights
+I begged them
+to take this life away.
+
+I call myself an open book,
+but there are chapters
+no one has ever read—
+pages even I'm afraid to turn.
+
+No one has seen
+my truest form.
+I shape myself
+into what others need,
+a reflection of their comfort,
+never my own.
+
+Maybe my presence
+brings them calm…
+but no one stays long enough
+to ask who I really am.
+
+And sometimes,
+in the quiet corners of my mind,
+I question my own existence—
+why was I born
+into a world like this?
+
+A world drowning in wars,
+in greed, in corruption,
+in pain that grows louder
+while people grow quieter.
+
+Was this the earth
+I was meant to belong to?
+Because it feels nothing like
+the one I once imagined.`,
+  },
+  {
+    id: 462,
+    title: "An Unread Chapter — Part II",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `If you ask me
+how many people truly care about me…
+the answer feels distant—
+they are all souls
+I have never even met.
+
+They live in words,
+in unseen connections,
+in moments that exist
+only through screens and silence.
+
+Even they are busy
+with their own lives,
+their own battles—
+yet I chose to share
+all of myself with them.
+
+With you.
+
+Because before I ever speak
+to the people around me,
+I write it here…
+like a quiet status,
+like a question to the world—
+
+Am I a good person or not?
+
+I don't know the answer yet.
+But I know this—
+everyone I've met, even from afar,
+has been real in their own way.
+
+Maybe one day,
+I'll meet them—
+turn these distant connections
+into something I can finally touch.
+
+And if that day never comes…
+if life ends before it happens—
+
+still,
+within my heart,
+they will always exist,
+unchanged by distance,
+untouched by time.`,
+  },
+  {
+    id: 463,
+    title: "An Unread Chapter — Part III",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `I was never the main story,
+never the one the world paused for—
+but I learned to smile
+being a quiet line
+in someone else's chapter.
+
+A friend,
+a passing presence,
+a name that fades softly with time—
+and somehow…
+that was enough for me.
+
+There was a night
+where silence felt louder than life,
+where endings seemed easier than breathing—
+but I couldn't leave.
+
+Not because I was strong,
+but because I was afraid—
+afraid of becoming a memory
+that slowly disappears
+from everyone's mind.
+
+They say
+people forget.
+
+Maybe they'll remember me
+for a month,
+or a year—
+and then one day,
+without even noticing,
+they'll stop.
+
+And the world will continue
+as if I was never there.
+
+Still…
+I love them.
+
+My friends,
+my people—
+the ones who stayed,
+even if only for a while.
+
+But there's a part of me
+still stuck in yesterday,
+holding onto a person
+who once felt like my whole world…
+and then
+became nothing but absence.
+
+They say I deserve better.
+
+But how do we stop loving
+someone
+we already gave our entire heart to?
+
+I try to move on.
+
+I really do.
+
+But healing feels like forgetting,
+and forgetting feels like betrayal—
+so I stand in between,
+pretending I'm okay.
+
+Because no one really sees
+what echoes inside me.
+
+I've always been
+the quiet one,
+the "boring" one,
+the one who doesn't know
+how to speak properly.
+
+Still,
+I tried.
+
+I tried to reach out,
+to connect,
+to belong—
+but even then,
+a voice inside me whispers,
+
+"They deserve better than you."
+
+So I stay careful,
+measuring my words,
+hiding my flaws,
+carrying my mistakes
+like they define me.
+
+And when someone appreciates me,
+when they say something kind—
+my heart doesn't accept it.
+
+It questions,
+doubts,
+pulls away—
+
+"Do I really deserve this?"
+
+I don't know.
+
+Because while the world remembers
+people for their mistakes,
+I remember them
+for their kindness.
+
+For the way they stayed
+when I was breaking.
+
+For the light they gave me
+when I had none.
+
+I hold onto their good,
+and carry my bad.
+
+Maybe that's why
+I feel like I don't belong
+in the same story as them.
+
+But still…
+
+If I'm just a side character,
+just a forgotten name
+in the margins of someone's life—
+
+I'll be a good one.
+
+Even if no one remembers
+I was ever there.`,
+  },
 ];
 export { POEMS };

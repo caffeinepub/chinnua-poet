@@ -5,6 +5,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AnimatePresence, motion } from "motion/react";
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useCamera } from "../camera/useCamera";
 import { POEMS } from "../poems-data";
@@ -44,7 +45,7 @@ interface UserProfileSlideProps {
   onLogin: () => void;
 }
 
-type Tab = "posts" | "notes" | "likes" | "messages";
+type Tab = "posts" | "notes" | "likes" | "messages" | "saved";
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -135,6 +136,251 @@ const inputSx: React.CSSProperties = {
   transition: "border-color 0.2s, box-shadow 0.2s",
   boxSizing: "border-box" as const,
 };
+
+function SavedItemsTab({
+  viewUsername,
+  isOwn,
+}: { viewUsername: string; isOwn: boolean }) {
+  const WARM_PAPER = "#F5ECD7";
+  const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_MOCHA = "#5C3D2E";
+  const WARM_BROWN = "#8B6F47";
+  const _WARM_TEXT = "#3D2B1F";
+
+  interface SavedItem {
+    id: string;
+    title?: string;
+    type: "post" | "poem" | "music";
+    savedAt: string;
+  }
+
+  const [savedItems, setSavedItems] = React.useState<SavedItem[]>([]);
+  const [showSavedPublic, setShowSavedPublic] = React.useState(() => {
+    try {
+      return (
+        localStorage.getItem(`chinnua_saved_public_${viewUsername}`) === "true"
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  React.useEffect(() => {
+    if (!isOwn && !showSavedPublic) return;
+    try {
+      const posts = (
+        JSON.parse(
+          localStorage.getItem(`chinnua_saved_posts_${viewUsername}`) || "[]",
+        ) as any[]
+      ).map((s: any) => ({
+        id: String(s.id || s),
+        title: s.title || "Saved Post",
+        type: "post" as const,
+        savedAt: s.savedAt || "",
+      }));
+      const poems = (
+        JSON.parse(
+          localStorage.getItem(`chinnua_saved_poems_${viewUsername}`) || "[]",
+        ) as any[]
+      ).map((s: any) => ({
+        id: String(s.id || s),
+        title: s.title || "Saved Poem",
+        type: "poem" as const,
+        savedAt: s.savedAt || "",
+      }));
+      const music = (
+        JSON.parse(
+          localStorage.getItem(`chinnua_saved_music_${viewUsername}`) || "[]",
+        ) as any[]
+      ).map((s: any) => ({
+        id: String(s.id || s),
+        title: s.title || "Saved Track",
+        type: "music" as const,
+        savedAt: s.savedAt || "",
+      }));
+      setSavedItems(
+        [...posts, ...poems, ...music].sort(
+          (a, b) =>
+            new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime(),
+        ),
+      );
+    } catch {}
+  }, [viewUsername, isOwn, showSavedPublic]);
+
+  const togglePublic = () => {
+    const next = !showSavedPublic;
+    setShowSavedPublic(next);
+    localStorage.setItem(`chinnua_saved_public_${viewUsername}`, String(next));
+  };
+
+  const removeSaved = (item: SavedItem) => {
+    const key =
+      item.type === "post"
+        ? `chinnua_saved_posts_${viewUsername}`
+        : item.type === "poem"
+          ? `chinnua_saved_poems_${viewUsername}`
+          : `chinnua_saved_music_${viewUsername}`;
+    try {
+      const arr = JSON.parse(localStorage.getItem(key) || "[]");
+      const filtered = arr.filter((s: any) => (s.id || s) !== item.id);
+      localStorage.setItem(key, JSON.stringify(filtered));
+      setSavedItems((prev) =>
+        prev.filter((s) => s.id !== item.id || s.type !== item.type),
+      );
+    } catch {}
+  };
+
+  if (!isOwn && !showSavedPublic) {
+    return (
+      <div
+        style={{ textAlign: "center", padding: "3rem 1rem", color: WARM_BROWN }}
+      >
+        <p
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontStyle: "italic",
+          }}
+        >
+          This user&apos;s saved items are private.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {isOwn && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "1.25rem",
+          }}
+        >
+          <button
+            type="button"
+            onClick={togglePublic}
+            data-ocid="profile.toggle"
+            style={{
+              width: 40,
+              height: 22,
+              borderRadius: 11,
+              background: showSavedPublic ? "#C8A96A" : "#8B6F47",
+              border: "none",
+              cursor: "pointer",
+              position: "relative",
+              transition: "background 0.2s",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: 2,
+                left: showSavedPublic ? "calc(100% - 20px)" : 2,
+                width: 18,
+                height: 18,
+                borderRadius: "50%",
+                background: "white",
+                transition: "left 0.2s",
+              }}
+            />
+          </button>
+          <span
+            style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.8rem",
+              color: WARM_BROWN,
+            }}
+          >
+            {showSavedPublic
+              ? "Saved items visible to others"
+              : "Saved items hidden from others"}
+          </span>
+        </div>
+      )}
+      {savedItems.length === 0 ? (
+        <div
+          data-ocid="profile.saved.empty_state"
+          style={{
+            textAlign: "center",
+            padding: "3rem",
+            color: WARM_BROWN,
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+          }}
+        >
+          No saved items yet.
+        </div>
+      ) : (
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
+        >
+          {savedItems.map((item, idx) => (
+            <div
+              key={`${item.type}-${item.id}`}
+              data-ocid={`profile.saved.item.${idx + 1}`}
+              style={{
+                background: WARM_PAPER,
+                border: `1px solid ${WARM_BORDER}`,
+                borderRadius: 10,
+                padding: "0.75rem 1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "0.75rem",
+              }}
+            >
+              <div>
+                <span
+                  style={{
+                    fontSize: "0.7rem",
+                    padding: "1px 6px",
+                    background: "rgba(212,168,83,0.12)",
+                    borderRadius: 4,
+                    color: "#D4A853",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {item.type}
+                </span>
+                <p
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontStyle: "italic",
+                    color: WARM_MOCHA,
+                    fontSize: "0.88rem",
+                    margin: "0.25rem 0 0",
+                  }}
+                >
+                  {item.title}
+                </p>
+              </div>
+              {isOwn && (
+                <button
+                  type="button"
+                  onClick={() => removeSaved(item)}
+                  data-ocid="profile.saved.delete_button"
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "0.72rem",
+                    color: "rgba(92,61,46,0.4)",
+                    fontFamily: "'Lora', Georgia, serif",
+                  }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function UserProfileSlide({
   viewUsername,
@@ -384,6 +630,7 @@ export default function UserProfileSlide({
           { key: "messages" as Tab, label: "Messages" },
         ]
       : []),
+    { key: "saved" as Tab, label: "Saved" },
   ];
 
   return (
@@ -1334,6 +1581,10 @@ export default function UserProfileSlide({
                   Open Messages
                 </button>
               </div>
+            )}
+            {/* Saved tab */}
+            {activeTab === "saved" && (
+              <SavedItemsTab viewUsername={viewUsername} isOwn={isOwn} />
             )}
           </motion.div>
         </AnimatePresence>

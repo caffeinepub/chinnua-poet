@@ -39,8 +39,8 @@ function getAIResponse(message: string): string {
   if (/contact|email|reach|message chinnua/.test(m)) {
     return "You can reach Chinnua directly at:\n\nanoldpoet07@gmail.com\n\nOr use the 'Contact Me' form on the website to send a message directly. Every message is read personally.";
   }
-  if (/instagram|social media|social/.test(m)) {
-    return "Chinnua is on Instagram as @chinnua_07_\n\nhttps://www.instagram.com/chinnua_07_/\n\nFollow for poetry fragments, mood posts, and glimpses of the poet's inner world.";
+  if (/social media|social/.test(m)) {
+    return "Chinnua is on YouTube (@ChinnuaPoetofficial) and X (@CHINNUA_POET).\n\nFollow for poetry and more.";
   }
   if (/youtube|video|channel/.test(m)) {
     return "Chinnua's YouTube channel is live at:\n\n@ChinnuaPoetofficial\n\nhttps://www.youtube.com/@ChinnuaPoetofficial\n\nPoetry read aloud \u2014 words in motion.";

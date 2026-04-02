@@ -4,7 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useActor } from "../hooks/useActor";
 import InboxSlide from "./InboxSlide";
 
-const WARM_BG = "#FFF8EE";
+const WARM_BG = "#FFF0F3";
+const _MSG_OWN_BG = "#F5ECD7";
+const _MSG_OTHER_BG = "#FDE8ED";
 const WARM_PAPER = "#F5ECD7";
 const WARM_MOCHA = "#5C3D2E";
 const WARM_BROWN = "#8B6F47";
@@ -1240,6 +1242,21 @@ export default function MessagesSlide({
                 </div>
 
                 {/* Messages */}
+                {/* Screenshot warning */}
+                <div
+                  style={{
+                    padding: "0.4rem 0.75rem",
+                    background: "rgba(212,168,83,0.1)",
+                    borderBottom: "1px solid rgba(212,168,83,0.2)",
+                    fontSize: "0.7rem",
+                    color: WARM_BROWN,
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontStyle: "italic",
+                    textAlign: "center",
+                  }}
+                >
+                  Screenshots are not permitted. This conversation is private.
+                </div>
                 <div
                   style={{
                     flex: 1,
@@ -1248,8 +1265,35 @@ export default function MessagesSlide({
                     flexDirection: "column",
                     gap: "0.5rem",
                     paddingBottom: "0.5rem",
+                    position: "relative",
                   }}
                 >
+                  {/* Watermark */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      pointerEvents: "none",
+                      zIndex: 0,
+                      opacity: 0.04,
+                      userSelect: "none",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'Playfair Display', Georgia, serif",
+                        fontSize: "1.4rem",
+                        color: WARM_MOCHA,
+                        transform: "rotate(-30deg)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      CHINNUA_POET — Private
+                    </span>
+                  </div>
                   {currentMessages.length === 0 && (
                     <p
                       style={{

@@ -107,7 +107,7 @@ export default function CommunitySlide({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             style={{
-              background: "rgba(16,24,38,0.85)",
+              background: "#FFF8EE",
               border: "1px solid rgba(200,169,106,0.25)",
               borderRadius: 14,
               padding: "2rem",
@@ -260,7 +260,7 @@ export default function CommunitySlide({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.1 }}
                 style={{
-                  background: "rgba(16,24,38,0.7)",
+                  background: "#FFF0F3",
                   border: "1px solid rgba(200,169,106,0.12)",
                   borderRadius: 10,
                   padding: "1.1rem",
@@ -334,7 +334,7 @@ export default function CommunitySlide({
                   transition={{ delay: 1.0 + i * 0.05 }}
                   data-ocid={`community.item.${i + 1}`}
                   style={{
-                    background: "rgba(16,24,38,0.7)",
+                    background: "#FFF0F3",
                     border: "1px solid rgba(200,169,106,0.12)",
                     borderRadius: 10,
                     padding: "1rem 1.25rem",
@@ -419,7 +419,7 @@ export default function CommunitySlide({
             style={{
               textAlign: "center",
               padding: "3rem 1rem",
-              background: "rgba(16,24,38,0.5)",
+              background: "rgba(245,236,215,0.7)",
               border: "1px solid rgba(200,169,106,0.1)",
               borderRadius: 14,
             }}

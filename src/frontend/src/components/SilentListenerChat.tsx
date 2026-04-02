@@ -2,14 +2,14 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 const colors = {
-  bg: "#FFF8EE",
-  paper: "#F5ECD7",
+  bg: "#FFF0F3",
+  paper: "#FDE8ED",
   brown: "#8B6F47",
   mocha: "#5C3D2E",
   gold: "#D4A853",
   text: "#3D2B1F",
   muted: "rgba(92,61,46,0.5)",
-  border: "rgba(139,111,71,0.25)",
+  border: "rgba(212,100,138,0.2)",
 };
 
 interface Message {
@@ -134,6 +134,25 @@ export default function SilentListenerChat() {
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  useEffect(() => {
+    const handleSettingsChange = (e: CustomEvent) => {
+      const s = e.detail;
+      if (s) {
+        setAiEnabled(s.aiEnabled !== false);
+        if (s.aiMode) setAiMode(s.aiMode);
+      }
+    };
+    window.addEventListener(
+      "settingsChanged",
+      handleSettingsChange as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        "settingsChanged",
+        handleSettingsChange as EventListener,
+      );
+  }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
@@ -399,10 +418,7 @@ export default function SilentListenerChat() {
                         msg.role === "user"
                           ? "12px 12px 2px 12px"
                           : "12px 12px 12px 2px",
-                      background:
-                        msg.role === "user"
-                          ? "rgba(212,168,83,0.15)"
-                          : "rgba(139,111,71,0.1)",
+                      background: msg.role === "user" ? "#F5ECD7" : "#FFF0F3",
                       fontFamily: "'Lora', serif",
                       fontSize: "0.85rem",
                       color: colors.text,
@@ -428,7 +444,7 @@ export default function SilentListenerChat() {
                     style={{
                       padding: "0.55rem 0.8rem",
                       borderRadius: "12px 12px 12px 2px",
-                      background: "rgba(139,111,71,0.1)",
+                      background: "#FFF0F3",
                       fontFamily: "'Lora', serif",
                       fontStyle: "italic",
                       color: colors.muted,

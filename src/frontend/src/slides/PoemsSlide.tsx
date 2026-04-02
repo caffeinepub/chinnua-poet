@@ -12,6 +12,7 @@ import CommentThread from "../components/CommentThread";
 import { LoginGate } from "../components/LoginGate";
 import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
+import { getAiSettings, speakText } from "../utils/aiFeatures";
 import GallerySlide from "./GallerySlide";
 import MusicSlide from "./MusicSlide";
 
@@ -429,6 +430,52 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
   const [search2, setSearch2] = useState("");
   const [category2, setCategory2] = useState("All");
   const [selected, setSelected] = useState<PoemType | null>(null);
+  const [savedPoems, setSavedPoems] = useState<Set<string>>(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("chinnua_user") || "null");
+      if (!user) return new Set();
+      const saved = JSON.parse(
+        localStorage.getItem(`chinnua_saved_poems_${user.username}`) || "[]",
+      );
+      return new Set(saved.map((s: any) => s.id || s));
+    } catch {
+      return new Set();
+    }
+  });
+
+  const toggleSavePoem = (poem: PoemType) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("chinnua_user") || "null");
+      if (!user) return;
+      const key = `chinnua_saved_poems_${user.username}`;
+      const saved = JSON.parse(localStorage.getItem(key) || "[]");
+      const newSet = new Set(savedPoems);
+      if (newSet.has(String(poem.id))) {
+        newSet.delete(String(poem.id));
+        localStorage.setItem(
+          key,
+          JSON.stringify(
+            saved.filter((s: any) => (s.id || s) !== String(poem.id)),
+          ),
+        );
+      } else {
+        newSet.add(String(poem.id));
+        saved.push({
+          id: String(poem.id),
+          title: poem.title,
+          savedAt: new Date().toISOString(),
+        });
+        localStorage.setItem(key, JSON.stringify(saved));
+      }
+      setSavedPoems(newSet);
+    } catch {}
+  };
+
+  const handleSpeakPoem = () => {
+    if (!selected) return;
+    const settings = getAiSettings();
+    speakText(selected.full, settings.defaultVoice, settings.playbackSpeed);
+  };
   const [poemComments, setPoemComments] = useState<Comment[]>([]);
   const [poemCommentsLoaded, setPoemCommentsLoaded] = useState(false);
   const { actor } = useActor();
@@ -564,7 +611,25 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
     );
   };
 
-  const mainPoems = POEMS.filter((p) => !p.collection);
+  // Load admin-published custom poems
+  const customPoems: PoemType[] = (() => {
+    try {
+      const raw = JSON.parse(
+        localStorage.getItem("chinnua_custom_poems") || "[]",
+      );
+      return raw.map((p: any, i: number) => ({
+        id: 10000 + i,
+        title: p.title,
+        theme: p.category || "New Poems",
+        collection: "New Poems",
+        full: p.full,
+      }));
+    } catch {
+      return [];
+    }
+  })();
+
+  const mainPoems = [...customPoems, ...POEMS.filter((p) => !p.collection)];
   const echoesPoems = POEMS.filter(
     (p) => p.collection === "Echoes of My Heart",
   );
@@ -921,6 +986,60 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
             >
               {assignCategory(selected)}
             </span>
+          )}
+          {/* Save + Speak buttons */}
+          {selected && (
+            <div
+              style={{
+                display: "flex",
+                gap: "0.5rem",
+                marginTop: "0.75rem",
+                marginBottom: "0.25rem",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => toggleSavePoem(selected)}
+                data-ocid="poems.toggle"
+                style={{
+                  padding: "0.35rem 0.9rem",
+                  background: savedPoems.has(String(selected.id))
+                    ? "rgba(212,168,83,0.2)"
+                    : "transparent",
+                  border: "1px solid rgba(212,168,83,0.4)",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontSize: "0.78rem",
+                  color: savedPoems.has(String(selected.id))
+                    ? "#5C3D2E"
+                    : "#8B6F47",
+                }}
+              >
+                {savedPoems.has(String(selected.id))
+                  ? "🔖 Saved"
+                  : "🏷 Save Poem"}
+              </button>
+              {getAiSettings().aiAudioGen && (
+                <button
+                  type="button"
+                  onClick={handleSpeakPoem}
+                  data-ocid="poems.secondary_button"
+                  style={{
+                    padding: "0.35rem 0.9rem",
+                    background: "transparent",
+                    border: "1px solid rgba(139,111,71,0.3)",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.78rem",
+                    color: "#8B6F47",
+                  }}
+                >
+                  🔊 Listen
+                </button>
+              )}
+            </div>
           )}
           {currentUser ? (
             <pre

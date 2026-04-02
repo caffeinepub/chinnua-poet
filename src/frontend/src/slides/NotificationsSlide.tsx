@@ -1,7 +1,17 @@
-import { motion } from "motion/react";
+import {
+  Bell,
+  Check,
+  Eye,
+  Heart,
+  Mail,
+  MessageSquare,
+  User,
+  X,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-interface User {
+interface IUser {
   username: string;
   bio: string;
   createdAt: string;
@@ -12,6 +22,7 @@ interface Notification {
   type: "like" | "comment" | "follow" | "message";
   fromUser: string;
   targetContent?: string;
+  message?: string;
   timestamp: string;
   read: boolean;
 }
@@ -24,16 +35,17 @@ const WARM_GOLD = "#D4A853";
 const WARM_TEXT = "#3D2B1F";
 const WARM_BORDER = "rgba(139,111,71,0.25)";
 
-function typeIcon(type: Notification["type"]) {
+function TypeIcon({ type }: { type: Notification["type"] }) {
+  const style = { width: 18, height: 18, flexShrink: 0 as const };
   switch (type) {
     case "like":
-      return "❤️";
+      return <Heart style={{ ...style, color: "#c04060" }} />;
     case "comment":
-      return "💬";
+      return <MessageSquare style={{ ...style, color: WARM_BROWN }} />;
     case "follow":
-      return "👤";
+      return <User style={{ ...style, color: WARM_BROWN }} />;
     case "message":
-      return "✉️";
+      return <Mail style={{ ...style, color: WARM_BROWN }} />;
   }
 }
 
@@ -47,6 +59,25 @@ function typeLabel(n: Notification) {
       return `${n.fromUser} started following you`;
     case "message":
       return `${n.fromUser} sent you a message`;
+  }
+}
+
+function typeFullMessage(n: Notification): string {
+  switch (n.type) {
+    case "like":
+      return `${n.fromUser} loved your poem${n.targetContent ? ` "${n.targetContent}"` : ""}. Their reaction shows your words resonated deeply.`;
+    case "comment":
+      return (
+        n.message ||
+        `${n.fromUser} left a comment on your post${n.targetContent ? ` "${n.targetContent}"` : ""}. Tap to read their words.`
+      );
+    case "follow":
+      return `${n.fromUser} is now following you. They will see your poems and posts in their feed.`;
+    case "message":
+      return (
+        n.message ||
+        `${n.fromUser} sent you a private message. Visit Messages to reply.`
+      );
   }
 }
 
@@ -86,7 +117,6 @@ function groupByDate(
     .map(([label, items]) => ({ label, items }));
 }
 
-// Seed sample notifications if none exist
 function seedNotifications(): Notification[] {
   const samples: Notification[] = [
     {
@@ -94,6 +124,8 @@ function seedNotifications(): Notification[] {
       type: "like",
       fromUser: "Luna_Verse",
       targetContent: "Echoes of My Heart",
+      message:
+        'Luna_Verse liked your poem "Echoes of My Heart". Your words touched their soul.',
       timestamp: new Date(Date.now() - 1200000).toISOString(),
       read: false,
     },
@@ -102,6 +134,8 @@ function seedNotifications(): Notification[] {
       type: "comment",
       fromUser: "SilentInk",
       targetContent: "Fading Light",
+      message:
+        'SilentInk wrote: "This poem made me feel seen. The way you write about silence is extraordinary."',
       timestamp: new Date(Date.now() - 3600000).toISOString(),
       read: false,
     },
@@ -109,7 +143,6 @@ function seedNotifications(): Notification[] {
       id: "n3",
       type: "follow",
       fromUser: "VelvetWords",
-      targetContent: undefined,
       timestamp: new Date(Date.now() - 7200000).toISOString(),
       read: true,
     },
@@ -117,7 +150,8 @@ function seedNotifications(): Notification[] {
       id: "n4",
       type: "message",
       fromUser: "PoetryMuse",
-      targetContent: undefined,
+      message:
+        'PoetryMuse wrote: "I\'ve been reading your poems for weeks. The one about unread chapters gave me chills."',
       timestamp: new Date(Date.now() - 86400000 * 1.5).toISOString(),
       read: true,
     },
@@ -126,14 +160,297 @@ function seedNotifications(): Notification[] {
   return samples;
 }
 
+function getUserAvatar(username: string): string | null {
+  try {
+    const p = localStorage.getItem(`chinnua_profile_${username}`);
+    if (p) return JSON.parse(p)?.photo ?? null;
+  } catch {}
+  return null;
+}
+
+function AvatarBubble({ username }: { username: string }) {
+  const photo = getUserAvatar(username);
+  const initials = username.charAt(0).toUpperCase();
+  return (
+    <div
+      style={{
+        width: 36,
+        height: 36,
+        borderRadius: "50%",
+        background: "rgba(212,168,83,0.15)",
+        border: `1px solid ${WARM_BORDER}`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'Playfair Display', serif",
+        fontWeight: 700,
+        fontSize: "0.9rem",
+        color: WARM_MOCHA,
+        flexShrink: 0,
+        overflow: "hidden",
+      }}
+    >
+      {photo ? (
+        <img
+          src={photo}
+          alt={username}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      ) : (
+        initials
+      )}
+    </div>
+  );
+}
+
+// Detail Modal
+function NotificationDetail({
+  notification,
+  onClose,
+  onMarkRead,
+}: {
+  notification: Notification;
+  onClose: () => void;
+  onMarkRead: (id: string) => void;
+}) {
+  useEffect(() => {
+    if (!notification.read) onMarkRead(notification.id);
+  }, [notification.id, notification.read, onMarkRead]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(61,43,31,0.4)",
+        zIndex: 200,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+      }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+        transition={{ duration: 0.25 }}
+        onClick={(e) => e.stopPropagation()}
+        data-ocid="notifications.dialog"
+        style={{
+          background: WARM_BG,
+          border: `1px solid ${WARM_BORDER}`,
+          borderRadius: 18,
+          padding: "1.75rem",
+          maxWidth: 420,
+          width: "100%",
+          boxShadow: "0 20px 60px rgba(92,61,46,0.2)",
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: "1.25rem",
+          }}
+        >
+          <div
+            style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
+          >
+            <AvatarBubble username={notification.fromUser} />
+            <div>
+              <p
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontWeight: 700,
+                  color: WARM_MOCHA,
+                  margin: 0,
+                  fontSize: "0.95rem",
+                }}
+              >
+                {notification.fromUser}
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.3rem",
+                  marginTop: "0.15rem",
+                }}
+              >
+                <TypeIcon type={notification.type} />
+                <span
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.72rem",
+                    color: WARM_BROWN,
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {notification.type}
+                </span>
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            data-ocid="notifications.close_button"
+            style={{
+              background: "rgba(139,111,71,0.1)",
+              border: "none",
+              borderRadius: "50%",
+              width: 30,
+              height: 30,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: WARM_BROWN,
+            }}
+          >
+            <X width={14} height={14} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div
+          style={{
+            background: WARM_PAPER,
+            borderRadius: 12,
+            padding: "1rem 1.25rem",
+            marginBottom: "1.25rem",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.9rem",
+              color: WARM_TEXT,
+              lineHeight: 1.7,
+              margin: 0,
+            }}
+          >
+            {typeFullMessage(notification)}
+          </p>
+        </div>
+
+        {/* Timestamp */}
+        <p
+          style={{
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontSize: "0.72rem",
+            color: "rgba(61,43,31,0.45)",
+            margin: "0 0 1.25rem",
+          }}
+        >
+          {new Date(notification.timestamp).toLocaleString()}
+        </p>
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: "0.6rem" }}>
+          {notification.type === "message" && (
+            <button
+              type="button"
+              data-ocid="notifications.confirm_button"
+              onClick={onClose}
+              style={{
+                flex: 1,
+                padding: "0.55rem",
+                background: "rgba(212,168,83,0.85)",
+                border: "none",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: "0.82rem",
+                color: "#3D2B1F",
+                fontWeight: 600,
+              }}
+            >
+              Go to Messages
+            </button>
+          )}
+          {notification.type === "follow" && (
+            <button
+              type="button"
+              data-ocid="notifications.confirm_button"
+              onClick={onClose}
+              style={{
+                flex: 1,
+                padding: "0.55rem",
+                background: "rgba(212,168,83,0.85)",
+                border: "none",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: "0.82rem",
+                color: "#3D2B1F",
+                fontWeight: 600,
+              }}
+            >
+              View Profile
+            </button>
+          )}
+          {(notification.type === "like" ||
+            notification.type === "comment") && (
+            <button
+              type="button"
+              data-ocid="notifications.confirm_button"
+              onClick={onClose}
+              style={{
+                flex: 1,
+                padding: "0.55rem",
+                background: "rgba(212,168,83,0.85)",
+                border: "none",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: "0.82rem",
+                color: "#3D2B1F",
+                fontWeight: 600,
+              }}
+            >
+              View Post
+            </button>
+          )}
+          <button
+            type="button"
+            data-ocid="notifications.cancel_button"
+            onClick={onClose}
+            style={{
+              padding: "0.55rem 1rem",
+              background: "transparent",
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 8,
+              cursor: "pointer",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.82rem",
+              color: WARM_BROWN,
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function NotificationsSlide({
   currentUser,
   onLogin,
 }: {
-  currentUser: User | null;
+  currentUser: IUser | null;
   onLogin: () => void;
 }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [selected, setSelected] = useState<Notification | null>(null);
 
   useEffect(() => {
     try {
@@ -152,6 +469,18 @@ export default function NotificationsSlide({
     const updated = notifications.map((n) => ({ ...n, read: true }));
     setNotifications(updated);
     localStorage.setItem("chinnua_notifications", JSON.stringify(updated));
+  };
+
+  const markRead = (id: string) => {
+    const updated = notifications.map((n) =>
+      n.id === id ? { ...n, read: true } : n,
+    );
+    setNotifications(updated);
+    localStorage.setItem("chinnua_notifications", JSON.stringify(updated));
+  };
+
+  const handleClick = (n: Notification) => {
+    setSelected(n);
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -178,6 +507,15 @@ export default function NotificationsSlide({
             maxWidth: 360,
           }}
         >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            <Bell style={{ width: 36, height: 36, color: WARM_GOLD }} />
+          </div>
           <p
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
@@ -186,7 +524,7 @@ export default function NotificationsSlide({
               marginBottom: "0.5rem",
             }}
           >
-            🔔 Notifications
+            Notifications
           </p>
           <p
             style={{
@@ -229,6 +567,16 @@ export default function NotificationsSlide({
         padding: "2rem 1.5rem",
       }}
     >
+      <AnimatePresence>
+        {selected && (
+          <NotificationDetail
+            notification={selected}
+            onClose={() => setSelected(null)}
+            onMarkRead={markRead}
+          />
+        )}
+      </AnimatePresence>
+
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         {/* Header */}
         <motion.div
@@ -242,46 +590,53 @@ export default function NotificationsSlide({
             marginBottom: "1.75rem",
           }}
         >
-          <div>
-            <h1
-              style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: "1.9rem",
-                color: WARM_MOCHA,
-                fontWeight: 700,
-                marginBottom: "0.2rem",
-              }}
-            >
-              Notifications
-              {unreadCount > 0 && (
-                <span
-                  style={{
-                    display: "inline-block",
-                    marginLeft: "0.6rem",
-                    background: WARM_GOLD,
-                    color: "#3D2B1F",
-                    borderRadius: "100px",
-                    padding: "0.1rem 0.55rem",
-                    fontSize: "0.7rem",
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  {unreadCount}
-                </span>
-              )}
-            </h1>
-            <p
-              style={{
-                fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontStyle: "italic",
-                color: "rgba(92,61,46,0.65)",
-                fontSize: "0.82rem",
-                margin: 0,
-              }}
-            >
-              Your activity, letters, and interactions
-            </p>
+          <div
+            style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
+          >
+            <Bell style={{ width: 24, height: 24, color: WARM_GOLD }} />
+            <div>
+              <h1
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontSize: "1.9rem",
+                  color: WARM_MOCHA,
+                  fontWeight: 700,
+                  marginBottom: "0.2rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                Notifications
+                {unreadCount > 0 && (
+                  <span
+                    style={{
+                      display: "inline-block",
+                      background: WARM_GOLD,
+                      color: "#3D2B1F",
+                      borderRadius: "100px",
+                      padding: "0.1rem 0.55rem",
+                      fontSize: "0.7rem",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    {unreadCount}
+                  </span>
+                )}
+              </h1>
+              <p
+                style={{
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontStyle: "italic",
+                  color: "rgba(92,61,46,0.65)",
+                  fontSize: "0.82rem",
+                  margin: 0,
+                }}
+              >
+                Your activity, letters, and interactions
+              </p>
+            </div>
           </div>
           {unreadCount > 0 && (
             <button
@@ -298,8 +653,12 @@ export default function NotificationsSlide({
                 fontSize: "0.72rem",
                 cursor: "pointer",
                 letterSpacing: "0.04em",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.3rem",
               }}
             >
+              <Check width={12} height={12} />
               Mark all read
             </button>
           )}
@@ -314,7 +673,16 @@ export default function NotificationsSlide({
             transition={{ delay: 0.2 }}
             style={{ textAlign: "center", padding: "4rem 1rem" }}
           >
-            <p style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>🔔</p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "1rem",
+                opacity: 0.4,
+              }}
+            >
+              <Bell style={{ width: 48, height: 48, color: WARM_GOLD }} />
+            </div>
             <p
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
@@ -366,28 +734,57 @@ export default function NotificationsSlide({
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.04 * idx, duration: 0.35 }}
+                      onClick={() => handleClick(n)}
                       style={{
                         background: n.read
                           ? WARM_PAPER
                           : "rgba(212,168,83,0.08)",
-                        border: `1px solid ${n.read ? WARM_BORDER : "rgba(212,168,83,0.35)"}`,
+                        border: `1px solid ${
+                          n.read ? WARM_BORDER : "rgba(212,168,83,0.35)"
+                        }`,
                         borderRadius: 12,
                         padding: "0.85rem 1rem",
                         display: "flex",
                         alignItems: "flex-start",
                         gap: "0.75rem",
-                        transition: "background 0.2s",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLDivElement).style.boxShadow =
+                          "0 4px 16px rgba(92,61,46,0.12)";
+                        (e.currentTarget as HTMLDivElement).style.transform =
+                          "translateY(-1px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLDivElement).style.boxShadow =
+                          "none";
+                        (e.currentTarget as HTMLDivElement).style.transform =
+                          "translateY(0)";
                       }}
                     >
-                      <span
-                        style={{
-                          fontSize: "1.25rem",
-                          flexShrink: 0,
-                          marginTop: "0.1rem",
-                        }}
-                      >
-                        {typeIcon(n.type)}
-                      </span>
+                      {/* Avatar + type icon */}
+                      <div style={{ position: "relative", flexShrink: 0 }}>
+                        <AvatarBubble username={n.fromUser} />
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: -2,
+                            right: -2,
+                            background: WARM_BG,
+                            borderRadius: "50%",
+                            width: 18,
+                            height: 18,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            border: `1px solid ${WARM_BORDER}`,
+                          }}
+                        >
+                          <TypeIcon type={n.type} />
+                        </div>
+                      </div>
+
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p
                           style={{
@@ -410,20 +807,43 @@ export default function NotificationsSlide({
                               margin: "0.2rem 0 0",
                             }}
                           >
-                            on "{n.targetContent}"
+                            on &ldquo;{n.targetContent}&rdquo;
                           </p>
                         )}
-                        <span
+                        <div
                           style={{
-                            fontFamily: "'Libre Baskerville', Georgia, serif",
-                            fontSize: "0.68rem",
-                            color: "rgba(61,43,31,0.45)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.4rem",
                             marginTop: "0.3rem",
-                            display: "block",
                           }}
                         >
-                          {relativeTime(n.timestamp)}
-                        </span>
+                          <span
+                            style={{
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.68rem",
+                              color: "rgba(61,43,31,0.45)",
+                            }}
+                          >
+                            {relativeTime(n.timestamp)}
+                          </span>
+                          <Eye
+                            style={{
+                              width: 11,
+                              height: 11,
+                              color: "rgba(61,43,31,0.35)",
+                            }}
+                          />
+                          <span
+                            style={{
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.65rem",
+                              color: "rgba(61,43,31,0.35)",
+                            }}
+                          >
+                            Tap for details
+                          </span>
+                        </div>
                       </div>
                       {!n.read && (
                         <div

@@ -25,9 +25,54 @@ interface User {
   createdAt: string;
 }
 
+interface GallerySlideProps {
+  currentUser: User | null;
+  viewUsername?: string; // If viewing another user's gallery
+}
+
 export default function GallerySlide({
   currentUser,
-}: { currentUser: User | null }) {
+  viewUsername,
+}: GallerySlideProps) {
+  // Gallery privacy check
+  const _targetUser = viewUsername || currentUser?.username;
+  const isViewingOther = viewUsername && viewUsername !== currentUser?.username;
+
+  const isGalleryLocked = (() => {
+    if (!isViewingOther || !viewUsername) return false;
+    try {
+      const profile = JSON.parse(
+        localStorage.getItem(`chinnua_profile_${viewUsername}`) || "{}",
+      );
+      if (!profile.isPrivate) return false;
+      // Check if current user is in approved list
+      const approved: string[] = JSON.parse(
+        localStorage.getItem(`chinnua_gallery_approved_${viewUsername}`) ||
+          "[]",
+      );
+      return !approved.includes(currentUser?.username || "");
+    } catch {
+      return false;
+    }
+  })();
+
+  const handleRequestAccess = () => {
+    if (!currentUser || !viewUsername) return;
+    try {
+      const requests: string[] = JSON.parse(
+        localStorage.getItem(`chinnua_gallery_requests_${viewUsername}`) ||
+          "[]",
+      );
+      if (!requests.includes(currentUser.username)) {
+        requests.push(currentUser.username);
+        localStorage.setItem(
+          `chinnua_gallery_requests_${viewUsername}`,
+          JSON.stringify(requests),
+        );
+      }
+      alert("Access request sent!");
+    } catch {}
+  };
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [likedPhotos, setLikedPhotos] = useState<Set<string>>(new Set());
   const fileRef = useRef<HTMLInputElement>(null);
@@ -90,6 +135,65 @@ export default function GallerySlide({
   };
 
   const openFileDialog = () => fileRef.current?.click();
+
+  if (isGalleryLocked) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: WARM_BG,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            padding: "2.5rem",
+            background: WARM_PAPER,
+            border: `1px solid ${WARM_BORDER}`,
+            borderRadius: 16,
+            maxWidth: 360,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "1.1rem",
+              color: WARM_MOCHA,
+              marginBottom: "0.75rem",
+            }}
+          >
+            Private Gallery
+          </p>
+          <p
+            style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontStyle: "italic",
+              fontSize: "0.85rem",
+              color: WARM_MUTED,
+              marginBottom: "1.25rem",
+            }}
+          >
+            This gallery is private. Request access to view its photos.
+          </p>
+          <Button
+            onClick={handleRequestAccess}
+            data-ocid="gallery.primary_button"
+            style={{
+              background: "rgba(212,168,83,0.85)",
+              border: "none",
+              color: "#3D2B1F",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+            }}
+          >
+            Request Access
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

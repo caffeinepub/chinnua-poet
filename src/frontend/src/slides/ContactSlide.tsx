@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { SiInstagram, SiX, SiYoutube } from "react-icons/si";
+import { SiX, SiYoutube } from "react-icons/si";
 import { toast } from "sonner";
 
 export default function ContactSlide() {
@@ -153,11 +153,6 @@ export default function ContactSlide() {
             </p>
             <div style={{ display: "flex", gap: "1rem" }}>
               {[
-                {
-                  href: "https://www.instagram.com/chinnua_07_/",
-                  Icon: SiInstagram,
-                  label: "Instagram",
-                },
                 {
                   href: "https://www.youtube.com/@ChinnuaPoetofficial",
                   Icon: SiYoutube,
