@@ -13,8 +13,13 @@ import { POEMS } from "../poems-data";
 
 interface UserEntry {
   username: string;
+  name?: string;
+  displayName?: string;
   bio: string;
-  createdAt: string;
+  email?: string;
+  phone?: string;
+  createdAt?: string;
+  joinedAt?: string;
 }
 interface Post {
   id: string;
@@ -250,6 +255,8 @@ function MusicManagementTab() {
     artist: string;
     mood: string;
     spotifyUrl: string;
+    audioData?: string;
+    fileName?: string;
   }
   const DEFAULT_TRACKS: Track[] = [
     {
@@ -307,12 +314,40 @@ function MusicManagementTab() {
     spotifyUrl: "",
   });
 
+  const [pendingAudio, setPendingAudio] = React.useState<{
+    data: string;
+    fileName: string;
+  } | null>(null);
+
+  const handleAudioFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Audio file must be under 10MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const data = ev.target?.result as string;
+      setPendingAudio({ data, fileName: file.name });
+    };
+    reader.readAsDataURL(file);
+  };
+
   const addTrack = () => {
     if (!newTrack.title.trim() || !newTrack.artist.trim()) return;
-    const updated = [...tracks, { ...newTrack, id: `track_${Date.now()}` }];
+    const track: Track = {
+      ...newTrack,
+      id: `track_${Date.now()}`,
+      ...(pendingAudio
+        ? { audioData: pendingAudio.data, fileName: pendingAudio.fileName }
+        : {}),
+    };
+    const updated = [...tracks, track];
     setTracks(updated);
     localStorage.setItem("chinnua_music_library", JSON.stringify(updated));
     setNewTrack({ title: "", artist: "", mood: "Peaceful", spotifyUrl: "" });
+    setPendingAudio(null);
   };
 
   const deleteTrack = (id: string) => {
@@ -434,6 +469,46 @@ function MusicManagementTab() {
             ))}
           </select>
         </div>
+        {/* Audio upload */}
+        <div style={{ marginBottom: "0.75rem" }}>
+          <label
+            htmlFor="audio-file-upload"
+            style={{
+              display: "block",
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.82rem",
+              color: WARM_BROWN,
+              marginBottom: "0.4rem",
+            }}
+          >
+            Upload Audio File (optional, max 10MB)
+          </label>
+          <input
+            id="audio-file-upload"
+            type="file"
+            accept="audio/*"
+            onChange={handleAudioFile}
+            data-ocid="admin.upload_button"
+            style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.8rem",
+              color: WARM_TEXT,
+            }}
+          />
+          {pendingAudio && (
+            <p
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontSize: "0.75rem",
+                color: WARM_BROWN,
+                marginTop: "0.3rem",
+                fontStyle: "italic",
+              }}
+            >
+              Ready: {pendingAudio.fileName}
+            </p>
+          )}
+        </div>
         <button
           type="button"
           onClick={addTrack}
@@ -515,6 +590,15 @@ function MusicManagementTab() {
               >
                 Spotify
               </a>
+            )}
+            {(track as any).audioData && (
+              <audio
+                controls
+                src={(track as any).audioData}
+                style={{ height: 28, flexShrink: 0, maxWidth: 140 }}
+              >
+                <track kind="captions" srcLang="en" label="English" />
+              </audio>
             )}
             <button
               type="button"
@@ -1079,6 +1163,7 @@ function AdminInboxTab() {
   const WARM_BROWN = "#8B6F47";
   const WARM_PAPER = "#F5ECD7";
   const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_GOLD = "#D4A853";
   const WARM_TEXT = "#3D2B1F";
 
   interface InboxMsg {
@@ -1089,30 +1174,611 @@ function AdminInboxTab() {
     timestamp: string;
   }
 
-  const [msgs, setMsgs] = React.useState<InboxMsg[]>([]);
+  interface Conversation {
+    username: string;
+    lastMsg: string;
+    lastTime: string;
+    messages: InboxMsg[];
+  }
 
-  React.useEffect(() => {
-    // Collect all messages sent to CHINNUA_POET
+  const [conversations, setConversations] = React.useState<Conversation[]>([]);
+  const [selectedUser, setSelectedUser] = React.useState<string | null>(null);
+  const [newMessage, setNewMessage] = React.useState("");
+  const [showNewConv, setShowNewConv] = React.useState(false);
+  const [newConvUsername, setNewConvUsername] = React.useState("");
+  const [lastRefresh, setLastRefresh] = React.useState(new Date());
+
+  const loadConversations = React.useCallback(() => {
     const allKeys = Object.keys(localStorage).filter((k) =>
       k.startsWith("chinnua_conv_"),
     );
-    const collected: InboxMsg[] = [];
+    const convMap: Record<string, InboxMsg[]> = {};
     for (const key of allKeys) {
       try {
-        const convMsgs = JSON.parse(localStorage.getItem(key) || "[]");
-        for (const m of convMsgs) {
-          if (m.to === "CHINNUA_POET" || key.includes("CHINNUA_POET")) {
-            collected.push(m);
+        const msgs: InboxMsg[] = JSON.parse(localStorage.getItem(key) || "[]");
+        for (const m of msgs) {
+          const otherUser = m.from === "CHINNUA_POET" ? m.to : m.from;
+          if (otherUser !== "CHINNUA_POET") {
+            if (!convMap[otherUser]) convMap[otherUser] = [];
+            convMap[otherUser].push(m);
+          }
+        }
+        // Also check key naming pattern
+        const keyParts = key.replace("chinnua_conv_", "").split("_");
+        for (const part of keyParts) {
+          if (part && part !== "CHINNUA" && part !== "POET") {
+            if (!convMap[part]) convMap[part] = [];
           }
         }
       } catch {}
     }
-    collected.sort(
-      (a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    const convList: Conversation[] = Object.entries(convMap).map(
+      ([username, msgs]) => {
+        const sorted = [...msgs].sort(
+          (a, b) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+        );
+        return {
+          username,
+          lastMsg: sorted[0]?.text?.slice(0, 50) || "(no messages)",
+          lastTime: sorted[0]?.timestamp || "",
+          messages: sorted,
+        };
+      },
     );
-    setMsgs(collected);
+    convList.sort(
+      (a, b) => new Date(b.lastTime).getTime() - new Date(a.lastTime).getTime(),
+    );
+    setConversations(convList);
+    setLastRefresh(new Date());
   }, []);
+
+  React.useEffect(() => {
+    loadConversations();
+  }, [loadConversations]);
+
+  const selectedConv = conversations.find((c) => c.username === selectedUser);
+
+  const sendMessage = () => {
+    if (!newMessage.trim() || !selectedUser) return;
+    const msg: InboxMsg = {
+      id: `admin_${Date.now()}`,
+      from: "CHINNUA_POET",
+      to: selectedUser,
+      text: newMessage.trim(),
+      timestamp: new Date().toISOString(),
+    };
+    const key = `chinnua_conv_CHINNUA_POET_${selectedUser}`;
+    try {
+      const existing: InboxMsg[] = JSON.parse(
+        localStorage.getItem(key) || "[]",
+      );
+      existing.push(msg);
+      localStorage.setItem(key, JSON.stringify(existing));
+    } catch {
+      localStorage.setItem(key, JSON.stringify([msg]));
+    }
+    setNewMessage("");
+    loadConversations();
+  };
+
+  const startNewConversation = () => {
+    if (!newConvUsername.trim()) return;
+    const username = newConvUsername.trim();
+    setSelectedUser(username);
+    setShowNewConv(false);
+    setNewConvUsername("");
+    // Ensure conversation entry exists
+    if (!conversations.find((c) => c.username === username)) {
+      setConversations((prev) => [
+        { username, lastMsg: "(no messages)", lastTime: "", messages: [] },
+        ...prev,
+      ]);
+    }
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "1rem",
+        }}
+      >
+        <h3
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            margin: 0,
+          }}
+        >
+          Admin Inbox
+        </h3>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <span
+            style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.72rem",
+              color: WARM_BROWN,
+              fontStyle: "italic",
+            }}
+          >
+            Updated: {lastRefresh.toLocaleTimeString()}
+          </span>
+          <button
+            type="button"
+            onClick={loadConversations}
+            data-ocid="admin.secondary_button"
+            style={{
+              padding: "0.3rem 0.75rem",
+              background: "rgba(212,168,83,0.1)",
+              border: "1px solid rgba(212,168,83,0.3)",
+              borderRadius: 6,
+              cursor: "pointer",
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: "0.75rem",
+              color: WARM_MOCHA,
+            }}
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: "1rem", minHeight: 500 }}>
+        {/* Left panel: conversation list */}
+        <div
+          style={{
+            width: "33%",
+            minWidth: 160,
+            background: WARM_PAPER,
+            border: `1px solid ${WARM_BORDER}`,
+            borderRadius: 12,
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+          }}
+          data-ocid="admin.panel"
+        >
+          <div
+            style={{
+              padding: "0.75rem",
+              borderBottom: `1px solid ${WARM_BORDER}`,
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setShowNewConv(!showNewConv)}
+              data-ocid="admin.primary_button"
+              style={{
+                width: "100%",
+                padding: "0.4rem 0.75rem",
+                background: "rgba(212,168,83,0.15)",
+                border: "1px solid rgba(212,168,83,0.35)",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontFamily: "'Lora', Georgia, serif",
+                fontSize: "0.8rem",
+                color: WARM_MOCHA,
+                fontWeight: 600,
+              }}
+            >
+              + Message User
+            </button>
+            {showNewConv && (
+              <div
+                style={{ marginTop: "0.5rem", display: "flex", gap: "0.4rem" }}
+              >
+                <input
+                  value={newConvUsername}
+                  onChange={(e) => setNewConvUsername(e.target.value)}
+                  placeholder="Username…"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") startNewConversation();
+                  }}
+                  data-ocid="admin.input"
+                  style={{
+                    flex: 1,
+                    padding: "0.35rem 0.5rem",
+                    border: `1px solid ${WARM_BORDER}`,
+                    borderRadius: 6,
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.78rem",
+                    color: WARM_TEXT,
+                    background: "white",
+                    outline: "none",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={startNewConversation}
+                  data-ocid="admin.confirm_button"
+                  style={{
+                    padding: "0.35rem 0.6rem",
+                    background: WARM_GOLD,
+                    border: "none",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    fontSize: "0.75rem",
+                    color: "#3D2B1F",
+                    fontWeight: 600,
+                  }}
+                >
+                  Go
+                </button>
+              </div>
+            )}
+          </div>
+          <div style={{ flex: 1, overflowY: "auto" }}>
+            {conversations.length === 0 ? (
+              <p
+                data-ocid="admin.empty_state"
+                style={{
+                  padding: "1.5rem",
+                  textAlign: "center",
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontStyle: "italic",
+                  fontSize: "0.8rem",
+                  color: WARM_BROWN,
+                }}
+              >
+                No conversations yet
+              </p>
+            ) : (
+              conversations.map((conv) => (
+                <button
+                  key={conv.username}
+                  type="button"
+                  onClick={() => setSelectedUser(conv.username)}
+                  data-ocid="admin.row"
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem 1rem",
+                    background:
+                      selectedUser === conv.username
+                        ? "rgba(212,168,83,0.12)"
+                        : "transparent",
+                    borderLeft:
+                      selectedUser === conv.username
+                        ? `3px solid ${WARM_GOLD}`
+                        : "3px solid transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    borderBottom: `1px solid ${WARM_BORDER}`,
+                    transition: "all 0.15s",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontWeight: 700,
+                      color: WARM_MOCHA,
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    @{conv.username}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Lora', Georgia, serif",
+                      fontSize: "0.72rem",
+                      color: WARM_BROWN,
+                      marginTop: "0.15rem",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {conv.lastMsg}
+                  </div>
+                  {conv.lastTime && (
+                    <div
+                      style={{
+                        fontFamily: "'Lora', Georgia, serif",
+                        fontSize: "0.65rem",
+                        color: "rgba(61,43,31,0.4)",
+                        marginTop: "0.1rem",
+                      }}
+                    >
+                      {new Date(conv.lastTime).toLocaleDateString()}
+                    </div>
+                  )}
+                </button>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Right panel: conversation thread */}
+        <div
+          style={{
+            flex: 1,
+            background: WARM_PAPER,
+            border: `1px solid ${WARM_BORDER}`,
+            borderRadius: 12,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+          data-ocid="admin.panel"
+        >
+          {selectedUser ? (
+            <>
+              {/* Thread header */}
+              <div
+                style={{
+                  padding: "0.75rem 1.25rem",
+                  borderBottom: `1px solid ${WARM_BORDER}`,
+                  background: "rgba(212,168,83,0.06)",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontWeight: 700,
+                    color: WARM_MOCHA,
+                    fontSize: "0.95rem",
+                  }}
+                >
+                  Conversation with @{selectedUser}
+                </span>
+              </div>
+
+              {/* Messages */}
+              <div
+                style={{
+                  flex: 1,
+                  overflowY: "auto",
+                  padding: "1rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.6rem",
+                }}
+              >
+                {!selectedConv || selectedConv.messages.length === 0 ? (
+                  <p
+                    data-ocid="admin.empty_state"
+                    style={{
+                      textAlign: "center",
+                      fontFamily: "'Lora', Georgia, serif",
+                      fontStyle: "italic",
+                      color: WARM_BROWN,
+                      fontSize: "0.85rem",
+                      marginTop: "2rem",
+                    }}
+                  >
+                    No messages yet. Send the first message below.
+                  </p>
+                ) : (
+                  [...(selectedConv?.messages || [])].reverse().map((m, i) => {
+                    const isAdmin = m.from === "CHINNUA_POET";
+                    return (
+                      <div
+                        key={m.id || i}
+                        data-ocid={`admin.item.${i + 1}`}
+                        style={{
+                          display: "flex",
+                          justifyContent: isAdmin ? "flex-end" : "flex-start",
+                        }}
+                      >
+                        <div
+                          style={{
+                            maxWidth: "70%",
+                            background: isAdmin
+                              ? "rgba(212,168,83,0.2)"
+                              : "rgba(255,248,238,0.9)",
+                            border: `1px solid ${isAdmin ? "rgba(212,168,83,0.4)" : WARM_BORDER}`,
+                            borderRadius: isAdmin
+                              ? "12px 12px 2px 12px"
+                              : "12px 12px 12px 2px",
+                            padding: "0.6rem 0.9rem",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.85rem",
+                              color: WARM_TEXT,
+                              margin: 0,
+                              lineHeight: 1.5,
+                            }}
+                          >
+                            {m.text}
+                          </p>
+                          <p
+                            style={{
+                              fontFamily: "'Lora', Georgia, serif",
+                              fontSize: "0.65rem",
+                              color: "rgba(61,43,31,0.4)",
+                              margin: "0.25rem 0 0",
+                              textAlign: isAdmin ? "right" : "left",
+                            }}
+                          >
+                            {new Date(m.timestamp).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Compose area */}
+              <div
+                style={{
+                  padding: "0.75rem 1rem",
+                  borderTop: `1px solid ${WARM_BORDER}`,
+                  display: "flex",
+                  gap: "0.5rem",
+                }}
+              >
+                <input
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Write a message…"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
+                  data-ocid="admin.input"
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem 0.75rem",
+                    border: `1px solid ${WARM_BORDER}`,
+                    borderRadius: 8,
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.85rem",
+                    color: WARM_TEXT,
+                    background: "white",
+                    outline: "none",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={sendMessage}
+                  data-ocid="admin.primary_button"
+                  style={{
+                    padding: "0.5rem 1rem",
+                    background: WARM_GOLD,
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.85rem",
+                    color: "#3D2B1F",
+                    fontWeight: 600,
+                    flexShrink: 0,
+                  }}
+                >
+                  Send
+                </button>
+              </div>
+            </>
+          ) : (
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div style={{ textAlign: "center" }}>
+                <p
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontStyle: "italic",
+                    color: WARM_BROWN,
+                    fontSize: "1rem",
+                  }}
+                >
+                  Select a conversation
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.8rem",
+                    color: "rgba(61,43,31,0.4)",
+                  }}
+                >
+                  or start a new one with "+ Message User"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AdminInfoTab() {
+  const WARM_MOCHA = "#5C3D2E";
+  const WARM_BROWN = "#8B6F47";
+  const WARM_PAPER = "#F5ECD7";
+  const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_GOLD = "#D4A853";
+  const WARM_TEXT = "#3D2B1F";
+
+  interface AdminProfile {
+    username: string;
+    displayName: string;
+    email: string;
+    bio: string;
+    profilePhoto: string;
+    websiteUrl: string;
+    memberSince: string;
+  }
+
+  const DEFAULT_PROFILE: AdminProfile = {
+    username: "CHINNUA_POET",
+    displayName: "CHINNUA_POET",
+    email: "anoldpoet07@gmail.com",
+    bio: "The poet behind CHINNUA_POET",
+    profilePhoto: "",
+    websiteUrl: window.location.origin,
+    memberSince: "2025",
+  };
+
+  const [profile, setProfile] = React.useState<AdminProfile>(() => {
+    try {
+      const stored = localStorage.getItem("chinnua_admin_profile");
+      if (stored) return { ...DEFAULT_PROFILE, ...JSON.parse(stored) };
+    } catch {}
+    return DEFAULT_PROFILE;
+  });
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [newPassword, setNewPassword] = React.useState("");
+  const [savedOk, setSavedOk] = React.useState(false);
+
+  const currentPassword =
+    localStorage.getItem("chinnua_admin_password") || "chinnua2025";
+
+  const handleSave = () => {
+    localStorage.setItem("chinnua_admin_profile", JSON.stringify(profile));
+    if (newPassword.trim()) {
+      localStorage.setItem("chinnua_admin_password", newPassword.trim());
+      setNewPassword("");
+    }
+    setSavedOk(true);
+    setTimeout(() => setSavedOk(false), 2000);
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "0.55rem 0.85rem",
+    border: `1px solid ${WARM_BORDER}`,
+    borderRadius: 8,
+    fontFamily: "'Libre Baskerville', Georgia, serif",
+    fontSize: "0.85rem",
+    color: WARM_TEXT,
+    background: "rgba(255,248,238,0.9)",
+    outline: "none",
+    boxSizing: "border-box",
+  };
+
+  const fieldStyle: React.CSSProperties = {
+    marginBottom: "1rem",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontFamily: "'Playfair Display', Georgia, serif",
+    fontSize: "0.78rem",
+    color: WARM_MOCHA,
+    fontWeight: 700,
+    marginBottom: "0.35rem",
+    letterSpacing: "0.04em",
+  };
 
   return (
     <div>
@@ -1120,10 +1786,11 @@ function AdminInboxTab() {
         style={{
           fontFamily: "'Playfair Display', Georgia, serif",
           color: WARM_MOCHA,
-          marginBottom: "1rem",
+          marginBottom: "0.35rem",
+          fontSize: "1.2rem",
         }}
       >
-        Admin Inbox
+        Admin Profile
       </h3>
       <p
         style={{
@@ -1134,74 +1801,554 @@ function AdminInboxTab() {
           marginBottom: "1.5rem",
         }}
       >
-        All messages sent to CHINNUA_POET from users.
+        Your admin account information. Changes are saved locally.
       </p>
-      {msgs.length === 0 ? (
+
+      <div
+        style={{
+          background: WARM_PAPER,
+          border: `1px solid ${WARM_BORDER}`,
+          borderRadius: 14,
+          padding: "1.5rem",
+          maxWidth: 560,
+        }}
+      >
+        {/* Read-only info row */}
         <div
           style={{
-            textAlign: "center",
-            padding: "3rem 1rem",
-            color: WARM_BROWN,
-            fontFamily: "'Lora', Georgia, serif",
-            fontStyle: "italic",
+            display: "flex",
+            gap: "1.5rem",
+            marginBottom: "1.5rem",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
           }}
         >
-          No messages yet.
-        </div>
-      ) : (
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
-        >
-          {msgs.slice(0, 50).map((m, i) => (
-            <div
-              key={m.id || i}
+          <div
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: "50%",
+              background: "rgba(212,168,83,0.15)",
+              border: `2px solid ${WARM_GOLD}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              overflow: "hidden",
+            }}
+          >
+            {profile.profilePhoto ? (
+              <img
+                src={profile.profilePhoto}
+                alt="Admin"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            ) : (
+              <span
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: "1.8rem",
+                  color: WARM_GOLD,
+                }}
+              >
+                ✒
+              </span>
+            )}
+          </div>
+          <div>
+            <p
               style={{
-                background: WARM_PAPER,
-                border: `1px solid ${WARM_BORDER}`,
-                borderRadius: 10,
-                padding: "0.85rem 1rem",
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "1.1rem",
+                fontWeight: 700,
+                color: WARM_MOCHA,
+                margin: "0 0 0.2rem",
               }}
             >
-              <div
+              {profile.displayName}
+            </p>
+            <p
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontSize: "0.8rem",
+                color: WARM_BROWN,
+                margin: "0 0 0.15rem",
+              }}
+            >
+              @{profile.username}
+            </p>
+            <p
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontSize: "0.75rem",
+                color: "rgba(61,43,31,0.5)",
+                margin: 0,
+              }}
+            >
+              Member since {profile.memberSince}
+            </p>
+          </div>
+        </div>
+
+        {/* Editable fields */}
+        <div style={fieldStyle}>
+          <label htmlFor="admin-username" style={labelStyle}>
+            Admin Username
+          </label>
+          <input
+            id="admin-username"
+            value={profile.username}
+            onChange={(e) =>
+              setProfile((p) => ({ ...p, username: e.target.value }))
+            }
+            style={inputStyle}
+            data-ocid="admin.input"
+          />
+        </div>
+
+        <div style={fieldStyle}>
+          <label htmlFor="admin-display-name" style={labelStyle}>
+            Display Name
+          </label>
+          <input
+            id="admin-display-name"
+            value={profile.displayName}
+            onChange={(e) =>
+              setProfile((p) => ({ ...p, displayName: e.target.value }))
+            }
+            style={inputStyle}
+            data-ocid="admin.input"
+          />
+        </div>
+
+        <div style={fieldStyle}>
+          <label htmlFor="admin-email" style={labelStyle}>
+            Admin Email
+          </label>
+          <input
+            id="admin-email"
+            type="email"
+            value={profile.email}
+            onChange={(e) =>
+              setProfile((p) => ({ ...p, email: e.target.value }))
+            }
+            style={inputStyle}
+            data-ocid="admin.input"
+          />
+        </div>
+
+        <div style={fieldStyle}>
+          <label htmlFor="admin-bio" style={labelStyle}>
+            Bio
+          </label>
+          <textarea
+            id="admin-bio"
+            value={profile.bio}
+            onChange={(e) => setProfile((p) => ({ ...p, bio: e.target.value }))}
+            rows={3}
+            style={{ ...inputStyle, resize: "vertical" }}
+            data-ocid="admin.textarea"
+          />
+        </div>
+
+        {/* Read-only fields */}
+        <div
+          style={{
+            ...fieldStyle,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "1rem",
+          }}
+        >
+          <div>
+            <label htmlFor="admin-website-url" style={labelStyle}>
+              Website URL (read-only)
+            </label>
+            <input
+              id="admin-website-url"
+              value={profile.websiteUrl}
+              readOnly
+              style={{ ...inputStyle, opacity: 0.6, cursor: "default" }}
+            />
+          </div>
+          <div>
+            <label htmlFor="admin-member-since" style={labelStyle}>
+              Member Since (read-only)
+            </label>
+            <input
+              id="admin-member-since"
+              value={profile.memberSince}
+              readOnly
+              style={{ ...inputStyle, opacity: 0.6, cursor: "default" }}
+            />
+          </div>
+        </div>
+
+        {/* Profile photo path */}
+        <div style={fieldStyle}>
+          <label htmlFor="admin-photo" style={labelStyle}>
+            Profile Photo URL (read-only)
+          </label>
+          <input
+            id="admin-photo"
+            value={profile.profilePhoto || "(none)"}
+            readOnly
+            style={{ ...inputStyle, opacity: 0.6, cursor: "default" }}
+          />
+        </div>
+
+        {/* Password section */}
+        <div
+          style={{
+            background: "rgba(212,168,83,0.06)",
+            border: "1px solid rgba(212,168,83,0.2)",
+            borderRadius: 10,
+            padding: "1rem",
+            marginBottom: "1.25rem",
+          }}
+        >
+          <label htmlFor="admin-pw-display" style={labelStyle}>
+            Admin Password
+          </label>
+          <div
+            style={{
+              display: "flex",
+              gap: "0.5rem",
+              alignItems: "center",
+              marginBottom: "0.5rem",
+            }}
+          >
+            <input
+              id="admin-pw-display"
+              type={showPassword ? "text" : "password"}
+              value={currentPassword}
+              readOnly
+              style={{
+                ...inputStyle,
+                opacity: 0.7,
+                cursor: "default",
+                flex: 1,
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((p) => !p)}
+              style={{
+                padding: "0.4rem 0.7rem",
+                background: "rgba(139,111,71,0.1)",
+                border: `1px solid ${WARM_BORDER}`,
+                borderRadius: 6,
+                cursor: "pointer",
+                color: WARM_BROWN,
+                fontSize: "0.78rem",
+                fontFamily: "'Lora', Georgia, serif",
+                flexShrink: 0,
+              }}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
+          <input
+            type="password"
+            placeholder="New password (leave blank to keep current)"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            style={inputStyle}
+            data-ocid="admin.input"
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleSave}
+          data-ocid="admin.save_button"
+          style={{
+            padding: "0.6rem 1.75rem",
+            background: savedOk
+              ? "rgba(74,222,128,0.15)"
+              : "rgba(212,168,83,0.85)",
+            border: "none",
+            borderRadius: 8,
+            cursor: "pointer",
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontSize: "0.88rem",
+            color: "#3D2B1F",
+            fontWeight: 700,
+            transition: "all 0.2s",
+            boxShadow: "0 2px 8px rgba(212,168,83,0.2)",
+          }}
+        >
+          {savedOk ? "Saved!" : "Save Profile"}
+        </button>
+      </div>
+
+      {/* Stats section */}
+      <div
+        style={{
+          marginTop: "1.5rem",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+          gap: "0.75rem",
+          maxWidth: 560,
+        }}
+      >
+        {[
+          { label: "Platform", value: "CHINNUA_POET" },
+          { label: "Contact", value: "anoldpoet07@gmail.com" },
+          { label: "YouTube", value: "ChinnuaPoetofficial" },
+          { label: "X / Twitter", value: "@CHINNUA_POET" },
+        ].map((item) => (
+          <div
+            key={item.label}
+            style={{
+              background: WARM_PAPER,
+              border: `1px solid ${WARM_BORDER}`,
+              borderRadius: 10,
+              padding: "0.8rem 1rem",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "0.7rem",
+                color: WARM_BROWN,
+                margin: "0 0 0.2rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+              }}
+            >
+              {item.label}
+            </p>
+            <p
+              style={{
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: "0.82rem",
+                color: WARM_MOCHA,
+                margin: 0,
+                fontWeight: 600,
+                wordBreak: "break-all",
+              }}
+            >
+              {item.value}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function UsersTab({
+  users,
+  onDeleteUser,
+}: { users: UserEntry[]; onDeleteUser: (username: string) => void }) {
+  const WARM_MOCHA = "#5C3D2E";
+  const WARM_BROWN = "#8B6F47";
+  const _WARM_PAPER = "#F5ECD7";
+  const WARM_BORDER = "rgba(139,111,71,0.25)";
+  const WARM_TEXT = "#3D2B1F";
+  const _WARM_GOLD = "#D4A853";
+
+  const [search, setSearch] = React.useState("");
+
+  const filtered = users.filter((u) => {
+    const q = search.toLowerCase();
+    return (
+      u.username.toLowerCase().includes(q) ||
+      (u.email || "").toLowerCase().includes(q) ||
+      (u.name || u.displayName || "").toLowerCase().includes(q)
+    );
+  });
+
+  const formatDate = (val?: string) => {
+    if (!val) return "—";
+    try {
+      return new Date(val).toLocaleDateString();
+    } catch {
+      return val;
+    }
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "1rem",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+            color: WARM_BROWN,
+            fontSize: "0.82rem",
+            margin: 0,
+          }}
+        >
+          {users.length} registered user{users.length !== 1 ? "s" : ""}
+        </p>
+        <input
+          type="search"
+          placeholder="Search by username or email…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          data-ocid="admin.search_input"
+          style={{
+            padding: "0.4rem 0.75rem",
+            border: `1px solid ${WARM_BORDER}`,
+            borderRadius: 8,
+            fontFamily: "'Lora', Georgia, serif",
+            fontSize: "0.82rem",
+            color: WARM_TEXT,
+            background: "white",
+            outline: "none",
+            minWidth: 220,
+          }}
+        />
+      </div>
+
+      {filtered.length === 0 ? (
+        <div
+          data-ocid="admin.empty_state"
+          style={{
+            textAlign: "center",
+            padding: "2rem",
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+            color: WARM_BROWN,
+          }}
+        >
+          No users found
+        </div>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+            }}
+          >
+            <thead>
+              <tr
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: "0.4rem",
+                  background: "rgba(212,168,83,0.08)",
+                  borderBottom: `2px solid ${WARM_BORDER}`,
                 }}
               >
-                <span
+                {[
+                  "Username",
+                  "Name",
+                  "Email",
+                  "Phone",
+                  "Joined",
+                  "Actions",
+                ].map((col) => (
+                  <th
+                    key={col}
+                    style={{
+                      padding: "0.6rem 0.9rem",
+                      textAlign: "left",
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontSize: "0.78rem",
+                      color: WARM_MOCHA,
+                      fontWeight: 700,
+                      letterSpacing: "0.05em",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((user, i) => (
+                <tr
+                  key={user.username}
+                  data-ocid={`admin.item.${i + 1}`}
                   style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
-                    fontWeight: 700,
-                    color: WARM_MOCHA,
-                    fontSize: "0.88rem",
+                    borderBottom: `1px solid ${WARM_BORDER}`,
+                    background:
+                      i % 2 === 0 ? "transparent" : "rgba(212,168,83,0.04)",
                   }}
                 >
-                  {m.from}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'Lora', Georgia, serif",
-                    fontSize: "0.7rem",
-                    color: "rgba(61,43,31,0.45)",
-                  }}
-                >
-                  {new Date(m.timestamp).toLocaleString()}
-                </span>
-              </div>
-              <p
-                style={{
-                  fontFamily: "'Libre Baskerville', Georgia, serif",
-                  fontSize: "0.85rem",
-                  color: WARM_TEXT,
-                  margin: 0,
-                  lineHeight: 1.6,
-                }}
-              >
-                {m.text}
-              </p>
-            </div>
-          ))}
+                  <td style={{ padding: "0.6rem 0.9rem" }}>
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        color: WARM_MOCHA,
+                        fontSize: "0.88rem",
+                      }}
+                    >
+                      @{user.username}
+                    </span>
+                  </td>
+                  <td
+                    style={{
+                      padding: "0.6rem 0.9rem",
+                      fontSize: "0.82rem",
+                      color: WARM_TEXT,
+                    }}
+                  >
+                    {user.name || user.displayName || "—"}
+                  </td>
+                  <td
+                    style={{
+                      padding: "0.6rem 0.9rem",
+                      fontSize: "0.82rem",
+                      color: WARM_TEXT,
+                    }}
+                  >
+                    {user.email || "—"}
+                  </td>
+                  <td
+                    style={{
+                      padding: "0.6rem 0.9rem",
+                      fontSize: "0.82rem",
+                      color: WARM_TEXT,
+                    }}
+                  >
+                    {user.phone || "—"}
+                  </td>
+                  <td
+                    style={{
+                      padding: "0.6rem 0.9rem",
+                      fontSize: "0.78rem",
+                      color: WARM_BROWN,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {formatDate(user.createdAt || user.joinedAt)}
+                  </td>
+                  <td style={{ padding: "0.6rem 0.9rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => onDeleteUser(user.username)}
+                      data-ocid="admin.delete_button"
+                      style={{
+                        padding: "0.25rem 0.65rem",
+                        background: "rgba(239,68,68,0.1)",
+                        border: "1px solid rgba(239,68,68,0.25)",
+                        borderRadius: 6,
+                        cursor: "pointer",
+                        fontFamily: "'Libre Baskerville', Georgia, serif",
+                        fontSize: "0.75rem",
+                        color: "rgba(239,68,68,0.85)",
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -1400,6 +2547,22 @@ function AdminAboutTab() {
   );
 }
 
+function ensureAdminFollowed() {
+  try {
+    const users: Array<{ username: string }> = JSON.parse(
+      localStorage.getItem("chinnua_users") || "[]",
+    );
+    for (const user of users) {
+      const key = `chinnua_following_${user.username}`;
+      const following: string[] = JSON.parse(localStorage.getItem(key) || "[]");
+      if (!following.includes("CHINNUA_POET")) {
+        following.push("CHINNUA_POET");
+        localStorage.setItem(key, JSON.stringify(following));
+      }
+    }
+  } catch {}
+}
+
 export default function AdminSlide() {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState("");
@@ -1500,6 +2663,13 @@ export default function AdminSlide() {
     const storedRules = localStorage.getItem("chinnua_rules");
     if (storedRules) setRules(storedRules);
   }, []);
+
+  // Auto-follow admin when authed
+  useEffect(() => {
+    if (authed) {
+      ensureAdminFollowed();
+    }
+  }, [authed]);
 
   const checkPassword = async () => {
     let passwordOk = false;
@@ -1900,7 +3070,7 @@ export default function AdminSlide() {
             Lock
           </Button>
         </div>
-        <Tabs defaultValue="poems">
+        <Tabs defaultValue="admin-info">
           <TabsList
             style={{
               background: "rgba(255,248,238,0.9)",
@@ -1913,6 +3083,7 @@ export default function AdminSlide() {
             }}
           >
             {[
+              "admin-info",
               "poems",
               "feed",
               "users",
@@ -1941,6 +3112,10 @@ export default function AdminSlide() {
               </TabsTrigger>
             ))}
           </TabsList>
+
+          <TabsContent value="admin-info">
+            <AdminInfoTab />
+          </TabsContent>
 
           <TabsContent value="poems">
             <div
@@ -2221,69 +3396,7 @@ export default function AdminSlide() {
           </TabsContent>
 
           <TabsContent value="users">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}
-            >
-              {users.length === 0 ? (
-                <p
-                  style={{
-                    color: "rgba(92,61,46,0.5)",
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
-                  }}
-                  data-ocid="admin.empty_state"
-                >
-                  No registered users
-                </p>
-              ) : (
-                users.map((user) => (
-                  <div
-                    key={user.username}
-                    className="feed-card"
-                    style={{
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div>
-                      <p
-                        style={{
-                          fontFamily: "'Libre Baskerville', Georgia, serif",
-                          fontSize: "0.9rem",
-                          color: "#3D2B1F",
-                          fontWeight: 600,
-                        }}
-                      >
-                        @{user.username}
-                      </p>
-                      {user.bio && (
-                        <p
-                          style={{
-                            fontFamily: "'Libre Baskerville', Georgia, serif",
-                            fontSize: "0.78rem",
-                            color: "rgba(92,61,46,0.5)",
-                          }}
-                        >
-                          {user.bio.slice(0, 60)}
-                        </p>
-                      )}
-                    </div>
-                    <Button
-                      onClick={() => deleteUser(user.username)}
-                      data-ocid="admin.delete_button"
-                      style={deleteBtn}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                ))
-              )}
-            </div>
+            <UsersTab users={users} onDeleteUser={deleteUser} />
           </TabsContent>
 
           <TabsContent value="gallery">
@@ -2673,8 +3786,8 @@ export default function AdminSlide() {
                           <span
                             style={{
                               marginLeft: "auto",
-                              background: `${riskColor.replace("0.85", "0.12")}`,
-                              border: `1px solid ${riskColor.replace("0.85", "0.3")}`,
+                              background: `${riskColor.replace("0.85", "0.12")}",
+                              border: "1px solid ${riskColor.replace("0.85", "0.3")}`,
                               borderRadius: 6,
                               padding: "0.1rem 0.5rem",
                               color: riskColor,

@@ -106,6 +106,23 @@ export default function App() {
   const [profileUsername, setProfileUsername] = useState<string | null>(null);
 
   useEffect(() => {
+    // Auto-follow admin on startup for all users
+    try {
+      const users: Array<{ username: string }> = JSON.parse(
+        localStorage.getItem("chinnua_users") || "[]",
+      );
+      for (const user of users) {
+        const key = `chinnua_following_${user.username}`;
+        const following: string[] = JSON.parse(
+          localStorage.getItem(key) || "[]",
+        );
+        if (!following.includes("CHINNUA_POET")) {
+          following.push("CHINNUA_POET");
+          localStorage.setItem(key, JSON.stringify(following));
+        }
+      }
+    } catch {}
+
     const params = new URLSearchParams(window.location.search);
     if (params.get("slide") === "admin") setActiveSlide("admin");
     const validSlides = [

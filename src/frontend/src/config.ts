@@ -139,8 +139,11 @@ export async function createActorWithConfig(
       console.error(err);
     });
   }
+  // Exclude agentOptions since we already used it to build the agent above.
+  // Passing both agent and agentOptions to createActor triggers a console.warn.
+  const { agentOptions: _consumed, ...resolvedWithoutAgentOptions } = resolvedOptions;
   const actorOptions = {
-    ...resolvedOptions,
+    ...resolvedWithoutAgentOptions,
     agent: agent,
     processError,
   };
