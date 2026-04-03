@@ -865,7 +865,7 @@ function DailyLettersTab() {
             margin: "0 0 0.75rem",
           }}
         >
-          ☀️ Morning Letters
+          Morning Letters
         </h3>
         {renderList(morningLetters, "morning")}
       </div>
@@ -878,7 +878,7 @@ function DailyLettersTab() {
             margin: "0 0 0.75rem",
           }}
         >
-          🌙 Evening Letters
+          Evening Letters
         </h3>
         {renderList(nightLetters, "night")}
       </div>
@@ -1066,7 +1066,7 @@ function InkRepliesTab() {
                   borderRadius: 20,
                 }}
               >
-                {reply.letterType === "morning" ? "☀️ Morning" : "🌙 Evening"}
+                {reply.letterType === "morning" ? "Morning" : "Evening"}
               </span>
               <span
                 style={{

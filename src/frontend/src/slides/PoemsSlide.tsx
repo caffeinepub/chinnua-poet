@@ -5,6 +5,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Bookmark, Tag, Volume2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { Comment, CommentReply } from "../components/CommentThread";
@@ -1016,9 +1017,15 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                     : "#8B6F47",
                 }}
               >
-                {savedPoems.has(String(selected.id))
-                  ? "🔖 Saved"
-                  : "🏷 Save Poem"}
+                {savedPoems.has(String(selected.id)) ? (
+                  <>
+                    <Bookmark size={13} fill="#5C3D2E" /> Saved
+                  </>
+                ) : (
+                  <>
+                    <Tag size={13} /> Save Poem
+                  </>
+                )}
               </button>
               {getAiSettings().aiAudioGen && (
                 <button
@@ -1036,7 +1043,7 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                     color: "#8B6F47",
                   }}
                 >
-                  🔊 Listen
+                  <Volume2 size={14} /> Listen
                 </button>
               )}
             </div>

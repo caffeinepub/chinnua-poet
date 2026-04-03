@@ -13453,5 +13453,3067 @@ I'll be a good one.
 Even if no one remembers
 I was ever there.`,
   },
+  {
+    id: 526,
+    title: "Question of Memories",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `Someone once asked me –
+"If you could change something in your past,
+what would it be?"
+
+I said –
+"If memories must be changed,
+I would erase myself
+from the very fabric of this world."
+
+Because behind every smile
+there hides a wound for me,
+behind every memory
+echoes my unfinished cry.
+
+Will this world
+that made me weep,
+ever taste the tears
+it placed in my eyes?
+Will you be able to pour
+the depth of my pain
+into their hearts?
+
+The hands I once held
+were the first to let me go.
+The eyes I trusted
+turned strangers in silence.
+Every weight of these memories
+still sits on my chest like stone.
+
+Sometimes I wonder –
+if I could rewind time,
+I wouldn't leave laughter behind,
+I would leave only my silence
+inside their hearts.
+
+Will this world
+ever hear the echo of my screams?
+Will these people
+ever recognize the wounds they gave?
+If yes –
+maybe my memories could change.
+But until then,
+I will keep washing them
+with my own tears.`,
+  },
+  {
+    id: 527,
+    title: "A World Like That",
+    theme: "Hopeful",
+    collection: "New Poems",
+    full: `I wish to go to a world,
+where there is only one soul of my own,
+where the sky smiles wide and free,
+and the stars whisper, you belong to us.
+
+Where my home is built—
+not of walls, but of feelings,
+where even the waves of the sea
+don't leave me behind,
+but embrace me,
+singing a song of purity.
+
+Where, at the heart of my home,
+trees spread their roots deep,
+where every bird in its melody
+holds the essence of nature,
+and with the breeze,
+reaches my very soul.
+
+Perhaps…
+there exists such a place,
+where even time chooses to pause,
+and where I can
+finally find myself whole.`,
+  },
+  {
+    id: 528,
+    title: "Hidden Beauty of Unseen Love",
+    theme: "Love",
+    collection: "New Poems",
+    full: `That love was so beautiful,
+A love no one ever saw,
+No one ever felt,
+It lived quietly within my heart.
+
+I kept it hidden,
+Never spoken, never confessed.
+If I had shared my memories with him,
+Perhaps he would never understand
+How deeply I loved him.
+
+My heart beats only for him,
+Yet even without holding him,
+The love itself remains beautiful.
+
+His happiness meant more than my own,
+So I let him go,
+Because I knew—
+If I revealed the depth of my feelings,
+He would not grasp them.
+
+But silence never meant
+That my love was less.
+It only meant
+I loved enough to let go.
+
+I never told a soul about it,
+And so he will never know,
+How endlessly,
+How quietly,
+I loved him.`,
+  },
+  {
+    id: 529,
+    title: "Fear",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `Is the fear of losing someone greater,
+or is the fear of losing oneself the greatest of all?
+
+The fear of losing someone arises
+when we see our own reflection in them,
+when we learn to love ourselves through them.
+
+But think—
+do we truly lose ourselves
+when we lose someone else?
+In the end,
+it is only we who must gather ourselves back.
+
+So isn't it true,
+that the fear of losing oneself is the greatest?
+For only when we love ourselves,
+do we fear losing ourselves.
+
+After losing someone,
+perhaps another may come,
+but after losing the self,
+there can never be another replacement.
+
+Someone's place
+may be filled by another,
+but one's own place
+can never be replaced.
+
+My only question is—
+is the pain of losing someone else
+greater than the pain of losing oneself?`,
+  },
+  {
+    id: 530,
+    title: "Expectations",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `Sometimes, we tie so many hopes to others,
+that their breaking becomes almost certain—
+because no one can always rise
+to the heights of our dreams.
+
+That's when I realize—
+expectations should only be from myself,
+for the ones placed on others
+often shatter us from within.
+
+And yet, a thought lingers—
+is it wrong to expect at all?
+When I already know no one can go beyond my thoughts,
+then why do I still burden my heart with them?
+
+At times, I ask myself—
+will I be able to live up
+to all the hopes people keep from me?
+Or will I, too, fade into the crowd,
+unheard and unseen?
+
+Finally, one question echoes inside—
+if someone doesn't even know
+what is expected of them,
+can they truly live up to those expectations?
+
+And then comes the deepest doubt—
+Will they ever rise
+to the weight of people's hopes?`,
+  },
+  {
+    id: 531,
+    title: "Finding the Way",
+    theme: "Hopeful",
+    collection: "New Poems",
+    full: `The way of finding you
+Is unlike anything else.
+Finding the light in darkness,
+Discovering secrets in the ocean's depths,
+Unfolding wings to soar.
+
+Finding the echo of my own heart,
+Tracing paths where shadows fade,
+Finding courage in my silent fears,
+Hearing the songs the wind whispers.
+
+Finding the spark that ignites the soul,
+Piecing together the fragments of me,
+Finding the stars hidden behind clouds,
+Discovering truth in moments I almost let go.
+
+Finding the home I carry within,
+Finding the love that never left, only waited,
+And in the journey of every step,
+I find myself, and I find you.`,
+  },
+  {
+    id: 532,
+    title: "Finding the Way (II)",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `In the hollow of night, where silence screams,
+I wander through the ruins of broken dreams.
+Shadows clutch my heart, and doubts entwine,
+Each step a question, each breath a line.
+
+The road disappears into the void of fear,
+Whispers of the lost echo in my ear.
+Stars hide their faces, the moon turns cold,
+Yet I move forward through the dark, untold.
+
+The weight of wrong choices drags me below,
+Rivers of regret in which I flow.
+Yet even in this abyss, a faint light bleeds,
+Guiding my soul through forgotten creeds.
+
+I do not seek comfort, I do not seek day,
+Only the fragments that show me the way.
+For in the darkness, I am reborn,
+Finding my path through the silent scorn.`,
+  },
+  {
+    id: 533,
+    title: "Between Hope and Expectation",
+    theme: "Hopeful",
+    collection: "New Poems",
+    full: `Hope is a whisper in the silence of night,
+A fragile flame that survives the storm's might.
+It asks for nothing, yet gives us wings,
+It lives in the unseen, in quiet, gentle things.
+
+Expectation, though, wears a crown of control,
+It measures the world, it burdens the soul.
+It demands, it waits, it questions "why?",
+When life doesn't answer, it starts to cry.
+
+Hope is freedom — it floats, it forgives,
+Expectation is prison — it binds as it lives.
+One keeps your heart open, the other confined,
+One heals your spirit, the other clouds your mind.
+
+So choose to hope, not to expect in vain,
+For hope stays with you — even through pain.
+It asks for no return, yet lights the way,
+Where expectation fades… hope chooses to stay.`,
+  },
+  {
+    id: 534,
+    title: "When Hope Bleeds, and Expectation Breaks",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `I hoped for light in the corners of my pain,
+But expectations turned it into rain.
+Hope whispered, "wait, the dawn will come,"
+Yet expectation screamed, "why are you still numb?"
+
+Hope held my hand in silence so deep,
+While expectation stole the peace I keep.
+One taught me patience, soft and kind,
+The other built prisons inside my mind.
+
+I learned —
+Hope never promises, yet it stays,
+Expectation counts the endless days.
+Hope breathes even in shattered dreams,
+Expectation dies where nothing redeems.
+
+Now I walk with hope, quiet and bare,
+No longer expecting someone to care.
+For hope doesn't need a reason to be —
+It lives in the ruins, quietly… inside me.`,
+  },
+  {
+    id: 535,
+    title: "Lost in the Edges of Universe",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `I wander where the stars forget their shine,
+Where even time dissolves, leaving no line.
+The galaxies whisper, but not for me,
+They guard their secrets in infinity.
+
+Every step I take, I fall through air,
+A silent prayer that no one hears there.
+Planets pass by like strangers unknown,
+And I wonder—was I meant to be alone?
+
+The constellations draw stories in light,
+But my name fades from their canvas tonight.
+I reach for a star, it slips through my hand,
+Like every dream I could never withstand.
+
+Maybe I am a shadow that space denied,
+A wandering soul with no place to hide.
+Drifting through silence, cursed and diverse,
+Forever lost in the edges of universe.`,
+  },
+  {
+    id: 536,
+    title: "Pages of the Past",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `When I thought of mending my mistakes,
+I found myself standing again
+on the same torn pages of the past —
+where those very mistakes were born.
+
+Each time I wished to return
+and rewrite what once went wrong,
+Time whispered softly —
+"You no longer belong to that chapter."
+
+Then I asked myself —
+if I could really go back there,
+would I ever learn
+what those mistakes came to teach?
+
+Maybe not.
+For every scar I carry,
+every wound I regret,
+is a lesson written
+in the ink of my own pain.
+
+Mistakes are the silent teachers —
+they burn us once,
+so we may not burn again.
+
+Now, when I stumble,
+I no longer curse the fall —
+I just smile,
+for every failure
+is only a rehearsal
+for becoming whole again.`,
+  },
+  {
+    id: 537,
+    title: "Shadow of the Unfinished Path",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `I asked myself, where have I gone,
+The answer came — into the cracks of time.
+Like sand slipping through a clenched fist,
+I too have fallen,
+Along with my own breath,
+Into those unfinished paths.
+
+Shadows surround me,
+Once they were mine,
+Now even they feel like strangers.
+At every turn, the scent of death lingers,
+As if the corpses of dreams
+Lie scattered across these roads.
+
+I am no longer a traveler,
+I am a story
+Torn from the book of time,
+Whose words have faded into mist.
+
+No destination remains,
+No place to return,
+Only the lonely sound of my steps,
+And inside, a void
+That has already dug its own grave.`,
+  },
+  {
+    id: 538,
+    title: "The Graveyard of Trust",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `This world gave me so little,
+that I stopped trusting it altogether.
+
+Every hand carried promises, yet their palms were cold.
+Every smile looked gentle, but their words were poison.
+I planted truth in the soil of hearts,
+but all that grew was a forest of thorns and betrayal.
+
+Each time my soul tried to believe again,
+the world chained my faith to its lies.
+Every sunrise of hope drowned before my eyes,
+and darkness became my quiet companion.
+
+Now I fear even my own reflection,
+for trust is no longer a feeling — it's a corpse buried deep inside.
+They say, "Don't fall apart,"
+but how do you break what's already turned to ashes?
+
+I've learned to live among shadows,
+where silence has a voice and emptiness breathes.
+Where eyes no longer cry,
+but the heart turns in its grave every night.
+
+What the world gave was poison,
+and what it took — was my faith.
+Now all that remains is a hollow space,
+where once… I used to exist.`,
+  },
+  {
+    id: 539,
+    title: "The Silence of My Anger",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `Let me tell you one thing —
+if I ever thunder like clouds before you,
+know that you are the nearest sky I have.
+Because I don't rain in everyone's weather.
+
+If I ever turn away in silence,
+will you rise like the sun to melt me?
+My anger isn't fire,
+it's cold ash —
+burning quietly within,
+seen by no one.
+
+I fear that if even a spark escapes,
+it might set fire to the fragile bridge we built.
+So I keep my storms locked inside me.
+
+When the rage fades,
+my eyes become a barren land,
+where tears fall like the morning dew.
+
+Now I've grown used to
+facing tempests with calm,
+hiding every wound beneath a smile.
+Because people's words —
+they're not arrows anymore,
+they're hands digging slowly
+into the soil of my soul.
+
+And still, I stay silent,
+for my silence has become my armor.`,
+  },
+  {
+    id: 540,
+    title: "The Day We Met",
+    theme: "Love",
+    collection: "New Poems",
+    full: `I don't connect with everyone —
+only with those I truly want in my life.
+Sometimes, it takes me a month to understand people,
+and sometimes, just a single day.
+
+In your case, it was that one day —
+I was sad when we first started talking,
+and you were too.
+We both asked each other the reason behind our sadness,
+but when I asked you why,
+you didn't tell me.
+Maybe because, back then,
+we didn't really know each other.
+
+But the next day,
+you asked me, "How are you feeling today?"
+And that one small question —
+made me curious about you.
+It was the first time someone cared,
+not just about me,
+but about how I was within.
+
+That moment made me realize —
+it's not about why we care for someone,
+but how we do.
+We were strangers then,
+yet you cared.
+And that day, I understood —
+there are still kind-hearted souls
+who care for others
+without expecting anything in return.`,
+  },
+  {
+    id: 541,
+    title: "In Search of the Infinite",
+    theme: "Nature",
+    collection: "New Poems",
+    full: `I want to soar across the endless sky,
+Like a bird dancing with the winds,
+Unbound, untamed, completely free.
+
+I want to sink into the ocean's hidden depths,
+Where secrets sleep beneath endless blue,
+And silence whispers stories untold.
+
+I want to become a mystery,
+Like the universe, vast and unknowable,
+A shadow of wonder wrapped in darkness.
+
+I want to ripple as an unseen wave,
+Still moving, still alive,
+Carrying my essence through the cosmos.
+
+I want to drift beside trees and blossoms,
+Like the wind that lifts leaves and carries relief,
+Bringing calm and unseen freedom to all it touches.`,
+  },
+  {
+    id: 542,
+    title: "The Hope Called Love",
+    theme: "Love",
+    collection: "New Poems",
+    full: `"Why don't you give up on your love?"
+they asked me,
+as if love were a thing you could abandon
+like a fading dream at dawn.
+
+But my heart whispered,
+"If I give up now...
+the hope of being loved — even once —
+will die with me."
+
+I've lived on that fragile thread of yearning,
+a silent ache that keeps me breathing
+when the world feels empty.
+
+Love is not my desire —
+it's my last prayer,
+my final sin,
+the reason I still wake up in this cold universe.
+
+To be loved by someone,
+to lose myself in him,
+and if fate demands —
+to die in that love,
+would still be a beautiful ending.
+
+Because even in death,
+I'd rather be broken by love
+than untouched by it.`,
+  },
+  {
+    id: 543,
+    title: "The Villain I Became",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `I was never made for love,
+because love belongs to those who live in the light —
+not to someone who learned to survive in the shadows.
+
+In every story,
+I am the villainess —
+the one who burns silently
+so others can shine.
+
+To wear this darkness,
+I gave up everything I was,
+every heartbeat turned into punishment,
+every breath — a reminder of what I lost.
+
+When the final scene arrives,
+I'll fade without a word,
+without a wish to return.
+Because this world never had a place
+for a heart wrapped in sorrow.
+
+They'll remember me as the cursed one,
+the girl with the dangerous heart,
+the one they loved to hate.
+
+But no one will ever know —
+behind every smile lived a broken dream.
+
+Unchosen.
+Unloved.
+Unremembered.
+Maybe that's why my silence became my death.
+
+And if someone ever asks —
+why I turned so dark,
+tell them…
+the villainess never wanted to destroy the world,
+she just wanted a place in someone's heart.`,
+  },
+  {
+    id: 544,
+    title: "When All Start Fighting",
+    theme: "Spiritual",
+    collection: "New Poems",
+    full: `When all start fighting,
+Who will listen to the cries of the stars?
+Who will heal the wounds of the earth,
+When every hand holds a sword of scars?
+
+If every soul burns in rage's flame,
+Then who will carry the light of peace?
+If all become hunters of power and name,
+Who will pray for the world's release?
+
+The good and the bad —
+Aren't born from deeds alone,
+But from the silence that follows —
+What our hearts whisper when unseen, unknown.
+
+When the world drowns in its own noise,
+And love seems lost in endless war,
+The one who still thinks beyond themselves,
+Becomes the universe's guiding star.`,
+  },
+  {
+    id: 545,
+    title: "Unspoken Conversations",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `Who said silence cannot speak,
+When every stillness hides a storm beneath?
+When eyes linger, not by chance,
+Old souls remember their forgotten dance.
+
+Words are mere vessels of sound,
+But feelings — they echo where hearts are bound.
+Sometimes confession hides in a fleeting glance,
+And denial whispers in tears' trance.
+
+Every breath carries an unfinished prayer,
+Every heartbeat hums someone's care.
+Those who stay silent, feel the most,
+They listen to echoes the world has lost.
+
+Behind a smile, an ocean sleeps,
+Only those who've drowned can know its deep.
+Sometimes a look tells a tale untold,
+Sometimes a silence melts centuries cold.
+
+So never say silence cannot speak,
+For truth lives where words are weak.
+It doesn't shout, it doesn't plead —
+It simply breathes, where souls still bleed.`,
+  },
+  {
+    id: 546,
+    title: "The One Who Brings Peace",
+    theme: "Love",
+    collection: "New Poems",
+    full: `No one ever really stays.
+People come, smile, and fade —
+like echoes that forget to return.
+And I'm left wondering,
+why no one ever becomes home.
+
+Maybe I feel too deeply,
+maybe I see what others hide.
+I read pain behind laughter,
+and silence behind eyes.
+
+But why can't there be someone
+who looks at me and just knows?
+Someone who doesn't ask —
+but still understands the chaos I hold.
+
+The one who finds comfort
+in the tiredness of my eyes,
+who speaks not to my words,
+but to the places I've broken inside.
+
+Someone I don't have to explain myself to,
+someone who stays — not because they have to,
+but because they want to.
+
+Who doesn't judge, doesn't fix,
+just sits quietly beside me,
+till the noise of the world fades
+and I can breathe again.
+
+Maybe they're not human —
+maybe they're a fragment of my own soul,
+someone I've met before,
+and lost again...
+in another life.`,
+  },
+  {
+    id: 547,
+    title: "I Lost My Whole Emotions",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `When this earth turns into a barren desert,
+When all great oceans dry into silence,
+Maybe then someone will understand —
+How it feels when the heart forgets to cry.
+
+Every pain has turned into stillness,
+Every joy — blown away like dust in wind.
+Tears no longer fall, only eyes grow tired,
+And smiles feel forced, hollow, and wired.
+
+Once my heart beat for dreams untold,
+Now it echoes with emptiness cold.
+Like a melody the wind forgot to play,
+I've forgotten myself along the way.
+
+When the earth becomes lifeless clay,
+And the oceans lose their voice someday,
+Maybe then they'll whisper my confession —
+I lost my soul… and with it, all emotion.`,
+  },
+  {
+    id: 548,
+    title: "The Living Corpse",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `Once I used to smile — like flowers in bloom,
+Now even my lips hesitate to move.
+My eyes once held oceans — of hope and dreams,
+Now they're deserts, where no tears stream.
+
+Every day a silent death takes place inside,
+No scream escapes, yet echoes collide.
+The one who called my heartbeat his home,
+Burned it down — left ashes alone.
+
+My heart doesn't beat — it just remembers the act,
+My breath continues — out of habit, not fact.
+I live, yet I've died long ago,
+A trapped soul — in my body's shadow.
+
+Sometimes I think —
+If pain had a color,
+My skin would've turned black by now.
+If love had a boundary,
+I would've saved myself somehow.
+
+He said, "I'll never make you cry,"
+But every word he spoke was a lie.
+The hand that promised to hold forever,
+Dug my grave, leaving me tethered.
+
+Now I smile — but it's hollow and fake,
+Every laugh hides the ache I can't shake.
+They say, "You've changed, you're not the same,"
+But how do I tell them — the real me is slain.
+
+I'm dead — yet no one performed my rite,
+For my breath still flows, though my heart lost its fight.
+He says, "You're alive, you still breathe,"
+But he doesn't know — my soul took her leave.
+
+Now I fear the rain —
+It might wash away my ashes in vain.
+Each winter reminds me of that night,
+When he left my innocence to freeze in fright.
+Even summers no longer burn bright,
+For the fire within lost its light.
+
+There's no "me" left inside anymore,
+Just a shadow — living in his lore.
+A shadow that keeps me breathing still,
+But kills my soul — against my will.
+
+Each night I erase a little more,
+In memories drowned, in dreams torn sore.
+Each dawn I rise, alive once more,
+Like my soul forced back through the door.
+
+I live — but the world doesn't see,
+They love my breath, not the death in me.
+I speak — but my words don't come from heart,
+They just escape — as a daily part.
+
+And someday if someone dares to ask,
+"Are you truly happy at last?"
+I'll smile — and softly say,
+"Yes… I'm alive today."
+But inside, my soul will scream —
+"I died long ago… in that dream."`,
+  },
+  {
+    id: 549,
+    title: "The Time We All Need",
+    theme: "Hopeful",
+    collection: "New Poems",
+    full: `When you grow tired of life's endless race,
+pause a moment and find yourself,
+step away from the noisy crowd,
+and listen closely to your own heart.
+
+In the hardest hours, don't forget who you are,
+save a little time just for you,
+without the weight of others' thoughts,
+try to truly understand yourself.
+
+Sometimes go where no one follows,
+find your dreams among the clouds,
+break the chains and let yourself fly,
+taste the freedom of the open sky.
+
+Amid the rush of this restless world,
+learn to pause and smile again,
+for it is necessary to make time,
+to return home — to yourself.`,
+  },
+  {
+    id: 550,
+    title: "Now This World Feels Like a Prison to Me",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `Now this world feels like a prison to me,
+Where even my breaths come with permission,
+Where every smile stands guarded,
+And every dream dies behind a wall's silence.
+
+Once the air around me was free and kind,
+Now it turns to dust that settles inside my lungs.
+Every morning, the sun still rises,
+But the night within me — never fades away.
+
+I'm alive, but whom do I deceive?
+This life feels like a sentence being served,
+And I — the prisoner of my own heart's wounds.
+Every bond is a chain I hold myself,
+And every shackle — I wear willingly.
+
+Once I saw myself in mirrors,
+Those eyes spoke, they wove dreams,
+Now they just stare into an empty sky,
+Like a fallen star that forgot its way home.
+
+Layers of exhaustion cover my soul,
+Every pain has turned into an old song.
+I laugh — but even that laughter feels borrowed,
+As if taken from someone else's life.
+
+Sometimes I wish to run — from these walls, these faces,
+But where would I go?
+For even my existence is now imprisoned within itself.
+
+People say — "You've changed so much."
+Yes, I have changed...
+Now I speak the language of pain,
+And happiness — it frightens me now.
+
+In this crowd, I die a little every day,
+Burying another "me" deep inside my chest.
+The one who once loved, who once felt —
+Now only pretends to live.
+
+Sometimes I wish,
+I could be the wind — free, untamed, unowned.
+But I'm only a captive breath,
+Counting the days till my release.
+
+When the night comes,
+Even my walls cry with me,
+For they know —
+I am no longer a living being,
+Just a walking silence wrapped in flesh.
+
+And when the morning arrives,
+I wear my smile again —
+So the world never learns,
+That this prison now lives inside me.`,
+  },
+  {
+    id: 551,
+    title: "When Even the Universe Got Tired of Me",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `I once stitched my pain into the stars,
+But even they have dimmed —
+As if the cosmos itself grew weary
+Of hearing my silent scars.
+
+My soul has fallen into a black hole,
+Where light can't reach,
+Where hope is swallowed whole,
+And every heartbeat echoes — empty, cold.
+
+I used to orbit like Saturn's rings,
+Revolving around my fragile dreams,
+But all my paths have shattered now,
+And every road leads to nothingness somehow.
+
+My feelings — just cosmic dust,
+Scattered in the ashes of a dying trust,
+Where love burns out like a forgotten sun,
+And memories fade — one by one.
+
+Once, the moon was my only friend,
+Now it watches from afar,
+Whispering softly,
+"You've become emptier than the stars."
+
+And I smile — a ghost of gravity lost,
+For even my tears don't fall anymore,
+They just float… endlessly,
+In the vast loneliness of the universe within me.`,
+  },
+  {
+    id: 553,
+    title: "I Will Return to Where I Came From",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `Once, this world trapped me in a mirror,
+and whispered — "Look, this is who you are."
+But I knew… what they saw was not me,
+it was their poison painted as truth.
+
+I wore smiles like rusted armor,
+so no one could see the bleeding beneath.
+They told me — "Be strong,"
+and in the name of strength, they stole my innocence.
+
+Sometimes I was tied in the name of love,
+sometimes bound by society's laws,
+sometimes my dreams became my prison,
+and sometimes, even my heart betrayed me.
+
+Everyone took a piece of my soul,
+some as lovers, some as liars with soft eyes.
+I learned — pain too has a voice,
+but it doesn't scream, it echoes in silence.
+
+Nights understand me; days deceive me,
+I've seen even the sun being fooled.
+Now I will break these chains —
+that bind my heart, that cage my flight.
+
+I will return… to where I came from,
+where souls fly unchained,
+where no faces are fake, no smiles rehearsed.
+There, I will exist in my truest form,
+without fear, without name, without expectation.
+
+This world has killed me in a thousand ways,
+with taunts, with silence, with the cruelty of care.
+Now, I will rise from these ashes —
+like a soul finding its home again.
+
+Yes, I will free myself —
+from these chains, these masks, this weight of the world.
+Because now I remember…
+who I was,
+and where I belong.`,
+  },
+  {
+    id: 554,
+    title: "When Even the Clouds Fall on Me",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `When even the clouds fall upon me,
+and the whole sky collapses on my name,
+I wish… just once,
+someone would hold me — not to save,
+but to stay.
+
+I've fought a thousand tempests alone,
+stitched my soul back from storms and silence,
+but even strength — sometimes breaks.
+Even courage — begs to be held.
+
+They call me strong,
+but they never saw the nights
+when my own echoes devoured me.
+When my pulse turned into thunder,
+and my thoughts — a cyclone of memories that refused to die.
+
+I wanted someone
+who wouldn't ask me to speak,
+but would read the storm in my breath,
+the lightning hidden in my tears.
+
+Someone who could drown in my eyes
+and see the sorrow I buried there,
+someone who wouldn't flinch at the ruins in my soul,
+but find beauty in my wreckage.
+
+I spoke to the sky — it stayed quiet.
+I whispered to the earth — it said, "Stand alone."
+But I'm only human —
+even strength needs a place to rest.
+
+When even the clouds fall on me,
+I don't need saving.
+I just need someone to fall with me,
+to break with me,
+and rise again from the same ashes.
+
+Someone who could see their reflection
+in my tears,
+who could hear their own heartbeat
+echo through my silence.
+
+I don't crave a fairytale love —
+I crave a soul that trembles when it touches mine,
+that whispers — "You're still beautiful, even in your storm."
+
+So when the clouds fall on me again,
+I hope someone comes…
+just to say — "Don't be afraid, not this time."
+
+Then I'll fly —
+with wings made from the mist of my own pain,
+with light born from the fire of my scars,
+because someone believed in me...
+when I no longer could.`,
+  },
+  {
+    id: 555,
+    title: "Obsession — The Curse Written by the Gods",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `They say some loves are written by the gods,
+but mine was their greatest mistake.
+When destinies were carved in heaven's scroll,
+they forgot to bind my name with yours —
+and yet, my soul refused to obey.
+
+On the night the stars were born,
+a voice echoed through the endless sky:
+"One soul shall return again and again,
+only to whisper one name."
+
+That soul was me.
+That name — was you.
+Through lifetimes your face changed,
+but your presence never did.
+You came as a flame, a shadow, a storm,
+a god, a death, a breath of wind in form.
+
+My love has wandered through centuries,
+burning in temples, grieving in tombs.
+In every life, I lost you —
+and in every loss, I found you again.
+
+This obsession is no longer love —
+it's a prophecy older than sin itself.
+The day I find you one final time,
+time itself will halt,
+and the universe will hold its breath.
+
+The gods once declared — "This love must remain incomplete."
+But what they didn't see —
+was that even incompleteness can become immortal.
+
+For every falling star that burns across the sky,
+is a shard of my soul,
+still defying destiny,
+still chasing you —
+with the same eternal obsession.`,
+  },
+  {
+    id: 556,
+    title: "The Fear I Loved",
+    theme: "Love",
+    collection: "New Poems",
+    full: `In the stillness of night,
+when even the clock ticks in trembling breaths,
+I wonder—
+was I afraid of losing him,
+or afraid of losing myself
+in his growing indifference?
+
+He said, "Trust me,"
+and I kept wondering,
+how do you trust the one
+who can dive into your eyes
+and still never notice the color of your tears?
+
+Sometimes I thought I was wrong,
+because every time I tried to make him understand,
+my attempts crashed
+against the walls of his pride.
+And he kept smiling,
+as if my restlessness was his favorite show.
+
+In the darkness of midnight,
+when even the wind pauses to hear me cry,
+I ask myself—
+was it wrong to fear losing him?
+Or was he wrong
+to mistake my fear for weakness?
+
+Sometimes I think, maybe I was wrong,
+maybe fear is a sin in love.
+But every time he ignored me,
+my soul grew weaker.
+
+In that silent night,
+when only my breaths were audible,
+I asked myself—
+can trust survive on words alone?
+Or does it live only in the act of feeling?
+
+He said, "You think too much."
+And I thought,
+yes… I think,
+so the fear of losing you doesn't consume me.
+
+Every question hid a broken hope,
+every answer gave birth to new silence.
+And I…
+within myself, within him,
+kept getting lost.
+
+I am writing to you,
+in this silent night,
+where every heartbeat listens to my voice,
+but you…
+you never did.
+
+Was I afraid of losing you?
+Or was I only showing the insecurity of my heart,
+which you mistook for weakness?
+
+Sometimes I wonder,
+maybe I was wrong,
+maybe this fear was wrong in love,
+but every time you ignored me,
+my soul grew weaker.
+
+Now, between these pages,
+I leave my voice for you.
+Will you ever understand
+that my fear was only love,
+and my silence only pain?
+
+And if someday our paths diverge,
+know this…
+in fearing to lose you,
+I only tried not to lose myself.
+
+Maybe love itself was wrong,
+or maybe only our understanding.
+Perhaps fear was the truest form of love,
+and insecurity its deepest depth.
+
+And now,
+only this silence and this heart remain,
+where I search for myself,
+so that in fearing to lose him,
+I do not lose myself again.`,
+  },
+  {
+    id: 557,
+    title: "Care: The Devotion That Outlived Love",
+    theme: "Love",
+    collection: "New Poems",
+    full: `He never knew
+what care really meant —
+when someone trades her breath for your peace,
+when someone hides your pain
+inside her own soul.
+
+He kept laughing,
+and I kept hearing the sorrow behind it.
+Every time he said, "I'm fine,"
+my spirit trembled —
+for I knew that lie,
+the one I once called love.
+
+I heard my name in his silences,
+found my reflection in his half-spoken words.
+But he never stayed —
+he passed through me,
+like a forgotten chapter
+in a story he never meant to finish.
+
+I prayed to every star,
+begged the night —
+"Keep me in his dreams,
+if I no longer belong in his world."
+
+He wanted me only enough
+to fill his empty moments,
+while I became the shadow
+that sheltered him
+from another woman's memory.
+
+For me, care was worship.
+For him, just a pause —
+a breath between his escapes.
+
+I wrote him letters in my blood,
+drowned his name in my tears,
+and he —
+burned every word
+before it could reach his heart.
+
+Even now, when the wind passes his city,
+it brushes my curtains gently —
+as if to whisper,
+"Do you still care?"
+And I smile…
+"No, not anymore —
+but my soul still does."`,
+  },
+  {
+    id: 558,
+    title: "Obsession — When Time Stands Still",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `They say every story must end,
+but my love never did.
+It spread like a universe unfolding,
+each lifetime a star carved in your name.
+
+When creation took its first breath,
+my heart trembled to your sound.
+I was no body then,
+just a soul suspended in your wait.
+
+You came as fire, as darkness,
+as rain that drowned my being.
+And in every birth, I found you again —
+the same flame in your eyes,
+the one that never dies, only burns.
+
+I lost you many times,
+watched death steal your touch,
+but from every ash, I rebuilt you.
+Even your silence had a voice,
+echoing endlessly inside my ribs.
+
+Now time has stopped.
+The heavens have closed their eyes,
+and I stand before you.
+No fear of life, no border of death —
+only you and I,
+two souls merging at the gate of eternity.
+
+The gods once said, "This love will remain unfinished,"
+but they never saw —
+that unfinished love is the truest one.
+For when love completes, it dies,
+but what remains in longing —
+becomes immortal.
+
+Now you and I are no longer names,
+just echoes wandering through creation.
+Every falling star is a fragment of our breath,
+every silence — a verse of our story.
+And whenever a soul falls in love again,
+it will be born from the shadow of our obsession.`,
+  },
+  {
+    id: 559,
+    title: "The Pain That Stays",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `I feel like pain stays longer than happiness ever does.
+It doesn't shout,
+but quietly makes a home in every corner of the heart.
+
+Sometimes I wonder,
+why do people remember the moments of betrayal so clearly,
+but forget the days we lived for their smiles?
+
+One mistake —
+and everything good we ever did disappears.
+For the ones we bend ourselves for,
+they only remember the times we fell.
+
+They say "people change,"
+but the truth is —
+people never really understand.
+No matter how much we try to be good,
+the world keeps count of our flaws.
+
+And maybe that's why
+my heart now fears attachment.
+Because getting close is easy,
+but staying loyal
+feels like punishment in disguise.
+
+Now I've learned —
+not to be good for everyone,
+but to be honest with myself.
+Because happiness comes and goes,
+but pain...
+pain always stays.
+It learns our name,
+and never leaves.
+
+And now…
+I don't run from pain anymore —
+I wear it like a memory that shaped me.
+It's no longer my weakness,
+it's my quiet strength.
+Because once you learn to live with pain,
+nothing the world does can break you again.`,
+  },
+  {
+    id: 560,
+    title: "I Still Speak From the Silence",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `Listen…
+If in the dead of night
+you hear a faint thunder,
+a breath that trembles like the wind —
+know this —
+it's me.
+
+The girl no one celebrated,
+the one whose first cry
+was not joy,
+but an omen of sorrow.
+
+Yes, I am she —
+the one whose cradle
+was lined with a shroud,
+whose existence was whispered as a curse.
+
+I still linger —
+between these walls,
+in the dust of forgotten toys,
+in the silence where lullabies never came.
+
+I am the ghost
+of my own beginning,
+Haunting the world
+that refused to love me.
+
+If you listen closely,
+you'll hear my sigh —
+it carries the grief
+of mothers forced to smile
+when their hearts bled silently.
+
+My grave has no name,
+just earth heavy with shame,
+and beneath it,
+the question that killed me —
+"Why were you born?"
+
+I wander still —
+to every home
+where a girl is about to be born,
+just to see
+if this time,
+someone lit a lamp for her.
+
+Sometimes I wonder —
+will anyone ever love my soul?
+Or will I remain
+a ghost in every story,
+a shadow in every prayer?
+
+Yes… I am that cursed one —
+born, but never allowed to live.
+I am the silence
+behind your laughter,
+the cold breath in your dreams.
+
+And if ever the night air
+wraps around your skin,
+gentle yet heavy —
+know this…
+it's me —
+the soul still searching
+for the love she never received.`,
+  },
+  {
+    id: 561,
+    title: "The Scars of Childhood — I'm Still Alive",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `Today I'm really sad,
+you know that…
+I'm trying so hard
+to rise above the wounds of my childhood.
+
+But I don't know
+when that day will come,
+when I'll finally say
+I'm free from those memories.
+
+My childhood wasn't kind,
+those smiles were fake,
+those games were played under fear,
+each lullaby hid a scream
+that no one ever heard.
+
+Those days are gone,
+but that little girl still lives within me,
+the one who cries herself to sleep,
+and wears a smile every morning.
+
+I tried so many times
+to let that pain out,
+but every time I did,
+it sank deeper into my soul.
+
+I began to write,
+hoping words would heal me,
+but each line I create
+bleeds the same old wounds again.
+
+Whenever I try,
+those voices, those shadows,
+those nights of fear —
+pull me back to the moment
+I first broke.
+
+In every poem I write,
+I bury a scream from my childhood,
+but the more I write,
+the louder it echoes within me.
+
+The more I try to forget,
+the deeper I drown.
+These memories are a swamp —
+every step forward
+pulls me back again.
+
+You won't understand,
+how do I explain —
+that I'm not happy,
+not today, not any day.
+
+So many times,
+I thought of ending it all,
+to go somewhere
+where pain can't find me.
+
+Yes, I tried to stop breathing,
+many, many times —
+not to die,
+but to be free from the ache inside.
+
+But every time,
+life whispered softly —
+"Not yet…"
+and I came back,
+still broken,
+but stronger than before.
+
+That little girl still cries,
+but now I wipe her tears.
+The fear still exists,
+but now I hold it close.
+
+Now I know —
+peace doesn't mean forgetting,
+it means learning to live
+with what once broke you.
+
+I'm not shattered anymore,
+I'm a mosaic of pain and light —
+still finding beauty
+in my cracks.`,
+  },
+  {
+    id: 562,
+    title: "The Nature of Self-Love",
+    theme: "Hopeful",
+    collection: "New Poems",
+    full: `The river of dawn whispered to me,
+"If you don't love yourself, none will truly see."
+So under the sky, beneath the trees,
+I learned my first love must begin with me.
+
+I sought the warmth of another's eyes,
+Like flowers that bloom beneath the skies.
+But the moonlight taught me a wiser part:
+To nurture my soul, to heal my heart.
+
+When I cherish the stars within my own,
+I am never truly left alone.
+Even if storms of loss appear,
+Self-love will guide me through the fear.
+
+Through winds of night, my pen took flight,
+I carved my soul in poems of light.
+Each verse a seed the earth had sown,
+A song of love I made my own.
+
+Now broken branches bloom again,
+The garden grows where there was pain.
+Nature shows me, pure and free,
+The beauty of loving the soul in me.`,
+  },
+  {
+    id: 563,
+    title: "Invisible Streets",
+    theme: "Spiritual",
+    collection: "New Poems",
+    full: `Beneath the hum of city lights, they lie,
+Cardboard sheets and quiet sighs,
+Stories whispered to the passing night,
+Dreams unseen by hurried eyes.
+
+A cup of warmth, a fleeting smile,
+Measures hope in small, fragile ways.
+They walk the miles with silent grace,
+Counting stars where no one stays.
+
+The wind becomes a lullaby,
+The cold, a companion sharp and near.
+Yet in their hearts, a stubborn fire,
+A song of courage, soft but clear.
+
+We rush past without a glance,
+Unaware of battles fought unseen.
+But every soul beneath the sky
+Holds a story, sacred and serene.`,
+  },
+  {
+    id: 564,
+    title: "The House That Feels Empty",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `This house no longer feels like mine.
+The people inside no longer feel like my own.
+It seems there is no home for me anymore,
+nor any recognition, nor connection to this world.
+
+The sky has become my roof,
+the sea my companion,
+the wind gives breath to empty rooms,
+the sun lights the day,
+and the moon keeps the night.
+
+Yet all of these understand me better than I understand myself.
+In this house I have no shelter;
+what am I to do in a place
+where my being is optional,
+where no one is truly mine?
+
+There should be a home
+that calls out to me.
+I am searching for that home,
+in the shadow of longing...`,
+  },
+  {
+    id: 565,
+    title: "May This Death Belong to Someone Else",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `My heartbeat has turned into a burden,
+Each breath carries the weight of tired existence,
+Even the mirror now turns away,
+When I see the ashes that were once my face.
+
+Every night, a war rages inside me,
+Each tear I shed — another death I die,
+Yet every morning, with a fake smile,
+I return to serve my sentence of life.
+
+Family words pierce deeper than swords,
+Society counts my sins like coins of shame,
+I'm no longer that girl I used to be —
+Just a shadow, embarrassed of her own name.
+
+How many times have I whispered to myself,
+"Enough now… I don't want to live,"
+But my heart replies softly —
+"Even death needs a purpose."
+
+Then I saw him —
+A man whose eyes carried dying days,
+He wished to live,
+While I had forgotten how to breathe.
+
+And my soul murmured —
+"If only my breaths could be his,
+If my death could give him life,
+May this death belong to someone else."
+
+I spoke to the moon,
+"Take my shining soul to him,"
+I told the sun,
+"Fill his days with my fading light."
+
+If the universe still listens,
+Let the pain that runs through my veins,
+Turn into his strength —
+Like spring reborn after endless autumns.
+
+I will dissolve into my own ashes,
+But rise again in his smile,
+Let my ending be his beginning,
+That's the only wish my heart carries now.
+
+O Creation, you know me well,
+I no longer wish to fight you,
+I have embraced every wound you gave,
+Now I wish to return my soul to you.
+
+You are the witness, the just one,
+My existence now rests in your hands,
+If my death could breathe life into another,
+Then I shall die smiling.
+
+No more fear, no more questions,
+I'm not dying, I'm returning —
+To that space where pain also sleeps,
+Where the soul learns to be pure again.
+
+If his laughter returns to this world,
+Then I accept my erasure with peace,
+I'll become a whisper in the wind,
+That moves through his breath as calm.
+
+"May this death belong to someone else,"
+Let that be the last line I leave behind,
+For in my dying, there lies a life —
+And that, is my most beautiful prayer.`,
+  },
+  {
+    id: 566,
+    title: "The Search for Peace",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `It's better to sleep forever in a lonely grave,
+Than to keep breathing in this cruel world's flame.
+Where no voices echo with judgment or blame,
+Only silence hums my forgotten name.
+
+Each breath feels heavy like a sin,
+Each smile hides a storm within.
+From family walls to streets so cold,
+Every whisper turns my wounds to gold.
+
+I feel like a stranger in my own home,
+Where love has turned to sharpened stones.
+Every bond burns with hidden fears,
+Every promise drowned in tears.
+
+My heart has already died somewhere deep,
+While my body still pretends to breathe.
+Once I dreamed to live so true,
+Now death feels calmer — something new.
+
+Each night's darkness creeps inside my chest,
+Each dream now screams, never lets me rest.
+The mirror reflects a stranger's face,
+Even my shadow avoids my space.
+
+People say, "It will all be fine,"
+But they never hear this silent cry of mine.
+Their words like knives, their stares like chains,
+Their pity tastes like poison rain.
+
+My silence was mistaken for fear,
+My tears were called weak and unclear.
+The ones I loved — they walked away,
+Leaving scars where warmth once lay.
+
+Yes, I breathe, but life is gone,
+Each heartbeat echoes a hollow song.
+And still I wonder in the night's release —
+Does peace exist? Can pain find peace?
+
+No tears remain, no sobs to hide,
+Even pain has frozen inside.
+No love, no hate, no feeling stays,
+Just emptiness in endless ways.
+
+The smile I wear is built on lies,
+Yet truth lives deep inside my eyes.
+I walk in crowds, but feel so alone,
+Every voice cuts deeper than stone.
+
+I'm living, but not alive anymore,
+My heart locked behind a silent door.
+They ask, "Are you happy?" I softly say,
+"Yes, I'm fine" — the biggest lie I play.
+
+Each day feels like a slow punishment,
+Each night — another death's descent.
+The body breathes, the soul is numb,
+Awaiting peace that will never come.
+
+Now death no longer feels like fear,
+It whispers softly, drawing near.
+It feels like an old friend's call,
+Who'll lift me gently as I fall.
+
+I only wish for a peaceful sleep,
+Where no eyes judge, no voices weep.
+Where no cruel words can reach my heart,
+Where silence plays the sweetest part.
+
+They'll call me weak, they'll never know,
+How many times I fought the woe.
+How many nights I held my pain,
+How many times I rose again.
+
+But now I'm tired — of endless fight,
+I seek the ocean's quiet light.
+A place so deep, so still, so far,
+Where no one knows who we are.
+
+Now I walk the path alone,
+Where silence hums its gentle tone.
+Where every wound forgets its name,
+And every tear dissolves in flame.
+
+The ocean calls, its voice serene,
+In its depths, I'll finally dream.
+No one to hurt, no one to see,
+Just endless blue embracing me.
+
+No name will stay, no face remain,
+No memories tied to earthly pain.
+But there, where my spirit flows,
+Only peace forever grows.
+
+At last I've found where I belong,
+Beyond the world, beyond the wrong.
+No fear, no ache, no broken chain —
+Just quiet… and peace remains.`,
+  },
+  {
+    id: 567,
+    title: "Who Am I?",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `I ask the mirror, who stares back at me?
+A stranger's face, yet familiar to see.
+Eyes that carry storms, smiles that hide rain,
+A puzzle of joy, woven with pain.
+
+I walk through days wearing borrowed names,
+Chasing shadows, playing their games.
+But deep inside, a whisper grows—
+Who I am, I still don't know.
+
+Am I the dreamer lost in the skies,
+Or the silent one who quietly cries?
+Am I the fire that refuses to die,
+Or just the question that lingers—why?
+
+Perhaps I'm fragments, broken yet whole,
+A shifting tide, a restless soul.
+Not answers, but journeys, shape what I show,
+And maybe it's okay… if I don't yet know.`,
+  },
+  {
+    id: 568,
+    title: "Midnight Yearning",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `I always yearn for love through the countless days of my life —
+I don't know why. Still I keep manifesting:
+someone who will come and truly love me,
+who notices my pain without my saying a word.
+
+I know how foolish that sounds,
+yet I want a person who reads everything in my mind and heart.
+There is something inside that hurts me badly.
+
+I say I'm okay. I'm trying to heal.
+But it's truly so hard.
+Only the night knows how much I'm hurting —
+it sees me as I really am.
+
+I force myself to be strong in front of everyone,
+practical, open-minded, composed.
+But at night I lose myself among countless stars,
+and I can't stop remembering the cruel words people said.
+Then my heart loses control of its feelings.`,
+  },
+  {
+    id: 569,
+    title: "One-Sided Love",
+    theme: "Love",
+    collection: "New Poems",
+    full: `I understood, that very day,
+you were never truly interested in me.
+You just needed someone
+to pass your time.
+
+So now, I am leaving forever.
+I messaged you every day,
+hoping that someday
+you would reply,
+that you would understand my silence
+and the pain behind it.
+
+But nothing changed.
+You would send a message
+once in many weeks,
+and then disappear again
+without a word.
+
+What kind of love is this—
+where I have no value,
+where I am only being used?
+A relationship without loyalty,
+without presence,
+is not a relationship at all.
+It is only a shadow,
+a one-sided bond
+destined to break.
+
+Maybe you were never mine,
+maybe this was never love.
+Because love is not silence,
+and a partner always finds
+at least a little time.
+
+Still, if you ever return,
+come with your whole heart.
+Come with intensity.
+But if you plan to leave again—
+don't come at all.`,
+  },
+  {
+    id: 570,
+    title: "Among the Crowd",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `I am the kind of person
+who may not speak in front of everyone—
+a little quiet, a little playful,
+lost within myself.
+
+I do only what my heart desires.
+
+But in a crowd, I let myself fade,
+stepped over, unnoticed.
+Perhaps in that sea of faces,
+there's no one to truly call me theirs.
+
+For others, I remain just an option—
+a companion for loneliness.
+
+I don't mind this.
+Yet, I wish for someone who,
+even in a crowd,
+would make me feel truly theirs,
+claiming me in front of everyone.
+
+Being just an option for all—
+that I cannot accept.`,
+  },
+  {
+    id: 571,
+    title: "My Partner",
+    theme: "Love",
+    collection: "New Poems",
+    full: `The one who claims me as theirs without asking,
+and the one I can claim the same way.
+
+The one unafraid to cry before me,
+and who stands beside me when I fall apart.
+
+The one who steals time from the rush of life,
+just to sit with me for a little while,
+and for whom I will do the same.
+
+The one who tells me how their day has been,
+and listens when I share mine.
+
+The one who speaks without fear,
+and lets me share my truths freely.
+
+The one who is real with me,
+and allows me to be nothing but myself.
+
+The one who would fight the world for our love,
+and knows I would too.
+
+The one with whom love flows from both hearts,
+built on honesty, courage, and trust.
+
+The one who understands me in silence,
+and sometimes through words.
+
+That one… will be my partner.`,
+  },
+  {
+    id: 572,
+    title: "What Do You Really Write?",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `You once told me,
+that you write poetry too.
+But tell me—who do you truly write for?
+For yourself, or for someone else?
+
+Do you write of the memories
+that turn into tears upon your pillow each night?
+Or of the laughter once shared,
+now frozen only in faded photographs?
+
+Do you write of the secrets your heart could never confess,
+or the dreams that still glimmer faintly in your eyes?
+Do you write of love,
+an unfinished story still alive,
+or of meetings where silent gazes
+spoke louder than words ever could?
+
+Do you write of betrayals,
+etched into you like unhealed scars,
+or of fragile dreams
+that shattered before they could bloom?
+
+Do you write of joy and its fleeting warmth,
+or of pain that lingers like shadows in the night?
+Of the past that clings,
+and the future that feels too far?
+Of truth that wounds,
+or of imagination that heals?
+
+Tell me…
+what do you really write—
+echoes of silence, or the heartbeat of life itself?`,
+  },
+  {
+    id: 573,
+    title: "Heartbeat Promise",
+    theme: "Love",
+    collection: "New Poems",
+    full: `Hey, listen —
+when silence feels heavier than words,
+and loneliness wraps around you,
+remember this vow of mine.
+
+As long as this heart beats,
+you will never walk alone.
+My shadow will move beside you,
+my strength will stand with you.
+
+And if the day comes
+when I cannot be there myself,
+I will send someone to reach you,
+to hold, to help, to heal.
+
+For love is a river that never dries,
+it flows through distance and time,
+finding every broken shore,
+to stand with you again.`,
+  },
+  {
+    id: 574,
+    title: "Will You Still Stay?",
+    theme: "Love",
+    collection: "New Poems",
+    full: `If I hide my anger in silence,
+Will you hear the storm inside my voice?
+
+If my tears fall quietly before you,
+Will you catch them, or let them drown in noise?
+
+If I refuse to follow your words,
+Will you loosen your grip on my hand?
+
+If I command you, "Go far away,"
+Will you leave, or still choose to stand?
+
+If I hand you a reason to hate me,
+Will you harden your heart into stone?
+
+If I whisper, "I don't love you,"
+Will you let me walk away alone?
+
+If one day I abandon your side,
+Will you call my love a lie?
+
+If I ask you to change who you are,
+Will you bury your truth just to satisfy?
+
+Or will you—through every test, every scar,
+Still love me exactly as you are?`,
+  },
+  {
+    id: 575,
+    title: "The Message That Never Came",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `If you want to know how much I miss you,
+I miss you like the moon misses the sun before dawn,
+like a storm waiting for the first drop of rain,
+like a heart waiting for a beat it fears won't return.
+
+Not hearing from you each day feels like
+wandering in a desert with no horizon in sight,
+silence stretches—an endless night
+where even the stars refuse to write your name.
+
+I know you're busy, the world has chained your time,
+but even the busiest river finds a way to touch the shore.
+Couldn't you spare a ripple, a wave,
+to remind me that I still matter?
+
+Talking to you was once my shelter,
+a lighthouse in the dark sea of days.
+But now your silence is a storm—
+loud, crushing, yet spoken in whispers.
+
+So I fold my words into shadows,
+leave them drifting between us, unseen…
+Because you never replied,
+and all I was left with—
+was the echo of the message that never came.
+
+Tell me… will silence always be our last conversation?`,
+  },
+  {
+    id: 576,
+    title: "Your Shadow Beside Me",
+    theme: "Love",
+    collection: "New Poems",
+    full: `Just do this—just this much:
+Hold my hand, tight and sure,
+And whisper softly:
+"I am with you,
+Through every shadow,
+At every turn of your life."
+
+Even when storms roar,
+I will feel you standing there beside me.
+
+When the world turns away,
+I will not be alone,
+For your presence will linger
+Like a quiet light in my chest.
+
+As the sun keeps its golden glow,
+The moon its silver watch in the night,
+Stars cling to their sky,
+And oceans hide their endless depths—
+So will I carry the warmth of your promise.
+
+I will meet every challenge,
+Even in your absence,
+For your words will rise in me
+Stronger than any fear.
+
+As a seed strains to grow into a tree,
+As clouds gather thunder to bless the earth with rain,
+My courage will awaken and never falter again.
+
+Just whisper this once—
+And my heart will carry it forever.`,
+  },
+  {
+    id: 577,
+    title: "This Hand, Always",
+    theme: "Love",
+    collection: "New Poems",
+    full: `I don't let go of anyone…
+just because someone says so…
+No… never.
+
+Even if they tell me to leave,
+this hand…
+will always stay held.
+
+This bond wasn't made…
+to be forgotten later.
+This hand was held…
+to stay by your side at every turn.
+
+If someone tells you to leave,
+I'll whisper softly—
+"You are special to me…"
+Our laughter, our talks…
+our memories…
+all of it is tied to you.
+
+If they don't understand,
+I'll fight…
+to keep this bond alive.
+Because this hand…
+was never held
+to be let go.`,
+  },
+  {
+    id: 578,
+    title: "Just Say That…",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `When hope had broken,
+I still whispered to myself—
+You'll come back.
+Maybe I was the only one crazy in your love.
+
+Was I really living in hope,
+That one day you'd return?
+Yes… my biggest mistake.
+
+You, who left without reason,
+Gone… just like that.
+I, who loved you every moment,
+All I want to ask—
+What mistake did I make
+That made you leave?
+
+If only you had told me,
+I would have changed,
+Even for you.
+So why did you leave?
+Just say that…`,
+  },
+  {
+    id: 579,
+    title: "Hidden Storm",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `Don't be fooled by my smiling face,
+You can't tell
+Whether I'm truly happy
+Or quietly breaking inside.
+People have always seen me smile.
+
+Like the sun rising in the sky,
+Hiding its own brilliance as it sets and rises again.
+Like stars shining above,
+Yet many remain dim, unseen.
+Like birds soaring through the air,
+No one notices the struggle it takes to fly.
+
+But if they ever saw the truth,
+The sadness in my heart,
+Growing heavier, hollowing me from within—
+Like a black hole, pulling everything close,
+Invisible yet devastating, hiding its true nature.
+
+Like a fire raging through the forest,
+Or a storm turning rivers into floods,
+Or ocean waves erasing the land,
+Or earthquakes leaving ruins behind—
+
+My heart is like that.
+If someone truly noticed,
+They'd see how much I pretend to be happy,
+And the depth of the pain I carry.
+
+Yet no one sees this hidden storm behind the smile.
+That's why I keep it to myself…`,
+  },
+  {
+    id: 580,
+    title: "The Garden of Our Friendship",
+    theme: "Love",
+    collection: "New Poems",
+    full: `Someone has walked into my life, a true friend,
+like the first drop of rain falling on thirsty earth.
+Now I don't know why, but my heart blooms,
+like flowers suddenly blossoming in an abandoned garden.
+
+The day we spoke for the first time,
+the moon was half, and so were we.
+He was sad, and I was too —
+like two raindrops falling from the same broken cloud.
+
+The next day he asked me, "How are you feeling today?"
+And it felt as though the wind whispered its secret in my ear.
+Back then, our words were few,
+but now they flow like rivers running to the sea.
+
+Every time I speak with him,
+a smile arrives uninvited on my face,
+like dawn's first light
+kissing away the night's darkness.
+
+He worries for me,
+like the sky guarding its stars.
+We are "just friends" — that's the name,
+but the bond feels limitless.
+
+Nights stretch longer,
+when our talks drift endlessly,
+like a river losing itself
+in the glow of moonlight.
+
+Yet I carry only one fear:
+that one day he might leave,
+for it was so rare to find someone
+who truly speaks the language of my soul.
+
+I fear that day when words will fade,
+when our voices will grow quiet,
+and we might return to being strangers,
+like trees in autumn parting with their leaves.
+
+So I pray with all my heart —
+may our friendship never break,
+like the ocean and its waves,
+like the sun and the sky —
+eternal, inseparable, endless.`,
+  },
+  {
+    id: 581,
+    title: "Without Words",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `Who said that there is no talk without words,
+Behind every silence, there was always one hidden.
+When eyes meet eye-to-eye,
+So even the spirits say something quietly.
+
+Who said that expression is necessary through the tongue,
+Sometimes, even in the silence of the eyes, the confession is fulfilled.
+In every breath, in every heartbeat,
+Some untold stories are heard.
+
+Behind every deception in the world, behind every smile,
+An incomplete story is buried.
+Those who understand the language of feelings,
+They know everything without speaking.
+
+Sometimes one glance is enough,
+To read the depths of the heart,
+Sometimes a silence erupts,
+To say the pain suppressed for centuries.
+
+So don't say that things don't happen without speaking,
+Sometimes, silences are the truest sounds.`,
+  },
+  {
+    id: 582,
+    title: "Unspoken Conversations (II)",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `Who said words are needed to speak,
+When silence itself holds the deepest meaning?
+When eyes meet, souls begin to whisper,
+Telling stories no voice could ever utter.
+
+Who said love needs to be confessed aloud,
+When glances already reveal the heart's crowd?
+In every breath, in every beat,
+Echoes of unspoken feelings repeat.
+
+Behind every smile, every deceit,
+Lies a tale that never found its release.
+Those who can read the language of hearts,
+Understand every silence, every pause, every start.
+
+Sometimes, one gaze says what a lifetime can't,
+Sometimes, one silence carries what words shan't.
+So never say — that words are a must to speak,
+For silence often speaks the truth we seek.`,
+  },
+  {
+    id: 583,
+    title: "The Language of Silence",
+    theme: "Spiritual",
+    collection: "New Poems",
+    full: `Who said that words are needed to speak,
+When eyes can whisper what hearts truly seek?
+In every pause, a hidden voice lies,
+In every breath, a quiet story sighs.
+
+Sometimes the wind carries a message untold,
+Sometimes the moonlight makes emotions unfold.
+Without a word, the soul understands,
+When silence holds memories in gentle hands.
+
+Every rhythm of this world hums a secret tone,
+In every stillness, an echo is born.
+Those who listen, truly hear,
+Those who feel, connect beyond fear.
+
+Words may falter, but silence remains true,
+For the deepest talks need no cue.
+When hearts converse beyond space and time,
+It's not through speech — but through the divine.`,
+  },
+  {
+    id: 584,
+    title: "Unspoken Conversations (III)",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `Who said silence cannot speak,
+When every stillness hides a storm beneath?
+When eyes linger, not by chance,
+Old souls remember their forgotten dance.
+
+Words are mere vessels of sound,
+But feelings — they echo where hearts are bound.
+Sometimes confession hides in a fleeting glance,
+And denial whispers in tears' trance.
+
+Every breath carries an unfinished prayer,
+Every heartbeat hums someone's care.
+Those who stay silent, feel the most,
+They listen to echoes the world has lost.
+
+Behind a smile, an ocean sleeps,
+Only those who've drowned can know its deep.
+Sometimes a look tells a tale untold,
+Sometimes a silence melts centuries cold.
+
+So never say silence cannot speak,
+For truth lives where words are weak.
+It doesn't shout, it doesn't plead —
+It simply breathes, where souls still bleed.`,
+  },
+  {
+    id: 585,
+    title: "The Weight of Invisible Choices",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `The echo of hidden decisions,
+An unspoken question rising at every step.
+Branches of unknown paths
+Lie scattered upon the traces of our feet.
+
+Within the mind, silent screams,
+Caught between the fire of desires and the cold shadow of duty.
+Sometimes we ask ourselves—what was right, what was wrong?
+But the answers drift away, floating in the air.
+
+Every choice, small or large,
+Becomes a shadow of our soul.
+Lost in the vastness of time,
+Yet this invisible burden shapes our untold story.
+
+And when night falls,
+And the moon spreads its hazy light,
+These choices remind us—
+We are always choosing,
+And this is the music of our existence.`,
+  },
+  {
+    id: 586,
+    title: "Whispers of the Wind",
+    theme: "Nature",
+    collection: "New Poems",
+    full: `I felt the wind today—
+it slipped through the cracks of my silence,
+brushing past my shoulders
+like a forgotten memory.
+
+It carried your laughter,
+soft as the hum of distant oceans,
+and your tears,
+cold as midnight rain on empty streets.
+
+It wandered through abandoned paths,
+stirring the fallen leaves,
+and in its invisible hands,
+it held stories I was too afraid to speak.
+
+The wind knows my secrets—
+it whispers them to the stars,
+and in its endless journey,
+I am never truly alone.`,
+  },
+  {
+    id: 587,
+    title: "Whispers of the Universe",
+    theme: "Nature",
+    collection: "New Poems",
+    full: `Beneath the velvet stretch of night,
+Stars scatter softly, ancient light.
+Galaxies twirl in silent grace,
+Time drifts gently through endless space.
+
+Nebulae bloom in colors untamed,
+Secrets of creation quietly framed.
+Comets blaze with fleeting fire,
+Trail of wonder that will never tire.
+
+Planets waltz in invisible rings,
+Moons hum softly the tune silence sings.
+Black holes whisper in shadowed deep,
+Holding mysteries they silently keep.
+
+And here we stand, a spark, a part,
+Eyes lifted upward, hearts and art.
+In the vastness, awe takes flight,
+A fleeting soul in eternal night.`,
+  },
+  {
+    id: 589,
+    title: "Seasons of the Soul",
+    theme: "Dark",
+    collection: "New Poems",
+    full: `I was once a seed buried in shadowed soil,
+Whispers of loss and fear entwined my toil.
+Spring arrived like a ghost in pale disguise,
+Stirring fragile hope beneath stormy skies.
+
+Summer burned with a fevered, cruel light,
+Days of laughter shadowed by silent night.
+Joy was fleeting, like smoke through my hands,
+Leaving ashes of dreams on cold, empty lands.
+
+Autumn came with leaves of dying fire,
+Each falling fragment a secret desire.
+Memories bled in crimson and gold,
+Stories of sorrow the wind would unfold.
+
+Winter claimed me in frost's quiet embrace,
+A mirror of time etched on my face.
+Yet even in darkness, the soul learns to rise,
+A flicker of flame beneath endless skies.`,
+  },
+  {
+    id: 590,
+    title: "Rain as a Mirror of Emotions",
+    theme: "Sad",
+    collection: "New Poems",
+    full: `The sky weeps in whispers,
+each drop a reflection of my soul.
+Pattering softly on the windowpane,
+it mimics the tremors I hide inside.
+
+In the rhythm of the storm,
+my heart beats unguarded—
+a symphony of sorrow and hope,
+melancholy braided with longing.
+
+Puddles mirror the world above,
+and in them, I see my own reflection—
+eyes blurred by the drizzle,
+thoughts dissolved in the grey.
+
+And when the rain finally ceases,
+I feel cleansed yet fragile,
+as if the sky has bared its secrets to me,
+and I, in return, have bared mine.`,
+  },
+  {
+    id: 591,
+    title: "Fire is Not Always…",
+    theme: "Hopeful",
+    collection: "New Poems",
+    full: `Fire is not always a raging storm,
+Not always a blaze that consumes all in its path.
+Sometimes it lingers in quiet corners,
+A flicker in the heart that whispers,
+Soft, unseen, yet alive.
+
+Fire is not always a destroyer.
+It can forge, reshape, and awaken
+From ashes that no one noticed falling.
+It can warm hands frozen in the night,
+Or light the shadows of a weary mind.
+
+Fire is not always the enemy.
+It hides in glances, in the pulse of memory,
+In the courage to rise when the world expects you to fall.
+It is subtle, tender, patient—
+A glow that refuses to die,
+Even when storms rage around it.
+
+Fire is not always what it seems,
+For even in darkness, a gentle flame
+Can hold the power to guide, to heal,
+To remind us: light is not always loud,
+And heat is not always pain.`,
+  },
+  {
+    id: 592,
+    title: "To My Beloved",
+    theme: "Love",
+    collection: "New Poems",
+    full: `My dearest,
+
+even though we are thousands of miles apart, my heart is always with you.
+Your memories light up every morning in me, and
+your love sweetens every night.
+
+You say you miss me very much, and
+every moment your words echo in my ears like music.
+Every moment we spend together – walking, laughing, watching movies,
+shopping, sharing food –
+makes everything even more special with you by your side.
+
+I know this distance is tough at times.
+Even if you can't comfort me,
+your words and your love are always with me.
+"Always be optimistic, my love," you say,
+I live with this hope every day.
+
+Your love is as deep as the ocean,
+as solid as a rock, and as vast as the sky.
+You say, "Until the sea dries up and
+the rocks crumble, I will belong to you."
+Your loyalty, honesty and dedication
+are the most precious treasures in my life.
+
+Every day I think of you, your
+name echoing in every heartbeat of mine.
+I believe that one day,
+this distance will end and we will be together forever.
+
+You are my hope, the light in every dream of me.
+I belong completely to you, just as you always belong to me.
+Your love lights up my world, and
+I know that our future will be full of happiness.
+
+My love, you are in every corner of my heart,
+in every breath and every thought I take.
+No matter how far away our love is,
+we will eventually get together and never be separated.
+
+Forever yours,
+[your love]`,
+  },
+  {
+    id: 593,
+    title: "Anger and Silence",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `We smile at those we barely know,
+A calm river where no winds blow.
+Our storms are hidden, kept inside,
+A raging fire we never confide.
+
+Yet with our own, the lightning strikes,
+The smallest words ignite the spikes.
+Anger dances in familiar eyes,
+Where love and pain both intertwine.
+
+Strangers see only our quiet streams,
+Not the thunder of our unseen dreams.
+They cannot feel the cracks we bear,
+Or the silent screams that linger there.
+
+So let them see the calm we show,
+For only our own can know the woe.
+And in this paradox we find our place,
+A tender storm within the human race.`,
+  },
+  {
+    id: 594,
+    title: "Nameless Bonds",
+    theme: "Love",
+    collection: "New Poems",
+    full: `Some ties breathe without a name,
+Like whispers hidden in the flame.
+They live in silence, soft, unseen,
+A secret space where hearts convene.
+
+A glance, a pause, a fleeting smile,
+That lingers gently for a while.
+The world may ask, "What shall we call?"
+But names can never hold it all.
+
+It is the fragrance, not the rose,
+The hush that every silence knows.
+It is the sky that meets the breeze,
+A bond unchained, yet full of ease.
+
+But since the world craves names to see,
+Such ties stay cloaked in mystery.
+For what's unnamed, the world ignores,
+Yet still, it lives in secret shores.`,
+  },
+  {
+    id: 595,
+    title: "When the Leaf Lets Go",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `The leaf once danced upon the bough,
+It whispered love, it swayed, it bowed.
+But silence came, the tree grew cold,
+Its arms no longer cared to hold.
+
+It felt the weight of being unseen,
+A part unloved, no longer green.
+And so it pierced the branch in pain,
+Then drifted free, like autumn rain.
+
+For even leaves have hearts that know,
+When roots refuse, they must let go.
+To cling where love has lost its stay,
+Is to wither, day by day.
+
+So let it fall, with quiet grace,
+An ending here, a new embrace.
+For moving on is wisdom's art—
+To find new soil, to heal the heart.`,
+  },
+  {
+    id: 596,
+    title: "The Heart Too Pure",
+    theme: "Love",
+    collection: "New Poems",
+    full: `It beat with trust, so soft, so kind,
+A childlike truth, an open mind.
+It gave its warmth to all who came,
+And never once demanded name.
+
+It loved like rivers love the sea,
+With endless flow, so selflessly.
+But hands unworthy took its grace,
+And left behind an empty space.
+
+Each crack was carved by careless care,
+Each scar a proof it once was there.
+Yet still it glows, though torn apart,
+The purest, most unbroken heart.
+
+For innocence will never learn,
+To cage its fire, to let love burn.
+And though the world may break it more,
+It shines far brighter than before.`,
+  },
+  {
+    id: 597,
+    title: "Forgive Before the Dawn",
+    theme: "Spiritual",
+    collection: "New Poems",
+    full: `Let us forgive with each new day,
+For mistakes are many, hearts may sway.
+Harbor no anger, release the pain,
+Who knows if tomorrow we'll meet again?
+
+Each harsh word spoken, each silent tear,
+Can linger long after we disappear.
+So mend the rift, let grudges cease,
+And fill each moment with fleeting peace.
+
+Life drifts like leaves upon the wind,
+Time slips away, it cannot rescind.
+Forgive today, embrace the light,
+For none can promise another night.
+
+Let kindness bloom, let sorrow fade,
+Heal the hearts that once betrayed.
+For love endures where grudges fall,
+And forgiveness is the greatest gift of all.`,
+  },
+  {
+    id: 598,
+    title: "The Last Hour We Meet",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `I want to meet you one last time,
+Where broken bells forget to chime.
+Not for love, nor for return,
+But to watch the final candle burn.
+
+Your eyes will hold the dying flame,
+A thousand echoes, yet no name.
+I'll watch them fade, I'll let them go,
+Like winter buries autumn's glow.
+
+The air will taste of rust and rain,
+Of unshed words, of hollow pain.
+Our silence sharp, our shadows near,
+Two ghosts that only we can hear.
+
+Yet when the night begins to fall,
+I'll search for light beneath it all.
+Not to bind, but just to stay,
+And see you once before you fade.
+
+Your voice will linger, soft, resigned,
+A final gift to ease my mind.
+And though the world will tear apart,
+That meeting's breath will guard my heart.
+
+So when you turn to walk away,
+I'll whisper thanks, though lips won't say.
+One last embrace, one fleeting grace—
+Then I'll remember your shadowed face.`,
+  },
+  {
+    id: 599,
+    title: "Your Arrival, My Dawn",
+    theme: "Love",
+    collection: "New Poems",
+    full: `Before you came,
+I was a sky without stars,
+A river that had forgotten its way,
+A song that had lost its melody,
+A garden where fragrance had vanished.
+
+My laughter was only an echo,
+My smile just a veil for the storms,
+My nights stretched endlessly,
+And dawn never seemed to arrive.
+
+Then you came—
+Not like lightning, not with the roar of storms,
+But like a gentle morning unfolding,
+A light that broke the cage of darkness,
+A song that had been silent for centuries, now began to sing with your presence.
+
+Your footsteps are like the gentle spring breeze,
+Filling the dry trees with blooming flowers,
+Your laughter is like sunlight,
+Melting the shadows of my yesterday.
+
+Your words began to flow
+Like a river in the dry corners of my heart.
+Your presence painted my sky
+With colors no one had ever seen before.
+
+Where there was silence, now birds sing,
+Where there was drought, now the scent of rain,
+My world has become a garden
+Where the colors of your soul bloom.
+
+Happiness is no longer fragile—
+It dances barefoot in the fields of my heart,
+Spreads like jasmine in summer nights,
+Shimmers like moonlight over restless waves.
+
+Every glance of yours is a falling star,
+Fulfilling wishes I never knew I had.
+Every smile of yours is a rising sun,
+Filling my darkness with light.
+
+Oh my beloved—
+You are my ocean,
+Where all my broken rivers meet.
+You are my light,
+Rewriting the destiny of my night.
+
+If happiness had a face, it would wear your smile.
+If love had a voice, it would speak your name.
+And if my heart had wings,
+They would fly only toward you.
+
+I am no longer a lonely shore,
+You have become my ocean of waves.
+I am no longer a forgotten night,
+You have become my eternal dawn.
+
+Happiness is no longer a stranger—
+It has become my identity,
+My breath, my song,
+Since the day you entered my life,
+And turned my world
+Into a garden that blooms forever.`,
+  },
+  {
+    id: 600,
+    title: "Invisible Energy",
+    theme: "Spiritual",
+    collection: "New Poems",
+    full: `The universe is woven with unseen waves,
+Where the wind moves yet remains invisible,
+Where rivers run toward the sea,
+Yet no one can see the thirst that guides them.
+
+In the silence of a moonlit night,
+Countless energies descend,
+Some gentle as a tender touch,
+Some heavy as the shadow of sorrow.
+
+People say,
+"What is unseen cannot exist."
+Yet they forget—
+Love is invisible,
+Pain is unseen,
+And even the sound of a prayer
+Vanishes into the air.
+
+God, the soul, blessings and curses—
+All are forms of that hidden power
+That shapes and sculpts our lives.
+
+Do the stars ever show themselves
+As they send their light to us?
+No—
+Yet we live within their radiance.
+
+So too, life is woven
+From countless unseen energies,
+Beyond the reach of the eye,
+Beyond the grasp of science.
+
+The truth is this:
+What is invisible is eternal.
+And it reminds us always—
+That the soul, like light,
+Though unseen,
+Forever exists.`,
+  },
+  {
+    id: 601,
+    title: "Finding Home in the Infinite",
+    theme: "Spiritual",
+    collection: "New Poems",
+    full: `People see stars in the sky, and I find my home in them.
+People find the ocean depths, and I find myself in the depths of the ocean.
+People see fire as dangerous, and I find myself burning in that fire.
+People see nature as beautiful, and I find myself lost within it.
+
+People hear the wind whispering, and I feel it speaking to my soul.
+People admire mountains for their strength, and I feel myself climbing them with every thought.
+People see rain as fleeting, and I find eternity in every falling drop.
+People chase dreams in the daylight, and I chase my dreams in the quiet of the night.
+
+People seek love in others, and I find love in the silence within me.
+People fear the darkness, and I discover light hidden in its shadows.
+People count moments, and I let moments count me, like waves shaping the shore.
+People follow paths, and I follow the compass of my heart, wherever it leads.
+
+In a world full of sight and sound, I wander within, seeing more than the eyes can hold,
+Feeling more than the heart can speak,
+And finding home in the infinite spaces where the world itself begins to fade.`,
+  },
+  {
+    id: 602,
+    title: "Lost Without You",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `Without you, my heart feels incomplete,
+In every smile, your memory I meet.
+The echo of your laughter still rings in my ear,
+Every night passes only with thoughts of you near.
+
+Every moment aches to see you again,
+Without you, my world feels empty and plain.
+The fire of your memory burns deep inside,
+In every breath, only your name resides.`,
+  },
+  {
+    id: 603,
+    title: "Missing You",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `Your memories walk with me every day,
+Even in silence, your voice finds its way.
+Your absence is felt in every space,
+Without you, the world seems out of place.
+
+My heart longs to hold you near,
+To erase every ache, every fear.
+I still feel the warmth of your smile,
+Without you, every moment stretches a mile.`,
+  },
+  {
+    id: 604,
+    title: "Shadows of Memories",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `The echo of your laughter still lingers in my ears,
+Every smile lights up the darkness of my lonely years.
+
+Old conversations come floating back in my mind,
+Unfinished words keep haunting, leaving me confined.
+
+Every memory of you has settled in my breath,
+This ache of missing you flows, escaping death.
+
+The scent of your memories still touches my soul,
+Every silent moment calls you, trying to make me whole.`,
+  },
+  {
+    id: 605,
+    title: "The Darkness of Your Memories",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `Beneath the black veil of night,
+I search for myself—
+but each time,
+I find only the shadow of you.
+
+The lamps have died,
+and even the light in my chest
+has turned to ashes.
+
+This forest of silence
+spreads around me,
+where the echoes of my own heartbeat
+make me feel even more abandoned.
+
+The rain falls,
+as if shaking hands with my tears,
+and every drop whispers—
+"He is no longer here."
+
+Once, with you,
+the winds would sing,
+but now these same winds
+awaken screams inside me.
+
+The pictures have blurred,
+yet the glimmer in your eyes
+still haunts my nights.
+
+Again and again, I tell myself—
+"Forget, move on,"
+but my heart refuses.
+It still clings
+to the sound of your name.
+
+Every morning feels
+like an unfinished beginning,
+and every evening
+a broken promise.
+
+Even my laughter
+is buried in memories,
+and my heart beats
+only to wait for you.`,
+  },
+  {
+    id: 606,
+    title: "No Longer the Same",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `If you must hesitate
+before speaking to me,
+then I know—
+this bond is no longer what it once was.
+
+Where once laughter lived,
+now only silence lingers.
+These distances are hollowing me out,
+neither you remain the same,
+nor does this bond.
+
+Every word shatters
+into an unfamiliar quiet.
+This emptiness,
+I can no longer endure.
+
+You once promised
+this bond would never lose its meaning.
+But what changed?
+What moment stole our smile,
+leaving us with a love
+that is no longer the same.`,
+  },
+  {
+    id: 607,
+    title: "When Hearts Speak",
+    theme: "Love",
+    collection: "New Poems",
+    full: `I softly asked,
+"Has something happened?"
+
+He stayed quiet, and just said,
+"No..."
+
+But I sat close to him again,
+holding his hand tightly in mine,
+and gently asked,
+"Come on… now tell me the truth, what happened?"
+
+Tears welled up in his eyes,
+and he whispered,
+"I've completely broken today,
+but I found your support."
+
+I hugged him tightly,
+"I'm here… everything will be alright.
+Never let go of my hand."
+
+He smiled and said,
+"How do you always know what my heart feels?"
+
+I smiled back,
+"Because I know you…
+I can feel every beat of your heart."
+
+And he softly said,
+"Never ever diminish the value of this relationship…
+because it's our whole world."`,
+  },
+  {
+    id: 608,
+    title: "Some Chapters Always Remain Incomplete",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `We didn't end because we lacked love,
+We ended because love was not enough.
+
+Every "what if" clings to my chest,
+Like a bookmark pressed into a story
+That will never see its last page.
+
+Your words are still half-written on my skin,
+Like ink that never dried,
+Like a sentence broken mid-breath.
+
+Maybe one day,
+When duties and families fall silent,
+Our hearts will meet again—
+Not to finish the story,
+But to honor the beauty
+Of its incompleteness.`,
+  },
+  {
+    id: 609,
+    title: "Why Special Ones Become Strangers",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `You once translated the silence in my eyes,
+Now even my hello feels foreign to you.
+
+We built a world out of unfinished conversations,
+But today, your gaze refuses to recognize the ruins.
+
+Strange—
+The hands that once carried my laughter
+Now carry nothing but indifference.
+
+You didn't just leave me,
+You erased yourself
+From the very story
+We once promised to live together.
+
+And here I stand—
+A girl still forgiving the distance
+That turned my home into a stranger.`,
+  },
+  {
+    id: 610,
+    title: "When Even the Stars Vanish",
+    theme: "Loss",
+    collection: "New Poems",
+    full: `When even the stars vanish from the sky,
+The moon too hides itself behind the clouds.
+
+When someone dear walks away from our world,
+Our state becomes just the same somehow.
+
+Breaths still flow but no voice escapes the heart,
+In a crowd we wander, yet lose who we are.
+
+A thousand faces around still feel so far,
+Without our own, every path seems incomplete.
+
+Eyes hold sleep but dreams keep shattering,
+Slowly, silently, we lose ourselves within.`,
+  },
+  {
+    id: 611,
+    title: "Behind the Mask",
+    theme: "Identity",
+    collection: "New Poems",
+    full: `You are a broken mirror,
+showing everyone their reflection,
+yet hiding your own cracks from the world.
+
+You are the candle,
+burning yourself to give others light,
+yet never speaking of your own darkness.
+
+You make everyone laugh…
+You bring smiles to every face…
+but your own smile
+remains hidden behind a mask.
+
+Your eyes…
+those very eyes,
+dripping with silent pain,
+mistaken by others as their shine.
+
+I know this truth—
+when you truly smile,
+your eyes look as though tears will fall again.
+It's been years since they have known real laughter,
+years since your face has carried a true smile.
+
+And yet the question lingers—
+when will your face
+welcome back its real smile?`,
+  },
 ];
 export { POEMS };

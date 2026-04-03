@@ -298,9 +298,9 @@ export default function PoetryAssistant() {
                         fontSize: "0.875rem",
                         lineHeight: "1.6",
                         background:
-                          msg.role === "user" ? "#C8A96A20" : "#1A1410",
+                          msg.role === "user" ? "#C8A96A20" : "#FFE8F0",
                         border: `1px solid ${msg.role === "user" ? "#C8A96A50" : "#C8A96A20"}`,
-                        color: msg.role === "user" ? "#C8A96A" : "#5C3D2E",
+                        color: msg.role === "user" ? "#8B6330" : "#3D2B1F",
                       }}
                     >
                       <FormatText text={msg.text} />

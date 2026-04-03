@@ -1,4 +1,27 @@
+import {
+  BarChart2,
+  Bell,
+  Bot,
+  Camera,
+  Globe,
+  HelpCircle,
+  Image,
+  Lock,
+  LogOut,
+  Mail,
+  MessageCircle,
+  Moon,
+  NotebookPen,
+  Palette,
+  PenTool,
+  Settings,
+  Shield,
+  Star,
+  Sun,
+  User,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useCamera } from "../camera/useCamera";
@@ -175,21 +198,21 @@ export function applyTheme(theme: keyof typeof THEME_PALETTES) {
   window.dispatchEvent(new CustomEvent("themeChanged", { detail: p }));
 }
 
-const SECTIONS = [
-  { id: "profile", icon: "👤", label: "Profile" },
-  { id: "privacy", icon: "🔒", label: "Privacy" },
-  { id: "notifications", icon: "🔔", label: "Notifications" },
-  { id: "appearance", icon: "🎨", label: "Appearance" },
-  { id: "writing", icon: "✍️", label: "Writing" },
-  { id: "ai", icon: "🤖", label: "AI Assistant" },
-  { id: "messaging", icon: "💬", label: "Messaging" },
-  { id: "content", icon: "🖼️", label: "Content" },
-  { id: "language", icon: "🌐", label: "Language" },
-  { id: "notes", icon: "📓", label: "Notes" },
-  { id: "help", icon: "❓", label: "Help Centre" },
-  { id: "security", icon: "🔐", label: "Security" },
-  { id: "email", icon: "📩", label: "Email" },
-  { id: "account", icon: "🚪", label: "Account" },
+const SECTIONS: { id: string; icon: React.ReactNode; label: string }[] = [
+  { id: "profile", icon: <User size={15} />, label: "Profile" },
+  { id: "privacy", icon: <Lock size={15} />, label: "Privacy" },
+  { id: "notifications", icon: <Bell size={15} />, label: "Notifications" },
+  { id: "appearance", icon: <Palette size={15} />, label: "Appearance" },
+  { id: "writing", icon: <PenTool size={15} />, label: "Writing" },
+  { id: "ai", icon: <Bot size={15} />, label: "AI Assistant" },
+  { id: "messaging", icon: <MessageCircle size={15} />, label: "Messaging" },
+  { id: "content", icon: <Image size={15} />, label: "Content" },
+  { id: "language", icon: <Globe size={15} />, label: "Language" },
+  { id: "notes", icon: <NotebookPen size={15} />, label: "Notes" },
+  { id: "help", icon: <HelpCircle size={15} />, label: "Help Centre" },
+  { id: "security", icon: <Shield size={15} />, label: "Security" },
+  { id: "email", icon: <Mail size={15} />, label: "Email" },
+  { id: "account", icon: <LogOut size={15} />, label: "Account" },
 ];
 
 const FAQ_ITEMS = [
@@ -203,7 +226,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "How do I use the translator?",
-    a: "Click the 🌐 globe icon in the navigation bar to select your language. The entire website — including poems — will be translated.",
+    a: "Click the globe icon (🌐) in the navigation bar to select your language. The entire website — including poems — will be translated.",
   },
   {
     q: "What is The Silent Guardian?",
@@ -307,7 +330,7 @@ function SectionCard({
   title,
   icon,
   children,
-}: { title: string; icon: string; children: React.ReactNode }) {
+}: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div
       style={{
@@ -493,7 +516,7 @@ export default function SettingsSlide({
     switch (activeSection) {
       case "profile":
         return (
-          <SectionCard title="Profile Settings" icon="👤">
+          <SectionCard title="Profile Settings" icon={<User size={16} />}>
             {settings.profilePhoto && (
               <div style={{ textAlign: "center", marginBottom: "1rem" }}>
                 <img
@@ -556,7 +579,7 @@ export default function SettingsSlide({
                 }}
                 data-ocid="settings.profile_photo.upload_button"
               >
-                📁 Upload from Device
+                Upload from Device
               </button>
               <button
                 type="button"
@@ -573,7 +596,7 @@ export default function SettingsSlide({
                 }}
                 data-ocid="settings.profile_photo_camera.button"
               >
-                📷 Capture from Camera
+                Capture from Camera
               </button>
             </div>
             <input
@@ -627,7 +650,7 @@ export default function SettingsSlide({
                       cursor: "pointer",
                     }}
                   >
-                    📸 Take Photo
+                    Take Photo
                   </button>
                   <button
                     type="button"
@@ -666,7 +689,15 @@ export default function SettingsSlide({
               }}
               data-ocid="settings.cover_image.upload_button"
             >
-              🖼️ Upload Cover Image
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                }}
+              >
+                <Image size={14} /> Upload Cover Image
+              </span>
             </button>
             <input
               ref={coverRef}
@@ -713,7 +744,7 @@ export default function SettingsSlide({
 
       case "privacy":
         return (
-          <SectionCard title="Privacy Settings" icon="🔒">
+          <SectionCard title="Privacy Settings" icon={<Lock size={16} />}>
             <p style={labelStyle}>Account Visibility</p>
             <div style={radioGroupStyle}>
               {radioOption("public", settings.accountVisibility, "Public", () =>
@@ -782,7 +813,7 @@ export default function SettingsSlide({
 
       case "notifications":
         return (
-          <SectionCard title="Notification Settings" icon="🔔">
+          <SectionCard title="Notification Settings" icon={<Bell size={16} />}>
             <Toggle
               id="notifyLikes"
               checked={settings.notifyLikes}
@@ -835,7 +866,7 @@ export default function SettingsSlide({
 
       case "appearance":
         return (
-          <SectionCard title="Appearance Settings" icon="🎨">
+          <SectionCard title="Appearance Settings" icon={<Palette size={16} />}>
             <p style={labelStyle}>Theme</p>
             <div
               style={{
@@ -993,7 +1024,7 @@ export default function SettingsSlide({
 
       case "writing":
         return (
-          <SectionCard title="Writing Preferences" icon="✍️">
+          <SectionCard title="Writing Preferences" icon={<PenTool size={16} />}>
             <p style={labelStyle}>Default Writing Mode</p>
             <div style={radioGroupStyle}>
               {radioOption("free", settings.writingMode, "Free Verse", () =>
@@ -1040,7 +1071,7 @@ export default function SettingsSlide({
 
       case "ai":
         return (
-          <SectionCard title="The Silent Listener" icon="🤖">
+          <SectionCard title="The Silent Listener" icon={<Bot size={16} />}>
             <p
               style={{
                 fontFamily: "'Lora', serif",
@@ -1101,19 +1132,19 @@ export default function SettingsSlide({
                 [
                   {
                     val: "soft",
-                    icon: "🌸",
+                    icon: "soft",
                     name: "Soft Emotional",
                     desc: "Gentle & comforting",
                   },
                   {
                     val: "philosophical",
-                    icon: "🌌",
+                    icon: "deep",
                     name: "Deep Philosophical",
                     desc: "Reflective & thought-provoking",
                   },
                   {
                     val: "minimal",
-                    icon: "🪶",
+                    icon: "minimal",
                     name: "Minimal",
                     desc: "Short & direct",
                   },
@@ -1208,7 +1239,10 @@ export default function SettingsSlide({
 
       case "messaging":
         return (
-          <SectionCard title="Messaging Settings" icon="💬">
+          <SectionCard
+            title="Messaging Settings"
+            icon={<MessageCircle size={16} />}
+          >
             <Toggle
               id="readReceipts"
               checked={settings.readReceipts}
@@ -1234,7 +1268,7 @@ export default function SettingsSlide({
                   fontSize: "0.9rem",
                 }}
               >
-                💤 Mute Conversations — available inside each conversation
+                Mute Conversations — available inside each conversation
               </span>
             </div>
             <Toggle
@@ -1271,7 +1305,7 @@ export default function SettingsSlide({
 
       case "content":
         return (
-          <SectionCard title="Content Preferences" icon="🖼️">
+          <SectionCard title="Content Preferences" icon={<Image size={16} />}>
             <p style={labelStyle}>Show</p>
             <select
               style={selectStyle}
@@ -1302,7 +1336,7 @@ export default function SettingsSlide({
                   fontSize: "0.9rem",
                 }}
               >
-                🌐 Language: English (content language is fixed)
+                Language: English (content language is fixed)
               </span>
             </div>
             <div style={{ padding: "0.6rem 0" }}>
@@ -1313,8 +1347,8 @@ export default function SettingsSlide({
                   fontSize: "0.9rem",
                 }}
               >
-                Use the 🌐 globe in the navigation bar to translate the website
-                into any language.
+                Use the globe icon in the navigation bar to translate the
+                website into any language.
               </span>
             </div>
             <button
@@ -1339,7 +1373,10 @@ export default function SettingsSlide({
 
       case "language":
         return (
-          <SectionCard title="Language & Translator" icon="🌐">
+          <SectionCard
+            title="Language &amp; Translator"
+            icon={<Globe size={16} />}
+          >
             <div
               style={{
                 background: colors.bg,
@@ -1349,7 +1386,16 @@ export default function SettingsSlide({
                 textAlign: "center",
               }}
             >
-              <p style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🌐</p>
+              <p
+                style={{
+                  fontSize: "1.75rem",
+                  marginBottom: "0.5rem",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Globe size={32} style={{ color: "#8B6F47" }} />
+              </p>
               <p
                 style={{
                   fontFamily: "'Playfair Display', serif",
@@ -1368,7 +1414,7 @@ export default function SettingsSlide({
                   lineHeight: 1.6,
                 }}
               >
-                Use the <strong>🌐 globe icon</strong> in the navigation bar to
+                Use the <strong>globe icon</strong> in the navigation bar to
                 translate the entire website into your language.
               </p>
               <p
@@ -1388,7 +1434,7 @@ export default function SettingsSlide({
 
       case "notes":
         return (
-          <SectionCard title="Notes Settings" icon="📓">
+          <SectionCard title="Notes Settings" icon={<NotebookPen size={16} />}>
             <p style={labelStyle}>Default Note Privacy</p>
             <select
               style={selectStyle}
@@ -1429,7 +1475,7 @@ export default function SettingsSlide({
 
       case "help":
         return (
-          <SectionCard title="Help Centre" icon="❓">
+          <SectionCard title="Help Centre" icon={<HelpCircle size={16} />}>
             {/* Silent Listener */}
             <div
               style={{
@@ -1447,7 +1493,7 @@ export default function SettingsSlide({
                   marginBottom: "0.4rem",
                 }}
               >
-                🤖 The Silent Listener AI Chat
+                The Silent Listener AI Chat
               </p>
               <p
                 style={{
@@ -1477,7 +1523,7 @@ export default function SettingsSlide({
                 }}
                 data-ocid="help.ai_chat.button"
               >
-                ✒️ Open The Silent Listener
+                Open The Silent Listener
               </button>
             </div>
 
@@ -1676,7 +1722,7 @@ export default function SettingsSlide({
                   fontSize: "0.85rem",
                 }}
               >
-                ▶️ YouTube
+                YouTube
               </a>
               <a
                 href="https://x.com/CHINNUA_POET"
@@ -1692,7 +1738,7 @@ export default function SettingsSlide({
                   fontSize: "0.85rem",
                 }}
               >
-                ✕ X (Twitter)
+                X (Twitter)
               </a>
             </div>
           </SectionCard>
@@ -1700,7 +1746,7 @@ export default function SettingsSlide({
 
       case "security":
         return (
-          <SectionCard title="Security Settings" icon="🔐">
+          <SectionCard title="Security Settings" icon={<Shield size={16} />}>
             <button
               type="button"
               onClick={() => setShowPasswordModal(true)}
@@ -1718,7 +1764,7 @@ export default function SettingsSlide({
               }}
               data-ocid="settings.change_password.button"
             >
-              🔑 Change Password
+              Change Password
             </button>
             <div
               style={{
@@ -1733,7 +1779,7 @@ export default function SettingsSlide({
                   fontSize: "0.9rem",
                 }}
               >
-                🔗 Connected Account: Google (Gmail)
+                Connected Account: Google (Gmail)
               </span>
             </div>
             <div
@@ -1758,7 +1804,7 @@ export default function SettingsSlide({
                 }
                 data-ocid="settings.logout_all.button"
               >
-                🚪 Logout from all devices
+                Logout from all devices
               </button>
             </div>
             <Toggle
@@ -2027,7 +2073,10 @@ export default function SettingsSlide({
 
       case "email":
         return (
-          <SectionCard title="Email & Notification Settings" icon="📩">
+          <SectionCard
+            title="Email &amp; Notification Settings"
+            icon={<Mail size={16} />}
+          >
             <Toggle
               id="emailUpdates"
               checked={settings.emailUpdates}
@@ -2068,7 +2117,7 @@ export default function SettingsSlide({
 
       case "account":
         return (
-          <SectionCard title="Account Controls" icon="🚪">
+          <SectionCard title="Account Controls" icon={<LogOut size={16} />}>
             <button
               type="button"
               onClick={onLogout}
@@ -2086,7 +2135,7 @@ export default function SettingsSlide({
               }}
               data-ocid="settings.logout.button"
             >
-              🚪 Logout
+              Logout
             </button>
             <button
               type="button"
@@ -2105,7 +2154,7 @@ export default function SettingsSlide({
               }}
               data-ocid="settings.deactivate.button"
             >
-              ⏸️ Deactivate Account
+              Deactivate Account
             </button>
             <button
               type="button"
@@ -2123,7 +2172,7 @@ export default function SettingsSlide({
               }}
               data-ocid="settings.delete_account.button"
             >
-              🗑️ Delete Account
+              Delete Account
             </button>
 
             <AnimatePresence>

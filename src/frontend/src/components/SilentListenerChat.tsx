@@ -418,7 +418,7 @@ export default function SilentListenerChat() {
                         msg.role === "user"
                           ? "12px 12px 2px 12px"
                           : "12px 12px 12px 2px",
-                      background: msg.role === "user" ? "#F5ECD7" : "#FFF0F3",
+                      background: msg.role === "user" ? "#F5ECD7" : "#FFE8F0",
                       fontFamily: "'Lora', serif",
                       fontSize: "0.85rem",
                       color: colors.text,

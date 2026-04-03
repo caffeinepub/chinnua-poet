@@ -1,3 +1,4 @@
+import { Lightbulb, Sparkles, Volume2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import {
@@ -284,7 +285,7 @@ function NoteFormModal({
                     color: "#8B6F47",
                   }}
                 >
-                  🔊 Listen
+                  <Volume2 size={13} /> Listen
                 </button>
               )}
               {aiSettings.aiWritingSuggestions && content.length > 20 && (
@@ -306,7 +307,7 @@ function NoteFormModal({
                     color: "#8B6F47",
                   }}
                 >
-                  ✨ Suggestions
+                  <Sparkles size={13} /> Suggestions
                 </button>
               )}
             </div>

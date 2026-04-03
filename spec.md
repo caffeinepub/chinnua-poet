@@ -1,40 +1,28 @@
 # CHINNUA_POET
 
 ## Current State
-- AdminSlide.tsx has tabs: poems, feed, users, gallery, settings, rules, guardian, letters, replies, ai-users, music, inbox, about
-- Users tab shows username + bio only (missing name, email, phone)
-- Music tab (MusicManagementTab) supports adding tracks by title/artist/mood/Spotify URL — no audio file upload
-- AdminInboxTab reads localStorage conversations but is read-only (no reply/compose from admin)
-- No "Admin Info" display section showing admin account details
-- No formal Admin User account object stored/displayed
-- Admin is not automatically added to all users' following lists
-- config.ts passes both `agent` and `agentOptions` to createActor, triggering console.warn — FIXED already
+- All slides use emoji characters for section headings, subheadings, and sub-subheadings (e.g. 👤 Profile Settings, 🔒 Privacy, 🔔 Notifications, etc.)
+- The `SilentListenerChat.tsx` AI assistant renders AI messages with a dark background (`#FFF0F3` for user, but with dark overlay styling that makes them unreadable on dark devices); `PoetryAssistant.tsx` also renders assistant messages with `background: "#1A1410"` (nearly black) and `color: "#5C3D2E"` making them hard to read
+- `backend.ts` `createActor` function uses old pattern: logs a warn and creates agent regardless
 
 ## Requested Changes (Diff)
 
 ### Add
-- **Admin Info tab**: Display admin account info (username: CHINNUA_POET, name, password masked, email, joined date, website stats summary)
-- **Admin User account object**: Save admin profile info to localStorage (`chinnua_admin_profile`) including username, display name, password (masked), email, bio, profile photo path, and website metadata
-- **Users tab enhancement**: Show full user info — Username, Display Name, Email, Phone Number, Join Date, account status; load from `chinnua_users` which already stores user objects
-- **Admin Inbox with full messaging**: Upgrade AdminInboxTab to allow admin to compose and send messages to any user; show full conversation threads grouped by user; reply directly from inbox; include daily refresh indicator
-- **Auto-follow admin**: When any user registers or on app load, ensure CHINNUA_POET is in their following list (`chinnua_following_{username}` in localStorage)
-- **Music audio upload**: In MusicManagementTab, add an audio file upload input (`<input type="file" accept="audio/*">`); store audio as base64 or blob URL in localStorage; play in music section
+- SVG icon components to replace all emoji characters used in headings/subheadings across all slides
 
 ### Modify
-- **Users tab**: Replace minimal username+bio display with full table showing Username, Name, Email, Phone, Joined Date, Delete button
-- **Admin settings tab**: Add "Admin Profile" card at the top showing saved admin info with edit capability
-- **MusicManagementTab**: Add audio file upload alongside the existing Spotify URL field; uploaded audio files stored as `chinnua_audio_{id}` in localStorage
-- **AdminInboxTab**: Full two-way messaging — list of users on left, conversation on right, compose new message button
+- All slide files: replace emoji strings in heading/section labels with inline minimalist SVG icons (Lucide icons already imported, use those)
+- `SilentListenerChat.tsx`: AI message bubbles — change background to light pink (`#FFF0F3`) and text to dark brown (`#3D2B1F`); ensure readability
+- `PoetryAssistant.tsx`: assistant message bubbles — change `background: "#1A1410"` to `#FFE8F0` (light pink) and `color` to `#3D2B1F` (dark brown)
+- `backend.ts`: replace `createActor` function body with cleaner version that avoids the `console.warn` by checking `options.agent` first
 
 ### Remove
-- Nothing removed
+- All emoji string literals used as section/heading icons (👤 🔒 🔔 🎨 ✍️ 🤖 💬 🖼️ 🌐 ❓ 🔐 📩 🚪 etc.)
 
 ## Implementation Plan
-1. Add new `AdminInfoTab` component showing admin profile card with all fields, editable, saved to localStorage
-2. Add `chinnua_admin_profile` localStorage key initialized with defaults on first load
-3. Upgrade `Users` tab to read full user objects from `chinnua_users` and display Username, Name/DisplayName, Email, Phone, Joined columns in a table
-4. Upgrade `AdminInboxTab` to full two-way inbox: left sidebar lists all users who have conversations, right panel shows thread + compose input; admin reply saved back to `chinnua_conv_{username}_CHINNUA_POET`
-5. Add auto-follow logic: utility function `ensureAdminFollowed(username)` that adds CHINNUA_POET to user's following list; call on user login/register via localStorage event or at app init
-6. Add audio file upload to `MusicManagementTab`: file input stores base64 audio; track object gets `audioData` field; MusicSlide reads and plays it
-7. Add new tab `"admin-info"` to the tab list
-8. Keep all existing tabs and functionality intact
+1. In `SettingsSlide.tsx`: replace all emoji strings in `SECTIONS` array and `SectionCard` `icon` props with Lucide SVG icon components (User, Lock, Bell, Palette, PenTool, Bot, MessageCircle, Image, Globe, HelpCircle, Shield, Mail, LogOut)
+2. In `TermsSlide.tsx` and `PrivacySlide.tsx`: replace `emoji` field values with SVG inline or Lucide icons
+3. In `AboutSlide.tsx`, `AdminSlide.tsx`, `FeedSlide.tsx`, `PoemsSlide.tsx`, `NotesSlide.tsx`, `InboxSlide.tsx`, `MessagesSlide.tsx`, `NotificationsSlide.tsx`, `ExploreSlide.tsx`, `MusicSlide.tsx`, `GallerySlide.tsx`: replace any emoji heading text with SVG icons
+4. In `SilentListenerChat.tsx`: change AI message bubble background from `#FFF0F3` / dark to `#FFE8F0` light pink, text to `#3D2B1F`
+5. In `PoetryAssistant.tsx`: change assistant message background from `#1A1410` to `#FFE8F0`, color from `#5C3D2E` to `#3D2B1F`
+6. In `backend.ts`: replace `createActor` function with the updated version that avoids the console.warn

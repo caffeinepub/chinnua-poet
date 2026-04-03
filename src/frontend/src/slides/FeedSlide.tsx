@@ -6,6 +6,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  BarChart2,
+  Bookmark,
+  Camera,
+  Heart,
+  MessageCircle,
+  MessageSquare,
+  Smile,
+  Tag,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -518,7 +528,7 @@ function PostCard({
             transition: "color 0.2s",
           }}
         >
-          ❤️ {post.likes}
+          <Heart size={14} /> {post.likes}
         </button>
         <button
           type="button"
@@ -539,7 +549,7 @@ function PostCard({
             gap: 3,
           }}
         >
-          💬 {post.replies.length}
+          <MessageCircle size={14} /> {post.replies.length}
         </button>
         <button
           type="button"
@@ -560,7 +570,11 @@ function PostCard({
             transition: "color 0.2s",
           }}
         >
-          {bookmarked ? "🔖" : "🏷"}
+          {bookmarked ? (
+            <Bookmark size={14} fill="#D4A853" />
+          ) : (
+            <Tag size={14} />
+          )}
         </button>
         {/* Comments toggle */}
         <button
@@ -588,7 +602,7 @@ function PostCard({
             transition: "all 0.2s",
           }}
         >
-          🗨 {comments.length}
+          <MessageSquare size={13} /> {comments.length}
         </button>
       </div>
 
@@ -949,7 +963,7 @@ export default function FeedSlide({
               <input
                 value={postTopic}
                 onChange={(e) => setPostTopic(e.target.value)}
-                placeholder="📌 Add a topic (optional)"
+                placeholder="Add a topic (optional)"
                 data-ocid="feed.input"
                 style={{
                   width: "100%",
@@ -1098,7 +1112,7 @@ export default function FeedSlide({
                   }}
                   data-ocid="feed.upload_button"
                 >
-                  📷
+                  <Camera size={16} />
                 </button>
                 <div style={{ position: "relative" }}>
                   <button
@@ -1117,7 +1131,7 @@ export default function FeedSlide({
                     }}
                     data-ocid="feed.toggle"
                   >
-                    😊
+                    <Smile size={16} />
                   </button>
                   {showEmojiPicker && (
                     <div
@@ -1151,7 +1165,7 @@ export default function FeedSlide({
                   }}
                   data-ocid="feed.toggle"
                 >
-                  📊
+                  <BarChart2 size={16} />
                 </button>
                 <div
                   style={{
@@ -1176,9 +1190,9 @@ export default function FeedSlide({
                       cursor: "pointer",
                     }}
                   >
-                    <option value="anyone">👥 Anyone can reply</option>
-                    <option value="followers">👤 Followers only</option>
-                    <option value="following">✓ People I follow</option>
+                    <option value="anyone">Anyone can reply</option>
+                    <option value="followers">Followers only</option>
+                    <option value="following">People I follow</option>
                     <option value="mentioned">@ Mentioned only</option>
                   </select>
                 </div>

@@ -369,7 +369,7 @@ export default function AboutSlide() {
                 fontSize: "1rem",
               }}
             >
-              ✍️ Edit About Section
+              Edit About Section
             </h3>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "1rem" }}

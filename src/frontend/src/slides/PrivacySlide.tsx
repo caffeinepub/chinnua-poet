@@ -1,70 +1,91 @@
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  Database,
+  Handshake,
+  Heart,
+  Lock,
+  Mail,
+  RefreshCw,
+  ScrollText,
+  Search,
+  Shield,
+  Trash2,
+  User,
+  UserCheck,
+} from "lucide-react";
 import { motion } from "motion/react";
+import type React from "react";
 
 interface PrivacySlideProps {
   onBack: () => void;
 }
 
-const sections = [
+const sections: {
+  icon: React.ReactNode;
+  num: string;
+  title: string;
+  body: string;
+}[] = [
   {
-    emoji: "🌑",
+    icon: <Database size={16} />,
     num: "1",
     title: "Information We Collect",
-    body: "We may collect:\n\n• Name / Username\n• Email address\n• Profile information (bio, profile picture)\n• Content you post (poetry, comments, messages)\n• Usage data (interactions, activity)",
+    body: "We may collect:\n\n\u2022 Name / Username\n\u2022 Email address\n\u2022 Profile information (bio, profile picture)\n\u2022 Content you post (poetry, comments, messages)\n\u2022 Usage data (interactions, activity)",
   },
   {
-    emoji: "🔍",
+    icon: <Search size={16} />,
     num: "2",
     title: "How We Use Your Information",
-    body: "We use your data to:\n\n• Create and manage your account\n• Display your content on the platform\n• Improve user experience\n• Send notifications (likes, comments, messages)\n• Ensure platform safety and moderation",
+    body: "We use your data to:\n\n\u2022 Create and manage your account\n\u2022 Display your content on the platform\n\u2022 Improve user experience\n\u2022 Send notifications (likes, comments, messages)\n\u2022 Ensure platform safety and moderation",
   },
   {
-    emoji: "🤝",
+    icon: <Handshake size={16} />,
     num: "3",
     title: "Sharing of Information",
-    body: "We do NOT sell your personal data.\n\nWe may share data only:\n\n• To comply with legal obligations\n• To protect platform security\n• With trusted service providers (hosting, authentication)",
+    body: "We do NOT sell your personal data.\n\nWe may share data only:\n\n\u2022 To comply with legal obligations\n\u2022 To protect platform security\n\u2022 With trusted service providers (hosting, authentication)",
   },
   {
-    emoji: "🔒",
+    icon: <Lock size={16} />,
     num: "4",
     title: "Data Security",
     body: "We take reasonable steps to protect your information. However, no system is completely secure.",
   },
   {
-    emoji: "📩",
+    icon: <Mail size={16} />,
     num: "5",
     title: "Email & Notifications",
-    body: "You may receive:\n\n• Account-related emails\n• Notifications about activity\n\nYou can control these in your settings.",
+    body: "You may receive:\n\n\u2022 Account-related emails\n\u2022 Notifications about activity\n\nYou can control these in your settings.",
   },
   {
-    emoji: "🧾",
+    icon: <ScrollText size={16} />,
     num: "6",
     title: "Your Rights",
-    body: "You have the right to:\n\n• Access your data\n• Edit your profile\n• Delete your account",
+    body: "You have the right to:\n\n\u2022 Access your data\n\u2022 Edit your profile\n\u2022 Delete your account",
   },
   {
-    emoji: "🗑️",
+    icon: <Trash2 size={16} />,
     num: "7",
     title: "Data Retention",
     body: "We keep your data as long as your account is active. Deleted accounts may have data removed permanently.",
   },
   {
-    emoji: "👶",
+    icon: <UserCheck size={16} />,
     num: "8",
     title: "Age Requirement",
     body: "Users must be at least 13 years old to use this platform.",
   },
   {
-    emoji: "🔄",
+    icon: <RefreshCw size={16} />,
     num: "9",
     title: "Changes to Privacy Policy",
     body: "We may update this policy. Continued use means acceptance.",
   },
   {
-    emoji: "🖤",
+    icon: <BookOpen size={16} />,
     num: "10",
     title: "Final Words",
-    body: "Your words matter.\nYour privacy does too.\n\nWe protect both—with care.",
+    body: "Your words matter.\nYour privacy does too.\n\nWe protect both\u2014with care.",
   },
 ];
 
@@ -125,9 +146,12 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
               fontWeight: 700,
               lineHeight: 1.3,
               marginBottom: "0.75rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
-            🔐 Privacy Policy
+            <Shield size={22} /> Privacy Policy
           </h2>
           <p
             style={{
@@ -167,9 +191,12 @@ export default function PrivacySlide({ onBack }: PrivacySlideProps) {
                   color: "#D4A853",
                   fontWeight: 600,
                   marginBottom: "0.6rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
                 }}
               >
-                {s.emoji} {s.num}. {s.title}
+                {s.icon} {s.num}. {s.title}
               </h3>
               <p
                 style={{

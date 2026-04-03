@@ -1,70 +1,90 @@
-import { ArrowLeft } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  BookOpen,
+  Heart,
+  Lock,
+  LogOut,
+  PenTool,
+  RefreshCw,
+  Scale,
+  Shield,
+  TrendingDown,
+  User,
+  XCircle,
+} from "lucide-react";
 import { motion } from "motion/react";
+import type React from "react";
 
 interface TermsSlideProps {
   onBack: () => void;
 }
 
-const sections = [
+const sections: {
+  icon: React.ReactNode;
+  num: string;
+  title: string;
+  body: string;
+}[] = [
   {
-    emoji: "🖤",
+    icon: <Heart size={16} />,
     num: "1",
     title: "Acceptance of Terms",
     body: "By accessing or using CHINNUA POET, you agree to follow these Terms of Service. If you do not agree, please do not use the platform.",
   },
   {
-    emoji: "👤",
+    icon: <User size={16} />,
     num: "2",
     title: "User Accounts",
     body: "You must provide accurate information when creating an account. You are responsible for maintaining your login credentials. You are responsible for all activity under your account.\n\nWe reserve the right to suspend or terminate accounts that violate these terms.",
   },
   {
-    emoji: "✍️",
+    icon: <PenTool size={16} />,
     num: "3",
     title: "User Content",
     body: "You retain ownership of the poetry, text, or content you create. By posting, you grant CHINNUA POET a non-exclusive license to display and share your content on the platform. You must not post content you do not own or have permission to use.",
   },
   {
-    emoji: "🚫",
+    icon: <XCircle size={16} />,
     num: "4",
     title: "Prohibited Activities",
-    body: "You agree NOT to:\n\n• Post harmful, abusive, or hateful content\n• Harass, threaten, or intimidate others\n• Upload spam, advertisements, or irrelevant material\n• Impersonate another person\n• Attempt to hack, disrupt, or misuse the platform",
+    body: "You agree NOT to:\n\n\u2022 Post harmful, abusive, or hateful content\n\u2022 Harass, threaten, or intimidate others\n\u2022 Upload spam, advertisements, or irrelevant material\n\u2022 Impersonate another person\n\u2022 Attempt to hack, disrupt, or misuse the platform",
   },
   {
-    emoji: "⚠️",
+    icon: <AlertTriangle size={16} />,
     num: "5",
     title: "Content Moderation",
-    body: "CHINNUA POET reserves the right to:\n\n• Review, approve, or remove content\n• Suspend or ban users\n• Take action against reported content\n\nModeration decisions are made to protect the community.",
+    body: "CHINNUA POET reserves the right to:\n\n\u2022 Review, approve, or remove content\n\u2022 Suspend or ban users\n\u2022 Take action against reported content\n\nModeration decisions are made to protect the community.",
   },
   {
-    emoji: "🔒",
+    icon: <Lock size={16} />,
     num: "6",
     title: "Privacy",
     body: "Your use of the platform is also governed by our Privacy Policy. We are committed to protecting your personal data.",
   },
   {
-    emoji: "📉",
+    icon: <TrendingDown size={16} />,
     num: "7",
     title: "Limitation of Liability",
-    body: "CHINNUA POET is not responsible for:\n\n• User-generated content\n• Emotional or personal impact of content\n• Loss of data or service interruptions\n\nUse the platform at your own discretion.",
+    body: "CHINNUA POET is not responsible for:\n\n\u2022 User-generated content\n\u2022 Emotional or personal impact of content\n\u2022 Loss of data or service interruptions\n\nUse the platform at your own discretion.",
   },
   {
-    emoji: "🔄",
+    icon: <RefreshCw size={16} />,
     num: "8",
     title: "Changes to Terms",
     body: "We may update these Terms at any time. Continued use means you accept the updated Terms.",
   },
   {
-    emoji: "🚪",
+    icon: <LogOut size={16} />,
     num: "9",
     title: "Termination",
     body: "We reserve the right to suspend or terminate access if rules are violated.",
   },
   {
-    emoji: "🖤",
+    icon: <BookOpen size={16} />,
     num: "10",
     title: "Final Note",
-    body: "This platform exists for expression—not harm.\nRespect it, and it will respect you.",
+    body: "This platform exists for expression\u2014not harm.\nRespect it, and it will respect you.",
   },
 ];
 
@@ -125,9 +145,12 @@ export default function TermsSlide({ onBack }: TermsSlideProps) {
               fontWeight: 700,
               lineHeight: 1.3,
               marginBottom: "0.75rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
-            ⚖️ Terms of Service
+            <Scale size={22} /> Terms of Service
           </h2>
           <p
             style={{
@@ -167,9 +190,12 @@ export default function TermsSlide({ onBack }: TermsSlideProps) {
                   color: "#D4A853",
                   fontWeight: 600,
                   marginBottom: "0.6rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
                 }}
               >
-                {s.emoji} {s.num}. {s.title}
+                {s.icon} {s.num}. {s.title}
               </h3>
               <p
                 style={{
