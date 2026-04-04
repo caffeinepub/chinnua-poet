@@ -145,10 +145,6 @@ export default function App() {
     ];
     const hash = window.location.hash.replace("#", "");
     if (hash && validSlides.includes(hash)) setActiveSlide(hash as Slide);
-    try {
-      const stored = localStorage.getItem("chinnua_user");
-      if (stored) setCurrentUser(JSON.parse(stored));
-    } catch {}
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener("resize", check);
@@ -380,7 +376,7 @@ export default function App() {
           <MessagesSlide
             currentUser={currentUser}
             onJoin={() => setShowUserSetup(true)}
-            onLogin={() => setShowLoginModal(true)}
+            onLogin={handleLogin}
           />
         );
       case "about":

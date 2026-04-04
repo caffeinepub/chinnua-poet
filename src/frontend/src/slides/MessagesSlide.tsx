@@ -181,11 +181,344 @@ function MicIcon({ muted, size = 16 }: { muted: boolean; size?: number }) {
   );
 }
 
+interface StoredUser {
+  username: string;
+  emailOrPhone: string;
+  password: string;
+  bio: string;
+  createdAt: string;
+}
+
+interface LoginGateUser {
+  username: string;
+  bio?: string;
+  createdAt: string;
+}
+
+function MessagesLoginGate({
+  onJoin,
+  onLogin,
+}: {
+  onJoin: () => void;
+  onLogin?: ((user: LoginGateUser) => void) | (() => void);
+}) {
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    const ep = emailOrPhone.trim();
+    const pw = password.trim();
+
+    if (!ep || !pw) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    let users: StoredUser[] = [];
+    try {
+      users = JSON.parse(localStorage.getItem("chinnua_users") || "[]");
+    } catch {}
+
+    if (mode === "login") {
+      const found = users.find(
+        (u) => u.emailOrPhone === ep && u.password === pw,
+      );
+      if (!found) {
+        setError("Incorrect email/phone or password.");
+        return;
+      }
+      const loggedIn: LoginGateUser = {
+        username: found.username,
+        bio: found.bio || "",
+        createdAt: found.createdAt,
+      };
+      localStorage.setItem("chinnua_user", JSON.stringify(loggedIn));
+      if (onLogin) (onLogin as (u: LoginGateUser) => void)(loggedIn);
+    } else {
+      const un = username.trim();
+      if (!un) {
+        setError("Please choose a username.");
+        return;
+      }
+      if (!/^[a-zA-Z0-9_]{3,20}$/.test(un)) {
+        setError("Username: 3–20 chars, letters/numbers/underscore.");
+        return;
+      }
+      if (pw.length < 6) {
+        setError("Password must be at least 6 characters.");
+        return;
+      }
+      if (pw !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
+      if (users.find((u) => u.username.toLowerCase() === un.toLowerCase())) {
+        setError("Username already taken.");
+        return;
+      }
+      if (users.find((u) => u.emailOrPhone === ep)) {
+        setError("Account already exists for this email/phone.");
+        return;
+      }
+      const now = new Date().toISOString();
+      const newUser: StoredUser = {
+        username: un,
+        emailOrPhone: ep,
+        password: pw,
+        bio: "",
+        createdAt: now,
+      };
+      users.push(newUser);
+      localStorage.setItem("chinnua_users", JSON.stringify(users));
+      const loggedIn: LoginGateUser = { username: un, bio: "", createdAt: now };
+      localStorage.setItem("chinnua_user", JSON.stringify(loggedIn));
+      if (onLogin) (onLogin as (u: LoginGateUser) => void)(loggedIn);
+    }
+  };
+
+  const inputSt: React.CSSProperties = {
+    background: "rgba(255,248,238,0.95)",
+    border: "1px solid rgba(200,169,106,0.3)",
+    borderRadius: 8,
+    padding: "0.65rem 1rem",
+    color: "#3D2B1F",
+    fontFamily: "'Libre Baskerville', Georgia, serif",
+    fontSize: "0.9rem",
+    outline: "none",
+    width: "100%",
+    boxSizing: "border-box" as const,
+  };
+
+  return (
+    <div
+      className="slide-container"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#FFF8EE",
+        padding: "2rem 1rem",
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          background: "#FFFDF9",
+          border: "1px solid rgba(200,169,106,0.3)",
+          borderRadius: 16,
+          padding: "2.5rem 2rem",
+          width: "100%",
+          maxWidth: 380,
+          boxShadow: "0 8px 32px rgba(92,61,46,0.1)",
+        }}
+      >
+        <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
+          <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>✉️</div>
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              color: "#3D2B1F",
+              margin: "0 0 0.4rem",
+            }}
+          >
+            {mode === "login" ? "Welcome Back" : "Create Account"}
+          </h2>
+          <p
+            style={{
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.85rem",
+              color: "rgba(92,61,46,0.6)",
+              margin: 0,
+              lineHeight: 1.6,
+            }}
+          >
+            {mode === "login"
+              ? "Sign in to access your messages"
+              : "Join to start sending messages"}
+          </p>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+        >
+          <input
+            type="text"
+            value={emailOrPhone}
+            onChange={(e) => {
+              setEmailOrPhone(e.target.value);
+              setError("");
+            }}
+            placeholder="Email or phone number"
+            autoComplete="username"
+            style={inputSt}
+          />
+          {mode === "signup" && (
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setError("");
+              }}
+              placeholder="Choose a username (3–20 chars)"
+              style={inputSt}
+            />
+          )}
+          <div style={{ position: "relative" }}>
+            <input
+              type={showPw ? "text" : "password"}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
+              placeholder="Password"
+              autoComplete={
+                mode === "login" ? "current-password" : "new-password"
+              }
+              style={{ ...inputSt, paddingRight: "2.75rem" }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPw((v) => !v)}
+              style={{
+                position: "absolute",
+                right: "0.75rem",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "#8B6F47",
+                padding: 0,
+              }}
+            >
+              {showPw ? "🙈" : "👁️"}
+            </button>
+          </div>
+          {mode === "signup" && (
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                setError("");
+              }}
+              placeholder="Confirm password"
+              autoComplete="new-password"
+              style={inputSt}
+            />
+          )}
+          {error && (
+            <p
+              style={{
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: "0.8rem",
+                color: "#e53e3e",
+                margin: 0,
+              }}
+            >
+              {error}
+            </p>
+          )}
+          <button
+            type="submit"
+            style={{
+              background: "linear-gradient(135deg, #D4A853, #8B6F47)",
+              border: "none",
+              borderRadius: 8,
+              padding: "0.75rem 1rem",
+              color: "#3D2B1F",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              cursor: "pointer",
+              marginTop: "0.25rem",
+            }}
+          >
+            {mode === "login" ? "Sign In" : "Create Account"}
+          </button>
+        </form>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "0.6rem",
+            marginTop: "1.25rem",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "login" ? "signup" : "login");
+              setError("");
+              setEmailOrPhone("");
+              setUsername("");
+              setPassword("");
+              setConfirmPassword("");
+            }}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.82rem",
+              color: "#D4A853",
+              textDecoration: "underline",
+              padding: 0,
+            }}
+          >
+            {mode === "login"
+              ? "New here? Create an account"
+              : "Already have an account? Sign in"}
+          </button>
+          <button
+            type="button"
+            onClick={onJoin}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.78rem",
+              color: "rgba(92,61,46,0.5)",
+              textDecoration: "underline",
+              padding: 0,
+            }}
+          >
+            or join as a new member
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function MessagesSlide({
   currentUser,
   onJoin,
   onLogin,
-}: { currentUser: User | null; onJoin: () => void; onLogin?: () => void }) {
+}: {
+  currentUser: User | null;
+  onJoin: () => void;
+  onLogin?:
+    | ((user: { username: string; bio?: string; createdAt: string }) => void)
+    | (() => void);
+}) {
   const { actor } = useActor();
   const [section, setSection] = useState<MsgSection>("messages");
   const [conversations, setConversations] = useState<string[]>([
@@ -550,79 +883,7 @@ export default function MessagesSlide({
   };
 
   if (!currentUser) {
-    return (
-      <div
-        className="slide-container"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: WARM_BG,
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ textAlign: "center", padding: "2rem" }}
-        >
-          <p
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: "1.2rem",
-              color: WARM_MOCHA,
-              marginBottom: "0.5rem",
-            }}
-          >
-            Join to send messages
-          </p>
-          <p
-            style={{
-              fontFamily: "'Lora', Georgia, serif",
-              fontStyle: "italic",
-              fontSize: "0.9rem",
-              color: WARM_MUTED,
-              marginBottom: "1.5rem",
-            }}
-          >
-            Messages are private and secure
-          </p>
-          <div
-            style={{
-              display: "flex",
-              gap: "0.75rem",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <Button
-              onClick={onJoin}
-              data-ocid="messages.primary_button"
-              style={{
-                background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
-                border: "none",
-                color: "#3D2B1F",
-              }}
-            >
-              Join the Community
-            </Button>
-            {onLogin && (
-              <Button
-                onClick={onLogin}
-                variant="outline"
-                data-ocid="messages.secondary_button"
-                style={{
-                  border: `1px solid ${WARM_BORDER}`,
-                  color: WARM_MOCHA,
-                  background: "transparent",
-                }}
-              >
-                Sign In
-              </Button>
-            )}
-          </div>
-        </motion.div>
-      </div>
-    );
+    return <MessagesLoginGate onJoin={onJoin} onLogin={onLogin} />;
   }
 
   const currentMessages = messages[activeConv] ?? [];
@@ -678,10 +939,7 @@ export default function MessagesSlide({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <InboxSlide
-              currentUser={currentUser}
-              onLogin={onLogin ?? (() => {})}
-            />
+            <InboxSlide currentUser={currentUser} onLogin={() => {}} />
           </motion.div>
         ) : (
           <motion.div
