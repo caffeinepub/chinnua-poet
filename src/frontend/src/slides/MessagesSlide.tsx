@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useActor } from "../hooks/useActor";
 import InboxSlide from "./InboxSlide";
 
-const WARM_BG = "#FFF0F3";
+const WARM_BG = "#FFF0F5";
 const _MSG_OWN_BG = "#F5ECD7";
 const _MSG_OTHER_BG = "#FDE8ED";
 const WARM_PAPER = "#F5ECD7";
@@ -520,6 +520,7 @@ export default function MessagesSlide({
     | (() => void);
 }) {
   const { actor } = useActor();
+  const [msgGateCleared, setMsgGateCleared] = useState(false);
   const [section, setSection] = useState<MsgSection>("messages");
   const [conversations, setConversations] = useState<string[]>([
     "CHINNUA_POET",
@@ -536,6 +537,17 @@ export default function MessagesSlide({
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [text, setText] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
+  const [showGifPicker, setShowGifPicker] = useState(false);
+  const [showSpotifyInput, setShowSpotifyInput] = useState(false);
+  const [spotifyUrl, setSpotifyUrl] = useState("");
+  const [showGroupModal, setShowGroupModal] = useState(false);
+  const [groupName, setGroupName] = useState("");
+  const [groupMembers, setGroupMembers] = useState<string[]>([]);
+  const [newConvInput, setNewConvInput] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const [callState, setCallState] = useState<CallState>("idle");
   const [callType, setCallType] = useState<CallType>("voice");
@@ -882,8 +894,16 @@ export default function MessagesSlide({
     }
   };
 
-  if (!currentUser) {
-    return <MessagesLoginGate onJoin={onJoin} onLogin={onLogin} />;
+  if (!currentUser || !msgGateCleared) {
+    return (
+      <MessagesLoginGate
+        onJoin={onJoin}
+        onLogin={(user) => {
+          setMsgGateCleared(true);
+          if (onLogin) (onLogin as (u: typeof user) => void)(user);
+        }}
+      />
+    );
   }
 
   const currentMessages = messages[activeConv] ?? [];
@@ -1249,6 +1269,69 @@ export default function MessagesSlide({
                   background: "rgba(245,236,215,0.5)",
                 }}
               >
+                {/* New conversation search */}
+                <div
+                  style={{
+                    marginBottom: "0.6rem",
+                    display: "flex",
+                    gap: "0.25rem",
+                  }}
+                >
+                  <input
+                    value={newConvInput}
+                    onChange={(e) => setNewConvInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && newConvInput.trim()) {
+                        const uname = newConvInput.trim();
+                        if (!conversations.includes(uname)) {
+                          setConversations((prev) => [...prev, uname]);
+                        }
+                        setActiveConv(uname);
+                        setNewConvInput("");
+                      }
+                    }}
+                    placeholder="Message a user..."
+                    data-ocid="messages.search_input"
+                    style={{
+                      flex: 1,
+                      background: "rgba(255,248,238,0.9)",
+                      border: `1px solid ${WARM_BORDER}`,
+                      borderRadius: 6,
+                      padding: "0.3rem 0.5rem",
+                      fontSize: "0.7rem",
+                      color: WARM_TEXT,
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      outline: "none",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    data-ocid="messages.secondary_button"
+                    onClick={() => {
+                      const uname = newConvInput.trim();
+                      if (uname) {
+                        if (!conversations.includes(uname)) {
+                          setConversations((prev) => [...prev, uname]);
+                        }
+                        setActiveConv(uname);
+                        setNewConvInput("");
+                      }
+                    }}
+                    style={{
+                      background: "rgba(212,168,83,0.15)",
+                      border: `1px solid ${WARM_BORDER}`,
+                      borderRadius: 6,
+                      padding: "0.3rem 0.5rem",
+                      cursor: "pointer",
+                      color: WARM_MOCHA,
+                      fontSize: "0.7rem",
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+
                 <div
                   style={{
                     display: "flex",
@@ -1581,7 +1664,7 @@ export default function MessagesSlide({
                         background:
                           msg.from === currentUser.username
                             ? "rgba(212,168,83,0.2)"
-                            : "rgba(245,236,215,0.9)",
+                            : "#FFE4EC",
                         border: `1px solid ${
                           msg.from === currentUser.username
                             ? "rgba(212,168,83,0.3)"
@@ -1589,16 +1672,123 @@ export default function MessagesSlide({
                         }`,
                       }}
                     >
-                      <p
-                        style={{
-                          color: WARM_TEXT,
-                          fontFamily: "'Libre Baskerville', Georgia, serif",
-                          fontSize: "0.88rem",
-                          margin: 0,
-                        }}
-                      >
-                        {msg.text}
-                      </p>
+                      {(() => {
+                        const t = msg.text;
+                        if (t.startsWith("[File: ")) {
+                          const name = t.slice(7, -1);
+                          return (
+                            <p
+                              style={{
+                                color: WARM_TEXT,
+                                fontFamily:
+                                  "'Libre Baskerville', Georgia, serif",
+                                fontSize: "0.88rem",
+                                margin: 0,
+                              }}
+                            >
+                              📎 {name}
+                            </p>
+                          );
+                        }
+                        if (t.startsWith("[Audio: ")) {
+                          const name = t.slice(8, -1);
+                          return (
+                            <p
+                              style={{
+                                color: WARM_TEXT,
+                                fontFamily:
+                                  "'Libre Baskerville', Georgia, serif",
+                                fontSize: "0.88rem",
+                                margin: 0,
+                              }}
+                            >
+                              🎵 {name}
+                            </p>
+                          );
+                        }
+                        if (t.startsWith("[Photo:data:")) {
+                          const b64 = t.slice(7, -1);
+                          return (
+                            <img
+                              src={b64}
+                              alt="Shared"
+                              style={{
+                                maxWidth: 140,
+                                maxHeight: 140,
+                                borderRadius: 6,
+                                display: "block",
+                              }}
+                            />
+                          );
+                        }
+                        if (t.startsWith("[Photo: ")) {
+                          const name = t.slice(8, -1);
+                          return (
+                            <p
+                              style={{
+                                color: WARM_TEXT,
+                                fontFamily:
+                                  "'Libre Baskerville', Georgia, serif",
+                                fontSize: "0.88rem",
+                                margin: 0,
+                              }}
+                            >
+                              🖼️ {name}
+                            </p>
+                          );
+                        }
+                        if (t.startsWith("[Spotify: ")) {
+                          const url = t.slice(10, -1);
+                          return (
+                            <div
+                              style={{
+                                background: "rgba(29,185,84,0.08)",
+                                border: "1px solid rgba(29,185,84,0.25)",
+                                borderRadius: 8,
+                                padding: "0.5rem 0.75rem",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  color: WARM_TEXT,
+                                  fontFamily:
+                                    "'Libre Baskerville', Georgia, serif",
+                                  fontSize: "0.8rem",
+                                  margin: "0 0 0.3rem",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                🎵 Spotify Track
+                              </p>
+                              <a
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  color: "rgba(29,185,84,0.9)",
+                                  fontSize: "0.75rem",
+                                  fontFamily:
+                                    "'Libre Baskerville', Georgia, serif",
+                                }}
+                              >
+                                Listen on Spotify ↗
+                              </a>
+                            </div>
+                          );
+                        }
+                        return (
+                          <p
+                            style={{
+                              color: WARM_TEXT,
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              fontSize: "0.88rem",
+                              margin: 0,
+                            }}
+                          >
+                            {t}
+                          </p>
+                        );
+                      })()}
                       <p
                         style={{
                           color: WARM_MUTED,
@@ -1618,48 +1808,544 @@ export default function MessagesSlide({
                   <div ref={endRef} />
                 </div>
 
-                {/* Input */}
+                {/* Hidden file inputs */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="*/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setText(`[File: ${file.name}]`);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+                <input
+                  ref={audioInputRef}
+                  type="file"
+                  accept="audio/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setText(`[Audio: ${file.name}]`);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/*,video/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    if (file.type.startsWith("image/")) {
+                      const reader = new FileReader();
+                      reader.onload = (ev) => {
+                        const b64 = ev.target?.result as string;
+                        setText(`[Photo:${b64}]`);
+                      };
+                      reader.readAsDataURL(file);
+                    } else {
+                      setText(`[Photo: ${file.name}]`);
+                    }
+                    e.target.value = "";
+                  }}
+                />
+                <input
+                  ref={cameraInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                      const b64 = ev.target?.result as string;
+                      setText(`[Photo:${b64}]`);
+                    };
+                    reader.readAsDataURL(file);
+                    e.target.value = "";
+                  }}
+                />
+
+                {/* Input area */}
                 <div
                   style={{
-                    display: "flex",
-                    gap: "0.5rem",
                     paddingTop: "0.75rem",
                     borderTop: `1px solid ${WARM_BORDER}`,
                   }}
                 >
-                  <input
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    placeholder="Write a message..."
-                    data-ocid="messages.input"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") sendMessage();
-                    }}
+                  {/* Attachment toolbar */}
+                  <div
                     style={{
-                      flex: 1,
-                      background: "rgba(255,248,238,0.9)",
-                      border: `1px solid ${WARM_BORDER}`,
-                      borderRadius: 8,
-                      padding: "0.6rem 0.9rem",
-                      color: WARM_TEXT,
-                      fontFamily: "'Libre Baskerville', Georgia, serif",
-                      fontSize: "0.9rem",
-                      outline: "none",
-                    }}
-                  />
-                  <Button
-                    onClick={sendMessage}
-                    disabled={!text.trim()}
-                    data-ocid="messages.submit_button"
-                    style={{
-                      background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
-                      border: "none",
-                      color: "#3D2B1F",
+                      display: "flex",
+                      gap: "0.25rem",
+                      marginBottom: "0.4rem",
+                      flexWrap: "wrap",
                     }}
                   >
-                    Send
-                  </Button>
+                    {[
+                      {
+                        label: "📎",
+                        title: "Attach file",
+                        action: () => fileInputRef.current?.click(),
+                      },
+                      {
+                        label: "🎵",
+                        title: "Send audio",
+                        action: () => audioInputRef.current?.click(),
+                      },
+                      {
+                        label: "🖼️",
+                        title: "Photo/Video",
+                        action: () => photoInputRef.current?.click(),
+                      },
+                      {
+                        label: "📷",
+                        title: "Camera",
+                        action: () => cameraInputRef.current?.click(),
+                      },
+                    ].map(({ label, title, action }) => (
+                      <button
+                        key={title}
+                        type="button"
+                        title={title}
+                        onClick={action}
+                        data-ocid="messages.secondary_button"
+                        style={{
+                          background: "rgba(255,240,245,0.8)",
+                          border: `1px solid ${WARM_BORDER}`,
+                          borderRadius: 6,
+                          width: 28,
+                          height: 28,
+                          cursor: "pointer",
+                          fontSize: "0.85rem",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                    {/* GIF/Sticker */}
+                    <div style={{ position: "relative" }}>
+                      <button
+                        type="button"
+                        title="GIF / Sticker"
+                        onClick={() => {
+                          setShowGifPicker((v) => !v);
+                          setShowSpotifyInput(false);
+                        }}
+                        data-ocid="messages.toggle"
+                        style={{
+                          background: showGifPicker
+                            ? "rgba(212,168,83,0.15)"
+                            : "rgba(255,240,245,0.8)",
+                          border: `1px solid ${WARM_BORDER}`,
+                          borderRadius: 6,
+                          width: 28,
+                          height: 28,
+                          cursor: "pointer",
+                          fontSize: "0.85rem",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        😄
+                      </button>
+                      {showGifPicker && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: "calc(100% + 4px)",
+                            left: 0,
+                            background: "#FFFDF9",
+                            border: `1px solid ${WARM_BORDER}`,
+                            borderRadius: 8,
+                            padding: "0.5rem",
+                            display: "flex",
+                            gap: "0.3rem",
+                            flexWrap: "wrap",
+                            width: 160,
+                            boxShadow: "0 4px 16px rgba(92,61,46,0.12)",
+                            zIndex: 10,
+                          }}
+                          data-ocid="messages.popover"
+                        >
+                          {["💫", "🌸", "🌙", "✨", "🎭", "🦋", "📖", "🕊️"].map(
+                            (emoji) => (
+                              <button
+                                key={emoji}
+                                type="button"
+                                onClick={() => {
+                                  setText(emoji);
+                                  setShowGifPicker(false);
+                                }}
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  fontSize: "1.3rem",
+                                  padding: "0.2rem",
+                                  borderRadius: 4,
+                                }}
+                              >
+                                {emoji}
+                              </button>
+                            ),
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {/* Spotify */}
+                    <div style={{ position: "relative" }}>
+                      <button
+                        type="button"
+                        title="Send Spotify link"
+                        onClick={() => {
+                          setShowSpotifyInput((v) => !v);
+                          setShowGifPicker(false);
+                        }}
+                        data-ocid="messages.toggle"
+                        style={{
+                          background: showSpotifyInput
+                            ? "rgba(29,185,84,0.15)"
+                            : "rgba(255,240,245,0.8)",
+                          border: `1px solid ${WARM_BORDER}`,
+                          borderRadius: 6,
+                          width: 28,
+                          height: 28,
+                          cursor: "pointer",
+                          fontSize: "0.85rem",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        🎸
+                      </button>
+                      {showSpotifyInput && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: "calc(100% + 4px)",
+                            left: 0,
+                            background: "#FFFDF9",
+                            border: `1px solid ${WARM_BORDER}`,
+                            borderRadius: 8,
+                            padding: "0.5rem",
+                            width: 200,
+                            boxShadow: "0 4px 16px rgba(92,61,46,0.12)",
+                            zIndex: 10,
+                          }}
+                          data-ocid="messages.popover"
+                        >
+                          <input
+                            value={spotifyUrl}
+                            onChange={(e) => setSpotifyUrl(e.target.value)}
+                            placeholder="Paste Spotify URL..."
+                            data-ocid="messages.input"
+                            style={{
+                              width: "100%",
+                              background: "rgba(255,248,238,0.9)",
+                              border: `1px solid ${WARM_BORDER}`,
+                              borderRadius: 5,
+                              padding: "0.3rem 0.5rem",
+                              fontSize: "0.72rem",
+                              color: WARM_TEXT,
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              outline: "none",
+                              boxSizing: "border-box",
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && spotifyUrl.trim()) {
+                                setText(`[Spotify: ${spotifyUrl.trim()}]`);
+                                setSpotifyUrl("");
+                                setShowSpotifyInput(false);
+                              }
+                            }}
+                          />
+                          <button
+                            type="button"
+                            data-ocid="messages.confirm_button"
+                            onClick={() => {
+                              if (spotifyUrl.trim()) {
+                                setText(`[Spotify: ${spotifyUrl.trim()}]`);
+                                setSpotifyUrl("");
+                                setShowSpotifyInput(false);
+                              }
+                            }}
+                            style={{
+                              marginTop: "0.3rem",
+                              background: "rgba(29,185,84,0.15)",
+                              border: "1px solid rgba(29,185,84,0.3)",
+                              borderRadius: 5,
+                              padding: "0.25rem 0.6rem",
+                              cursor: "pointer",
+                              fontSize: "0.7rem",
+                              color: WARM_TEXT,
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                              width: "100%",
+                            }}
+                          >
+                            🎵 Send Link
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {/* Group chat */}
+                    <button
+                      type="button"
+                      title="Create group chat"
+                      onClick={() => {
+                        setShowGroupModal(true);
+                        setShowGifPicker(false);
+                        setShowSpotifyInput(false);
+                      }}
+                      data-ocid="messages.open_modal_button"
+                      style={{
+                        background: "rgba(255,240,245,0.8)",
+                        border: `1px solid ${WARM_BORDER}`,
+                        borderRadius: 6,
+                        width: 28,
+                        height: 28,
+                        cursor: "pointer",
+                        fontSize: "0.85rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      👥
+                    </button>
+                  </div>
+
+                  {/* Text input + send */}
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <input
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      placeholder="Write a message..."
+                      data-ocid="messages.input"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          sendMessage();
+                          setShowGifPicker(false);
+                          setShowSpotifyInput(false);
+                        }
+                      }}
+                      style={{
+                        flex: 1,
+                        background: "rgba(255,248,238,0.9)",
+                        border: `1px solid ${WARM_BORDER}`,
+                        borderRadius: 8,
+                        padding: "0.6rem 0.9rem",
+                        color: WARM_TEXT,
+                        fontFamily: "'Libre Baskerville', Georgia, serif",
+                        fontSize: "0.9rem",
+                        outline: "none",
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
+                        sendMessage();
+                        setShowGifPicker(false);
+                        setShowSpotifyInput(false);
+                      }}
+                      disabled={!text.trim()}
+                      data-ocid="messages.submit_button"
+                      style={{
+                        background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
+                        border: "none",
+                        color: "#3D2B1F",
+                      }}
+                    >
+                      Send
+                    </Button>
+                  </div>
                 </div>
+
+                {/* Group chat modal */}
+                {showGroupModal && (
+                  <div
+                    style={{
+                      position: "fixed",
+                      inset: 0,
+                      background: "rgba(92,61,46,0.4)",
+                      backdropFilter: "blur(4px)",
+                      zIndex: 300,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    data-ocid="messages.modal"
+                  >
+                    <div
+                      style={{
+                        background: "#FFFDF9",
+                        border: `1px solid ${WARM_BORDER}`,
+                        borderRadius: 14,
+                        padding: "1.5rem",
+                        width: "90%",
+                        maxWidth: 340,
+                        boxShadow: "0 8px 32px rgba(92,61,46,0.15)",
+                      }}
+                    >
+                      <h3
+                        style={{
+                          fontFamily: "'Playfair Display', Georgia, serif",
+                          color: WARM_MOCHA,
+                          fontSize: "1rem",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        👥 Create Group Chat
+                      </h3>
+                      <input
+                        value={groupName}
+                        onChange={(e) => setGroupName(e.target.value)}
+                        placeholder="Group name..."
+                        data-ocid="messages.input"
+                        style={{
+                          width: "100%",
+                          background: "rgba(255,248,238,0.9)",
+                          border: `1px solid ${WARM_BORDER}`,
+                          borderRadius: 7,
+                          padding: "0.5rem 0.75rem",
+                          color: WARM_TEXT,
+                          fontFamily: "'Libre Baskerville', Georgia, serif",
+                          fontSize: "0.85rem",
+                          outline: "none",
+                          marginBottom: "0.75rem",
+                          boxSizing: "border-box",
+                        }}
+                      />
+                      <p
+                        style={{
+                          fontFamily: "'Libre Baskerville', Georgia, serif",
+                          fontSize: "0.75rem",
+                          color: WARM_BROWN,
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        Add members:
+                      </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "0.3rem",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        {conversations
+                          .filter((c) => c !== "CHINNUA_POET")
+                          .map((conv) => (
+                            <label
+                              key={conv}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.5rem",
+                                fontFamily:
+                                  "'Libre Baskerville', Georgia, serif",
+                                fontSize: "0.82rem",
+                                color: WARM_TEXT,
+                                cursor: "pointer",
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                data-ocid="messages.checkbox"
+                                checked={groupMembers.includes(conv)}
+                                onChange={(e) => {
+                                  setGroupMembers((prev) =>
+                                    e.target.checked
+                                      ? [...prev, conv]
+                                      : prev.filter((m) => m !== conv),
+                                  );
+                                }}
+                              />
+                              {conv}
+                            </label>
+                          ))}
+                        {conversations.filter((c) => c !== "CHINNUA_POET")
+                          .length === 0 && (
+                          <p
+                            style={{
+                              color: WARM_MUTED,
+                              fontSize: "0.75rem",
+                              fontStyle: "italic",
+                              fontFamily: "'Libre Baskerville', Georgia, serif",
+                            }}
+                          >
+                            No other conversations yet
+                          </p>
+                        )}
+                      </div>
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <button
+                          type="button"
+                          data-ocid="messages.confirm_button"
+                          onClick={() => {
+                            if (groupName.trim()) {
+                              const gname = `👥 ${groupName.trim()}`;
+                              setConversations((prev) => [...prev, gname]);
+                              setActiveConv(gname);
+                              setShowGroupModal(false);
+                              setGroupName("");
+                              setGroupMembers([]);
+                            }
+                          }}
+                          style={{
+                            flex: 1,
+                            background: "rgba(212,168,83,0.85)",
+                            border: "none",
+                            borderRadius: 8,
+                            padding: "0.55rem",
+                            cursor: "pointer",
+                            fontFamily: "'Libre Baskerville', Georgia, serif",
+                            fontSize: "0.82rem",
+                            color: "#3D2B1F",
+                            fontWeight: 700,
+                          }}
+                        >
+                          Create Group
+                        </button>
+                        <button
+                          type="button"
+                          data-ocid="messages.cancel_button"
+                          onClick={() => {
+                            setShowGroupModal(false);
+                            setGroupName("");
+                            setGroupMembers([]);
+                          }}
+                          style={{
+                            background: "transparent",
+                            border: `1px solid ${WARM_BORDER}`,
+                            borderRadius: 8,
+                            padding: "0.55rem 1rem",
+                            cursor: "pointer",
+                            fontFamily: "'Libre Baskerville', Georgia, serif",
+                            fontSize: "0.82rem",
+                            color: WARM_BROWN,
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>

@@ -2364,6 +2364,7 @@ function AdminAboutTab() {
 
   const [bio, setBio] = React.useState("");
   const [story, setStory] = React.useState("");
+  const [poetsNote, setPoetsNote] = React.useState("");
   const [saved, setSaved] = React.useState(false);
 
   React.useEffect(() => {
@@ -2373,6 +2374,7 @@ function AdminAboutTab() {
       );
       setBio(about.bio || "");
       setStory(about.story || "");
+      setPoetsNote(localStorage.getItem("chinnua_poets_note") || "");
     } catch {}
   }, []);
 
@@ -2395,6 +2397,17 @@ function AdminAboutTab() {
   const handleSave = () => {
     const about = { bio, story, poetName: "CHINNUA_POET" };
     localStorage.setItem("chinnua_about_content", JSON.stringify(about));
+    // Save poets note
+    const trimmedNote = poetsNote.trim();
+    const prevNote = localStorage.getItem("chinnua_poets_note") || "";
+    if (trimmedNote !== prevNote.trim()) {
+      localStorage.setItem("chinnua_poets_note", trimmedNote);
+      localStorage.setItem(
+        "chinnua_poets_note_saved_at",
+        Date.now().toString(),
+      );
+      localStorage.removeItem("chinnua_poets_note_feed_posted");
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -2515,6 +2528,53 @@ function AdminAboutTab() {
             border: `1px solid ${WARM_BORDER}`,
             borderRadius: 8,
             fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontSize: "0.85rem",
+            color: WARM_TEXT,
+            background: WARM_PAPER,
+            resize: "vertical",
+            outline: "none",
+          }}
+        />
+      </div>
+
+      {/* Poet's Note */}
+      <div style={{ marginBottom: "1.25rem" }}>
+        <div
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            fontSize: "0.88rem",
+            fontWeight: 600,
+            display: "block",
+            marginBottom: "0.5rem",
+          }}
+        >
+          Poet's Note
+        </div>
+        <p
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+            fontSize: "0.78rem",
+            color: WARM_BROWN,
+            marginBottom: "0.5rem",
+          }}
+        >
+          This note appears publicly on the About page. Visible to all visitors.
+        </p>
+        <textarea
+          value={poetsNote}
+          onChange={(e) => setPoetsNote(e.target.value)}
+          rows={5}
+          placeholder="Write a personal note to your readers…"
+          data-ocid="admin.textarea"
+          style={{
+            width: "100%",
+            padding: "0.75rem",
+            border: `1px solid ${WARM_BORDER}`,
+            borderRadius: 8,
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontStyle: "italic",
             fontSize: "0.85rem",
             color: WARM_TEXT,
             background: WARM_PAPER,

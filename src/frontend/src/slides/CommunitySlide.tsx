@@ -21,16 +21,26 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
+interface CommunityUser {
+  username: string;
+  bio?: string;
+  createdAt: string;
+}
+
 interface CommunitySlideProps {
   onJoin: () => void;
+  onLogin?: (user: CommunityUser) => void;
   currentUser: { username: string } | null;
 }
 
 export default function CommunitySlide({
   onJoin,
+  onLogin,
   currentUser,
 }: CommunitySlideProps) {
   const [communityPosts, setCommunityPosts] = useState<Post[]>([]);
+  const [joinUsername, setJoinUsername] = useState("");
+  const [joinError, setJoinError] = useState("");
 
   useEffect(() => {
     try {
@@ -42,6 +52,51 @@ export default function CommunitySlide({
       );
     } catch {}
   }, []);
+
+  const handleUsernameJoin = () => {
+    const uname = joinUsername.trim();
+    if (!uname) {
+      setJoinError("Please enter a username.");
+      return;
+    }
+    if (uname.length < 3) {
+      setJoinError("Username must be at least 3 characters.");
+      return;
+    }
+    setJoinError("");
+
+    // Look up existing users
+    let users: Array<
+      CommunityUser & { emailOrPhone?: string; password?: string }
+    > = [];
+    try {
+      users = JSON.parse(localStorage.getItem("chinnua_users") || "[]");
+    } catch {}
+
+    const existing = users.find(
+      (u) => u.username.toLowerCase() === uname.toLowerCase(),
+    );
+
+    let user: CommunityUser;
+    if (existing) {
+      user = {
+        username: existing.username,
+        bio: existing.bio,
+        createdAt: existing.createdAt,
+      };
+    } else {
+      user = { username: uname, bio: "", createdAt: new Date().toISOString() };
+      users.push({ ...user, emailOrPhone: "", password: "" });
+      localStorage.setItem("chinnua_users", JSON.stringify(users));
+    }
+
+    localStorage.setItem("chinnua_user", JSON.stringify(user));
+    if (onLogin) {
+      onLogin(user);
+    } else {
+      onJoin();
+    }
+  };
 
   return (
     <div
@@ -100,7 +155,7 @@ export default function CommunitySlide({
           </motion.p>
         </div>
 
-        {/* Join banner */}
+        {/* Join banner — username only */}
         {!currentUser && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -108,13 +163,13 @@ export default function CommunitySlide({
             transition={{ delay: 0.6 }}
             style={{
               background: "#FFF8EE",
-              border: "1px solid rgba(200,169,106,0.25)",
+              border: "1px solid rgba(200,169,106,0.3)",
               borderRadius: 14,
               padding: "2rem",
-              textAlign: "center",
               marginBottom: "2.5rem",
-              backdropFilter: "blur(8px)",
+              color: "#3D2B1F",
             }}
+            data-ocid="community.card"
           >
             <p
               style={{
@@ -124,26 +179,109 @@ export default function CommunitySlide({
                 color: "#3D2B1F",
                 marginBottom: "1.25rem",
                 lineHeight: 1.7,
+                textAlign: "center",
               }}
             >
               Every poet has a voice.
               <br />
               Yours is waiting to be heard.
             </p>
-            <Button
-              onClick={onJoin}
-              data-ocid="community.primary_button"
+
+            {/* Username-only join form */}
+            <div
               style={{
-                background: "rgba(200,169,106,0.85)",
-                border: "none",
-                color: "#3D2B1F",
-                fontFamily: "'Libre Baskerville', Georgia, serif",
-                padding: "0.65rem 2rem",
-                boxShadow: "0 0 20px rgba(200,169,106,0.25)",
+                background: "#FFFFFF",
+                border: "1px solid rgba(200,169,106,0.25)",
+                borderRadius: 10,
+                padding: "1.25rem",
+                marginBottom: "1rem",
               }}
             >
-              Join the Community
-            </Button>
+              <p
+                style={{
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.85rem",
+                  color: "#3D2B1F",
+                  fontWeight: 600,
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Join with your username
+              </p>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <input
+                  type="text"
+                  value={joinUsername}
+                  onChange={(e) => {
+                    setJoinUsername(e.target.value);
+                    setJoinError("");
+                  }}
+                  placeholder="Enter your username"
+                  data-ocid="community.input"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleUsernameJoin();
+                  }}
+                  style={{
+                    flex: 1,
+                    background: "#FFFFFF",
+                    border: "1px solid rgba(200,169,106,0.35)",
+                    borderRadius: 7,
+                    padding: "0.55rem 0.85rem",
+                    color: "#3D2B1F",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                  }}
+                />
+                <Button
+                  onClick={handleUsernameJoin}
+                  data-ocid="community.primary_button"
+                  style={{
+                    background: "rgba(200,169,106,0.85)",
+                    border: "none",
+                    color: "#3D2B1F",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontWeight: 700,
+                    padding: "0.55rem 1.25rem",
+                  }}
+                >
+                  Join
+                </Button>
+              </div>
+              {joinError && (
+                <p
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: "0.78rem",
+                    color: "#e53e3e",
+                    marginTop: "0.4rem",
+                  }}
+                  data-ocid="community.error_state"
+                >
+                  {joinError}
+                </p>
+              )}
+            </div>
+
+            {/* Full signup fallback */}
+            <p style={{ textAlign: "center" }}>
+              <button
+                type="button"
+                onClick={onJoin}
+                data-ocid="community.secondary_button"
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontSize: "0.8rem",
+                  color: "rgba(139,111,71,0.7)",
+                  textDecoration: "underline",
+                }}
+              >
+                Or sign up with full account →
+              </button>
+            </p>
           </motion.div>
         )}
 
