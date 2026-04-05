@@ -623,73 +623,223 @@ function MusicManagementTab() {
 }
 
 function DailyLettersTab() {
+  const MORNING_DEFAULTS = [
+    "Morning whispers in golden light,\nDreams fade softly from the night,\nRise with hope, let worries fall,\nToday is yours—embrace it all.",
+    "Sunrise paints the sky anew,\nFresh beginnings wait for you,\nBreathe in courage, let it stay,\nSmile gently into the day.",
+    "Dewdrops shine on petals bright,\nCarrying dreams from fading night,\nWake your soul with gentle grace,\nLet joy reflect upon your face.",
+    "The sky unfolds a story bright,\nOf hope reborn from darkest night,\nStep ahead with fearless heart,\nToday's your chance to make a start.",
+    "Golden rays through windows glide,\nBringing peace you hold inside,\nLet your spirit rise and sing,\nMorning brings a brand new wing.",
+    "Birds compose a melody sweet,\nNature bows at morning's feet,\nLet your heart in rhythm flow,\nWith every step, let happiness grow.",
+    "Soft winds hum a morning tune,\nDreams awaken far too soon,\nGather strength from light above,\nWalk your path with hope and love.",
+    "Sunlight dances on your face,\nTime begins its gentle race,\nChase your dreams, don't delay,\nMake your magic in the day.",
+    "Morning blooms in silent cheer,\nWashing away yesterday's fear,\nStep with faith, stand tall and true,\nThe world awaits the best of you.",
+    "New light spills across the sky,\nLifting dreams that long to fly,\nHold your purpose, keep it near,\nA brighter day has now appeared.",
+    "Morning blooms in golden air,\nHope awakens everywhere,\nLet your dreams step into light,\nLeave behind the fading night.",
+    "Sunlight kisses earth so wide,\nFilling hearts with warmth inside,\nRise and shine with fearless grace,\nLet joy glow upon your face.",
+    "A new dawn hums soft and slow,\nCarrying dreams you wish to grow,\nStep ahead with courage bright,\nTurn your shadows into light.",
+    "Morning sings in silent cheer,\nWashing off yesterday's fear,\nTake each step with calm belief,\nLife unfolds beyond your grief.",
+    "Golden rays begin to flow,\nTouching hearts with gentle glow,\nRise with strength, embrace the day,\nLet your worries drift away.",
+    "Soft winds carry dreams anew,\nPainting skies in brighter hue,\nWake your soul with hopeful sight,\nChase your dreams with all your might.",
+    "The sun writes poems in the sky,\nTelling dreams to rise and fly,\nHold your faith and start again,\nMorning heals all silent pain.",
+    "Dawn arrives with silent grace,\nTime begins its steady race,\nFill your heart with purpose true,\nThe day belongs to you.",
+    "Light unfolds on nature's face,\nFilling time with gentle pace,\nStep ahead with steady mind,\nLeave the past far behind.",
+    'Morning whispers soft and low,\n"Let your inner beauty glow,"\nRise above each fear and doubt,\nThat\'s what life is all about.',
+    "Sunlight spills like golden streams,\nAwakening your hidden dreams,\nTake a breath and start anew,\nA brighter path awaits you.",
+    "The sky awakens calm and wide,\nWith endless hope standing beside,\nRise today with fearless will,\nAnd let your dreams fulfill.",
+    "Morning hums a hopeful song,\nTelling you where you belong,\nTrust your path and gently start,\nLet courage guide your heart.",
+    "Dewdrops shine like tiny stars,\nHealing yesterday's old scars,\nStep into the morning light,\nAnd make your future bright.",
+    "Golden dawn begins to rise,\nPainting dreams across the skies,\nHold your strength and move ahead,\nLet no fear remain unsaid.",
+    "A fresh new day begins to call,\nInviting you to give your all,\nWalk ahead with steady pace,\nVictory will find your place.",
+    'Morning brings a silent cheer,\nWhispering "you\'re stronger here,"\nRise above what held you tight,\nStep into your inner light.',
+    "Sunlight dances, soft and free,\nOpening paths you cannot see,\nTake the chance and make it real,\nTrust the strength you truly feel.",
+    "The dawn unfolds a story new,\nFilled with dreams just made for you,\nHold your hope and let it stay,\nGuide you through this lovely day.",
+    "Morning smiles in golden hue,\nBringing endless chance to you,\nRise, believe, and take your stand,\nLife is shaped by your own hand.",
+    "Morning rises soft and bright,\nPushing back the silent night,\nTake a breath and start anew,\nThe world awakens just for you.",
+    "Golden sunlight gently falls,\nAnswering your inner calls,\nRise with hope, let worries fade,\nStep into the plans you made.",
+    "Dawn whispers through the air,\nTelling you life is fair,\nHold your dreams and let them grow,\nMorning gives a hopeful glow.",
+    "Sunlight paints your path ahead,\nFilling courage where you tread,\nWalk with faith and fearless heart,\nEvery day's a brand new start.",
+    "Morning breeze sings soft and low,\nCarrying dreams you long to grow,\nWake your soul and let it shine,\nToday is yours, the moment's mine.",
+    "The sky unfolds in shades so new,\nHolding endless hope for you,\nRise and shine with strength inside,\nLet your dreams become your guide.",
+    "Fresh light touches earth and sky,\nCalling silent dreams to fly,\nTake your step, don't hesitate,\nMorning opens every gate.",
+    "The sun arrives with gentle grace,\nBringing smiles to every face,\nLet your worries drift away,\nAnd welcome in this lovely day.",
+    "Morning hums a peaceful tune,\nDreams awaken all too soon,\nRise with courage, bold and free,\nBe the best you're meant to be.",
+    "Golden rays begin to gleam,\nLighting up your hidden dream,\nStep ahead with calm and might,\nTurn your darkness into light.",
+  ];
+
+  const EVENING_DEFAULTS = [
+    "Evening falls with amber glow,\nSoft winds whisper calm and slow,\nLet the worries drift away,\nPeace arrives at close of day.",
+    "The sun bows low in silent grace,\nLeaving warmth in its embrace,\nPause a while, let silence stay,\nAnd gently end your busy day.",
+    "Golden skies begin to fade,\nCalmness in the air is laid,\nTake a breath, release the strain,\nLet your soul feel light again.",
+    "Evening hums a quiet song,\nTelling hearts they've been strong,\nRest your thoughts in twilight's hue,\nPeaceful moments wait for you.",
+    "The horizon glows in soft delight,\nBlending day into the night,\nHold the calm, let tensions cease,\nWrap your soul in evening peace.",
+    "Shadows stretch and softly creep,\nCalling minds to gentle sleep,\nBefore the night fully begins,\nLet go of battles, losses, wins.",
+    "The sky turns into painted art,\nTouching deeply every heart,\nPause and feel this quiet bliss,\nEvenings are made just like this.",
+    "A golden hush fills up the air,\nSoft and calm beyond compare,\nLet your heart slow down its pace,\nEvening brings a warm embrace.",
+    "Light fades slow, yet hope remains,\nAfter joys and after pains,\nBreathe in calm, let stillness stay,\nAnd gently close your day.",
+    "Twilight sings in colors deep,\nCalling dreams from hidden sleep,\nLet your soul in silence bend,\nTo the beauty evenings send.",
+    "Evening falls in amber light,\nBlending day into the night,\nPause your heart and softly breathe,\nLet the calm your soul receive.",
+    "Golden skies begin to rest,\nHolding warmth within your chest,\nLet your worries fade away,\nPeace arrives at end of day.",
+    "The sun dips low with quiet grace,\nLeaving glow in every place,\nSlow your thoughts and gently stay,\nFeel the calm of closing day.",
+    "Evening hums a soothing tune,\nUnderneath the rising moon,\nLet your heart release its weight,\nPeace is never far or late.",
+    "Twilight paints the world so still,\nSoftly bending time and will,\nTake a pause, let silence grow,\nFeel the peace you truly know.",
+    "Golden light begins to fade,\nYet a calm is gently laid,\nBreathe it in and let it stay,\nEnding softly your long day.",
+    "Evening whispers calm and slow,\nLetting inner stillness grow,\nLeave behind each stress and race,\nRest within this quiet space.",
+    "The horizon glows so deep,\nCalling tired minds to sleep,\nBefore the stars fully rise,\nRest your thoughts and close your eyes.",
+    "Light dissolves in twilight's art,\nTouching gently every heart,\nHold the calm and let it stay,\nPeace belongs to evening's way.",
+    "Evening wraps the world in peace,\nGiving every soul release,\nLet your mind grow soft and light,\nDrifting slowly into night.",
+    "Soft winds hum a lullaby,\nAs the daylight waves goodbye,\nLet your spirit settle down,\nTrade your worries for a crown.",
+    "The sky turns into gentle fire,\nCooling down each loud desire,\nPause your soul and feel the air,\nEvening's calm is always there.",
+    "A quiet glow fills up the sky,\nWhere silent dreams begin to lie,\nTake a breath and let it flow,\nPeace is something you should know.",
+    "Evening sings in colors mild,\nSoothing every heart once wild,\nLet your thoughts find softer ground,\nWhere true calmness can be found.",
+    "Daylight fades with gentle art,\nLeaving warmth within your heart,\nClose the chapter, slow your pace,\nRest inside this calm embrace.",
+    'Twilight whispers soft and near,\n"You have done enough, my dear,"\nLet your heart now gently rest,\nYou have truly tried your best.',
+    "Evening spreads a velvet sky,\nWhere your restless thoughts can lie,\nTake a pause and just be still,\nLet calmness bend your will.",
+    "Golden dusk begins to fall,\nBringing quiet to it all,\nLet your worries fade away,\nYou've survived another day.",
+    'The day now bows in silent peace,\nGiving hearts a sweet release,\nBreathe it in and gently say,\n"I\'ll begin again someday."',
+    "Evening comes with tender light,\nBridging day and silent night,\nLet your heart feel soft and free,\nJust exist and simply be.",
+    "Evening falls with gentle light,\nBridging day into the night,\nPause your heart and softly breathe,\nLet the calm your soul receive.",
+    "Golden skies begin to fade,\nPeace within the air is laid,\nLet your worries slip away,\nYou've done enough for today.",
+    "The sun bows down in silent grace,\nLeaving warmth in every place,\nSlow your thoughts and gently rest,\nYou have truly done your best.",
+    "Twilight hums a quiet song,\nTelling hearts they've been strong,\nLet your mind now drift in peace,\nGive your worries sweet release.",
+    "Evening paints the sky so wide,\nHolding calmness deep inside,\nTake a breath and let it stay,\nEnd with peace your busy day.",
+    "Soft winds whisper through the air,\nCarrying peace beyond compare,\nLet your soul unwind and slow,\nEvening's calm begins to grow.",
+    "Golden dusk begins to fall,\nBringing silence over all,\nLeave behind the stress and race,\nRest within this quiet space.",
+    "Light dissolves in colors deep,\nCalling tired minds to sleep,\nBefore the stars fill up the sky,\nLet your restless thoughts pass by.",
+    "Evening comes with tender glow,\nTeaching hearts to move slow,\nHold this calm and let it stay,\nEnding softly your long day.",
+    "The horizon fades in art,\nTouching softly every heart,\nTake a pause and simply be,\nWrapped in quiet harmony.",
+  ];
+
+  const NIGHT_DEFAULTS = [
+    "Stars awaken in the sky,\nWhispering dreams drifting by,\nClose your eyes, let worries fade,\nIn night's calm embrace be laid.",
+    "Moonlight falls so soft and bright,\nGuarding you through silent night,\nRest your soul, release the day,\nLet your dreams gently sway.",
+    "The night hums a lullaby,\nUnderneath a velvet sky,\nLay your thoughts to peaceful rest,\nTomorrow will bring its best.",
+    "Darkness wraps the world in peace,\nGiving hearts a sweet release,\nSleep now deep, let dreams take flight,\nWrapped in love—good night.",
+    "Stars align in quiet grace,\nLighting up the darkest space,\nClose your eyes, drift far away,\nTo a brighter, softer day.",
+    "Night descends with tender care,\nBringing calm into the air,\nLet your soul unwind and rest,\nSleep is nature's quiet best.",
+    "Moonlight paints your dreams in white,\nGuarding you throughout the night,\nLet go softly, breathe in deep,\nAnd fall into peaceful sleep.",
+    "Silent skies above you stay,\nWashing all your stress away,\nDream in colors, soft and bright,\nSleep in peace—good night.",
+    "The world slows down, the stars appear,\nCarrying dreams you hold dear,\nClose your eyes without a fight,\nTomorrow waits—good night.",
+    "Night wraps you in velvet streams,\nGuiding you to gentle dreams,\nLet your heart feel calm and light,\nSleep well, and good night.",
+    "Night descends with silent grace,\nWrapping calm in every space,\nClose your eyes and drift away,\nDreams will guide a brighter day.",
+    "Stars above begin to glow,\nWhispering things you need to know,\nRest your soul and breathe in deep,\nLet the night embrace your sleep.",
+    "Moonlight dances soft and slow,\nWhere peaceful dreams begin to grow,\nLet your worries fade from sight,\nSleep in calm and gentle night.",
+    "The sky turns dark yet softly kind,\nLeaving all your stress behind,\nLay your head and gently rest,\nTomorrow will bring its best.",
+    "Stars align in quiet streams,\nGuiding you to tender dreams,\nClose your eyes without a fear,\nPeaceful nights are always near.",
+    "Night hums low a silent song,\nTelling you you've been strong,\nLet your heart now rest and heal,\nDreams will show what you can feel.",
+    "Moonlight wraps your thoughts in white,\nGuarding you through every night,\nLet go softly, don't hold tight,\nEverything will be alright.",
+    "The world slows down, the air is still,\nLet go now of every will,\nSleep will take you far away,\nTo a brighter, softer day.",
+    "Stars whisper in the sky so deep,\nCalling you to peaceful sleep,\nLet your heart feel calm and light,\nDrift away—good night.",
+    "Darkness brings a gentle peace,\nGiving tired minds release,\nClose your eyes and softly stay,\nDream your worries far away.",
+    "Night arrives with silent grace,\nWrapping calm in every space,\nClose your eyes and drift away,\nDreams will guide a brighter day.",
+    "Stars appear in skies so deep,\nCalling you to peaceful sleep,\nLet your worries fade from sight,\nRest your soul—good night.",
+    "Moonlight falls so soft and bright,\nGuarding you through silent night,\nLay your head and gently rest,\nTomorrow will bring its best.",
+    "The night hums a gentle tune,\nUnderneath the watching moon,\nLet your thoughts now fade away,\nSleep will heal what words can't say.",
+    "Darkness brings a peaceful air,\nSoft and calm beyond compare,\nClose your eyes and drift so light,\nWrapped in dreams—good night.",
+    "Stars whisper in quiet streams,\nGuiding you to tender dreams,\nLet your heart feel calm and free,\nSleep in peaceful harmony.",
+    "Moonlight paints your dreams so bright,\nHolding you throughout the night,\nLet go softly, breathe in deep,\nAnd fall into restful sleep.",
+    "The world slows down, the air is still,\nLet go now of every will,\nRest your mind and close your sight,\nPeace surrounds you—good night.",
+    "Night wraps you in velvet streams,\nCarrying you into dreams,\nLet your soul feel safe and light,\nSleep in calm—good night.",
+    "The moon glows soft, the stars align,\nWhispering dreams so pure, so fine,\nLet your heart feel calm and right,\nDrift away—good night.",
+  ];
+
   const [morningLetters, setMorningLetters] = React.useState<string[]>(() => {
     try {
       const d = localStorage.getItem("chinnua_daily_messages");
-      if (d) return JSON.parse(d).morning || [];
+      if (d) {
+        const parsed = JSON.parse(d);
+        if (parsed.morning && parsed.morning.length > 0) return parsed.morning;
+      }
     } catch {}
-    return [
-      "The sun rose today, and so did you. That alone is something worth celebrating.",
-      "Before the world asks anything of you, let this letter remind you — you are enough.",
-      "Open your eyes slowly. There's no rush. Today belongs to you.",
-      "The morning mist clears, and in its place — a day written just for you.",
-      "Today may hold a thousand moments. Let the first one be quiet, and yours.",
-      "Good morning, dear heart. May today be gentle on you.",
-      "A new page. A new morning. Write it softly.",
-    ];
+    return MORNING_DEFAULTS;
+  });
+  const [eveningLetters, setEveningLetters] = React.useState<string[]>(() => {
+    try {
+      const d = localStorage.getItem("chinnua_daily_messages");
+      if (d) {
+        const parsed = JSON.parse(d);
+        if (parsed.evening && parsed.evening.length > 0) return parsed.evening;
+      }
+    } catch {}
+    return EVENING_DEFAULTS;
   });
   const [nightLetters, setNightLetters] = React.useState<string[]>(() => {
     try {
       const d = localStorage.getItem("chinnua_daily_messages");
-      if (d) return JSON.parse(d).night || [];
+      if (d) {
+        const parsed = JSON.parse(d);
+        if (parsed.night && parsed.night.length > 0) return parsed.night;
+      }
     } catch {}
-    return [
-      "The day is done. Whatever it held, you held it too. Rest now.",
-      "Stars don't need to shine brightly every night. Neither do you.",
-      "Let the weight of today dissolve. Tomorrow will be lighter.",
-      "Close your eyes, dear soul. You did enough.",
-      "The moon is watching over you tonight. Sleep in peace.",
-      "In the silence of this night, your story continues. Rest well.",
-      "Another day loved, survived, breathed through. That's everything.",
-    ];
+    return NIGHT_DEFAULTS;
   });
   const [editIdx, setEditIdx] = React.useState<{
-    type: "morning" | "night";
+    type: "morning" | "evening" | "night";
     idx: number;
   } | null>(null);
   const [editVal, setEditVal] = React.useState("");
   const [newMsg, setNewMsg] = React.useState("");
-  const [newType, setNewType] = React.useState<"morning" | "night">("morning");
+  const [newType, setNewType] = React.useState<"morning" | "evening" | "night">(
+    "morning",
+  );
+  const [sendToast, setSendToast] = React.useState<string | null>(null);
+  const [seqPos, setSeqPos] = React.useState<number>(() => {
+    try {
+      return (
+        Number.parseInt(
+          localStorage.getItem("chinnua_letter_sequence_pos") || "0",
+          10,
+        ) || 0
+      );
+    } catch {
+      return 0;
+    }
+  });
 
-  const save = (m: string[], n: string[]) => {
+  const SEQ_LABELS = ["morning", "evening", "night"] as const;
+  const SEQ_EMOJI = ["🌅", "🌇", "🌙"];
+  const SEQ_NAMES = ["Good Morning", "Good Evening", "Good Night"];
+
+  const save = (m: string[], e: string[], n: string[]) => {
     localStorage.setItem(
       "chinnua_daily_messages",
-      JSON.stringify({ morning: m, night: n }),
+      JSON.stringify({ morning: m, evening: e, night: n }),
     );
   };
 
-  const handleEdit = (type: "morning" | "night", idx: number, val: string) => {
+  const handleEdit = (
+    type: "morning" | "evening" | "night",
+    idx: number,
+    val: string,
+  ) => {
     if (type === "morning") {
       const updated = morningLetters.map((l, i) => (i === idx ? val : l));
       setMorningLetters(updated);
-      save(updated, nightLetters);
+      save(updated, eveningLetters, nightLetters);
+    } else if (type === "evening") {
+      const updated = eveningLetters.map((l, i) => (i === idx ? val : l));
+      setEveningLetters(updated);
+      save(morningLetters, updated, nightLetters);
     } else {
       const updated = nightLetters.map((l, i) => (i === idx ? val : l));
       setNightLetters(updated);
-      save(morningLetters, updated);
+      save(morningLetters, eveningLetters, updated);
     }
     setEditIdx(null);
   };
 
-  const handleDelete = (type: "morning" | "night", idx: number) => {
+  const handleDelete = (type: "morning" | "evening" | "night", idx: number) => {
     if (type === "morning") {
       const updated = morningLetters.filter((_, i) => i !== idx);
       setMorningLetters(updated);
-      save(updated, nightLetters);
+      save(updated, eveningLetters, nightLetters);
+    } else if (type === "evening") {
+      const updated = eveningLetters.filter((_, i) => i !== idx);
+      setEveningLetters(updated);
+      save(morningLetters, updated, nightLetters);
     } else {
       const updated = nightLetters.filter((_, i) => i !== idx);
       setNightLetters(updated);
-      save(morningLetters, updated);
+      save(morningLetters, eveningLetters, updated);
     }
   };
 
@@ -698,13 +848,58 @@ function DailyLettersTab() {
     if (newType === "morning") {
       const updated = [...morningLetters, newMsg.trim()];
       setMorningLetters(updated);
-      save(updated, nightLetters);
+      save(updated, eveningLetters, nightLetters);
+    } else if (newType === "evening") {
+      const updated = [...eveningLetters, newMsg.trim()];
+      setEveningLetters(updated);
+      save(morningLetters, updated, nightLetters);
     } else {
       const updated = [...nightLetters, newMsg.trim()];
       setNightLetters(updated);
-      save(morningLetters, updated);
+      save(morningLetters, eveningLetters, updated);
     }
     setNewMsg("");
+  };
+
+  const sendToAll = (type: "morning" | "evening" | "night") => {
+    const now = new Date().toISOString();
+    localStorage.setItem(`chinnua_last_sent_${type}`, now);
+    try {
+      const users = JSON.parse(localStorage.getItem("chinnua_users") || "[]");
+      const log = JSON.parse(localStorage.getItem("chinnua_sent_log") || "[]");
+      log.push({ type, sentAt: now, count: users.length });
+      localStorage.setItem("chinnua_sent_log", JSON.stringify(log));
+    } catch {}
+    const label =
+      type === "morning"
+        ? "Good Morning"
+        : type === "evening"
+          ? "Good Evening"
+          : "Good Night";
+    setSendToast(`${label} sent to all users!`);
+    setTimeout(() => setSendToast(null), 3000);
+  };
+
+  const sendNextInSequence = () => {
+    const type = SEQ_LABELS[seqPos];
+    sendToAll(type);
+    const next = (seqPos + 1) % 3;
+    setSeqPos(next);
+    localStorage.setItem("chinnua_letter_sequence_pos", String(next));
+    const label = SEQ_NAMES[seqPos];
+    const nextLabel = SEQ_NAMES[next];
+    setSendToast(`${label} sent! Next up: ${nextLabel}`);
+    setTimeout(() => setSendToast(null), 4000);
+  };
+
+  const getLastSent = (type: string) => {
+    const ts = localStorage.getItem(`chinnua_last_sent_${type}`);
+    if (!ts) return null;
+    try {
+      return new Date(ts).toLocaleString();
+    } catch {
+      return null;
+    }
   };
 
   const inputStyle: React.CSSProperties = {
@@ -718,10 +913,13 @@ function DailyLettersTab() {
     fontStyle: "italic",
     fontSize: "0.9rem",
     outline: "none",
-    boxSizing: "border-box",
+    boxSizing: "border-box" as const,
   };
 
-  const renderList = (items: string[], type: "morning" | "night") => (
+  const renderList = (
+    items: string[],
+    type: "morning" | "evening" | "night",
+  ) => (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
       {items.map((msg, i) => (
         <div
@@ -744,8 +942,8 @@ function DailyLettersTab() {
               <textarea
                 value={editVal}
                 onChange={(e) => setEditVal(e.target.value)}
-                rows={3}
-                style={{ ...inputStyle, resize: "none" }}
+                rows={4}
+                style={{ ...inputStyle, resize: "vertical" }}
               />
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <button
@@ -794,14 +992,15 @@ function DailyLettersTab() {
                 style={{
                   fontFamily: "'Lora', Georgia, serif",
                   fontStyle: "italic",
-                  fontSize: "0.88rem",
+                  fontSize: "0.85rem",
                   color: WARM_TEXT,
                   margin: 0,
                   flex: 1,
-                  lineHeight: 1.6,
+                  lineHeight: 1.7,
+                  whiteSpace: "pre-line",
                 }}
               >
-                {msg}
+                {i + 1}. {msg}
               </p>
               <div style={{ display: "flex", gap: "0.35rem", flexShrink: 0 }}>
                 <button
@@ -856,32 +1055,308 @@ function DailyLettersTab() {
         paddingTop: "1rem",
       }}
     >
-      <div>
-        <h3
+      {/* Toast */}
+      {sendToast && (
+        <div
+          data-ocid="admin.toast"
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            color: WARM_GOLD,
-            fontSize: "1rem",
-            margin: "0 0 0.75rem",
+            position: "fixed",
+            top: 20,
+            right: 20,
+            background: "rgba(92,180,92,0.9)",
+            color: "white",
+            padding: "0.75rem 1.25rem",
+            borderRadius: 10,
+            fontFamily: "'Lora', Georgia, serif",
+            fontSize: "0.9rem",
+            zIndex: 9999,
+            boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
           }}
         >
-          Morning Letters
-        </h3>
+          {sendToast}
+        </div>
+      )}
+
+      {/* Morning Letters */}
+      <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "0.75rem",
+          }}
+        >
+          <h3
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              color: WARM_GOLD,
+              fontSize: "1rem",
+              margin: 0,
+            }}
+          >
+            🌅 Good Morning Letters ({morningLetters.length})
+          </h3>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: "0.2rem",
+            }}
+          >
+            <button
+              type="button"
+              data-ocid="admin.primary_button"
+              onClick={() => sendToAll("morning")}
+              style={{
+                background: "rgba(212,168,83,0.85)",
+                border: "none",
+                borderRadius: 6,
+                padding: "0.35rem 0.85rem",
+                color: "#3D2B1F",
+                cursor: "pointer",
+                fontSize: "0.78rem",
+                fontFamily: "'Lora', Georgia, serif",
+                fontWeight: 600,
+              }}
+            >
+              Send to All Users
+            </button>
+            {getLastSent("morning") && (
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  color: WARM_BROWN,
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontStyle: "italic",
+                }}
+              >
+                Last sent: {getLastSent("morning")}
+              </span>
+            )}
+          </div>
+        </div>
         {renderList(morningLetters, "morning")}
       </div>
+
+      {/* Evening Letters */}
       <div>
-        <h3
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "0.75rem",
+          }}
+        >
+          <h3
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              color: "#B8860B",
+              fontSize: "1rem",
+              margin: 0,
+            }}
+          >
+            🌇 Good Evening Letters ({eveningLetters.length})
+          </h3>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: "0.2rem",
+            }}
+          >
+            <button
+              type="button"
+              data-ocid="admin.primary_button"
+              onClick={() => sendToAll("evening")}
+              style={{
+                background: "rgba(184,134,11,0.85)",
+                border: "none",
+                borderRadius: 6,
+                padding: "0.35rem 0.85rem",
+                color: "#FFF8EE",
+                cursor: "pointer",
+                fontSize: "0.78rem",
+                fontFamily: "'Lora', Georgia, serif",
+                fontWeight: 600,
+              }}
+            >
+              Send to All Users
+            </button>
+            {getLastSent("evening") && (
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  color: WARM_BROWN,
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontStyle: "italic",
+                }}
+              >
+                Last sent: {getLastSent("evening")}
+              </span>
+            )}
+          </div>
+        </div>
+        {renderList(eveningLetters, "evening")}
+      </div>
+
+      {/* Night Letters */}
+      <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "0.75rem",
+          }}
+        >
+          <h3
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              color: WARM_MOCHA,
+              fontSize: "1rem",
+              margin: 0,
+            }}
+          >
+            🌙 Good Night Letters ({nightLetters.length})
+          </h3>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: "0.2rem",
+            }}
+          >
+            <button
+              type="button"
+              data-ocid="admin.primary_button"
+              onClick={() => sendToAll("night")}
+              style={{
+                background: "rgba(92,61,46,0.85)",
+                border: "none",
+                borderRadius: 6,
+                padding: "0.35rem 0.85rem",
+                color: "#FFF8EE",
+                cursor: "pointer",
+                fontSize: "0.78rem",
+                fontFamily: "'Lora', Georgia, serif",
+                fontWeight: 600,
+              }}
+            >
+              Send to All Users
+            </button>
+            {getLastSent("night") && (
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  color: WARM_BROWN,
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontStyle: "italic",
+                }}
+              >
+                Last sent: {getLastSent("night")}
+              </span>
+            )}
+          </div>
+        </div>
+        {renderList(nightLetters, "night")}
+      </div>
+
+      {/* Sequential Send Section */}
+      <div
+        style={{
+          background: "rgba(245,236,215,0.5)",
+          border: "1px solid rgba(212,168,83,0.3)",
+          borderRadius: 14,
+          padding: "1.25rem",
+        }}
+      >
+        <h4
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             color: WARM_MOCHA,
-            fontSize: "1rem",
-            margin: "0 0 0.75rem",
+            fontSize: "0.95rem",
+            margin: "0 0 0.5rem",
           }}
         >
-          Evening Letters
-        </h3>
-        {renderList(nightLetters, "night")}
+          Sequential Send
+        </h4>
+        <p
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+            fontSize: "0.78rem",
+            color: WARM_BROWN,
+            margin: "0 0 1rem",
+          }}
+        >
+          Sends messages in order: Morning → Evening → Night → Morning → ...
+          indefinitely.
+        </p>
+        <div
+          style={{
+            background: "rgba(212,168,83,0.08)",
+            border: "1px solid rgba(212,168,83,0.2)",
+            borderRadius: 8,
+            padding: "0.75rem 1rem",
+            marginBottom: "0.75rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+          }}
+        >
+          <span style={{ fontSize: "1.5rem" }}>{SEQ_EMOJI[seqPos]}</span>
+          <div>
+            <p
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                color: WARM_MOCHA,
+                fontSize: "0.9rem",
+                margin: 0,
+                fontWeight: 600,
+              }}
+            >
+              Next: {SEQ_NAMES[seqPos]}
+            </p>
+            <p
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontStyle: "italic",
+                fontSize: "0.72rem",
+                color: WARM_BROWN,
+                margin: "0.2rem 0 0",
+              }}
+            >
+              After this: {SEQ_NAMES[(seqPos + 1) % 3]} →{" "}
+              {SEQ_NAMES[(seqPos + 2) % 3]}
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          data-ocid="admin.primary_button"
+          onClick={sendNextInSequence}
+          style={{
+            background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_MOCHA})`,
+            border: "none",
+            borderRadius: 8,
+            padding: "0.6rem 1.5rem",
+            color: "#FFF8EE",
+            cursor: "pointer",
+            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontSize: "0.88rem",
+            fontWeight: 600,
+          }}
+        >
+          {SEQ_EMOJI[seqPos]} Send Next ({SEQ_NAMES[seqPos]})
+        </button>
       </div>
+
+      {/* Add New Letter */}
       <div
         style={{
           background: "rgba(245,236,215,0.3)",
@@ -900,54 +1375,52 @@ function DailyLettersTab() {
         >
           Add New Letter
         </h4>
-        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
-          <label
-            style={{
-              display: "flex",
-              gap: "0.3rem",
-              alignItems: "center",
-              cursor: "pointer",
-              fontFamily: "'Lora', Georgia, serif",
-              fontSize: "0.82rem",
-              color: WARM_TEXT,
-            }}
-          >
-            <input
-              type="radio"
-              name="newType"
-              checked={newType === "morning"}
-              onChange={() => setNewType("morning")}
-              style={{ accentColor: WARM_GOLD }}
-            />
-            Morning
-          </label>
-          <label
-            style={{
-              display: "flex",
-              gap: "0.3rem",
-              alignItems: "center",
-              cursor: "pointer",
-              fontFamily: "'Lora', Georgia, serif",
-              fontSize: "0.82rem",
-              color: WARM_TEXT,
-            }}
-          >
-            <input
-              type="radio"
-              name="newType"
-              checked={newType === "night"}
-              onChange={() => setNewType("night")}
-              style={{ accentColor: WARM_GOLD }}
-            />
-            Evening
-          </label>
+        <div
+          style={{
+            display: "flex",
+            gap: "0.5rem",
+            marginBottom: "0.5rem",
+            flexWrap: "wrap",
+          }}
+        >
+          {(["morning", "evening", "night"] as const).map((t) => (
+            <label
+              key={t}
+              style={{
+                display: "flex",
+                gap: "0.3rem",
+                alignItems: "center",
+                cursor: "pointer",
+                fontFamily: "'Lora', Georgia, serif",
+                fontSize: "0.82rem",
+                color: WARM_TEXT,
+              }}
+            >
+              <input
+                type="radio"
+                name="newType"
+                checked={newType === t}
+                onChange={() => setNewType(t)}
+                style={{ accentColor: WARM_GOLD }}
+              />
+              {t === "morning"
+                ? "🌅 Morning"
+                : t === "evening"
+                  ? "🌇 Evening"
+                  : "🌙 Night"}
+            </label>
+          ))}
         </div>
         <textarea
           value={newMsg}
           onChange={(e) => setNewMsg(e.target.value)}
           placeholder="Write a new letter…"
-          rows={3}
-          style={{ ...inputStyle, resize: "none", marginBottom: "0.5rem" }}
+          rows={4}
+          style={{
+            ...inputStyle,
+            resize: "vertical" as const,
+            marginBottom: "0.5rem",
+          }}
         />
         <button
           type="button"
@@ -2366,6 +2839,23 @@ function AdminAboutTab() {
   const [story, setStory] = React.useState("");
   const [poetsNote, setPoetsNote] = React.useState("");
   const [saved, setSaved] = React.useState(false);
+  const [photoPreview, setPhotoPreview] = React.useState<string>(
+    () => localStorage.getItem("chinnua_about_photo") || "",
+  );
+  const [aboutToggles, setAboutToggles] = React.useState<
+    { id: string; title: string; content: string }[]
+  >(() => {
+    try {
+      return JSON.parse(localStorage.getItem("chinnua_about_toggles") || "[]");
+    } catch {
+      return [];
+    }
+  });
+  const [newToggleTitle, setNewToggleTitle] = React.useState("");
+  const [newToggleContent, setNewToggleContent] = React.useState("");
+  const [editToggleId, setEditToggleId] = React.useState<string | null>(null);
+  const [editToggleTitle, setEditToggleTitle] = React.useState("");
+  const [editToggleContent, setEditToggleContent] = React.useState("");
 
   React.useEffect(() => {
     try {
@@ -2377,6 +2867,23 @@ function AdminAboutTab() {
       setPoetsNote(localStorage.getItem("chinnua_poets_note") || "");
     } catch {}
   }, []);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setPhotoPreview(dataUrl);
+      localStorage.setItem("chinnua_about_photo", dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const saveToggles = (toggles: typeof aboutToggles) => {
+    localStorage.setItem("chinnua_about_toggles", JSON.stringify(toggles));
+    setAboutToggles(toggles);
+  };
 
   const handleDocUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -2423,6 +2930,67 @@ function AdminAboutTab() {
       >
         About Page Editor
       </h3>
+
+      {/* Profile Photo */}
+      <div
+        style={{
+          background: WARM_PAPER,
+          border: `1px solid ${WARM_BORDER}`,
+          borderRadius: 10,
+          padding: "1rem 1.25rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            fontWeight: 600,
+            marginBottom: "0.5rem",
+            fontSize: "0.88rem",
+          }}
+        >
+          About Page Profile Photo
+        </p>
+        <p
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+            fontSize: "0.78rem",
+            color: WARM_BROWN,
+            marginBottom: "0.75rem",
+          }}
+        >
+          Upload a photo to display on the About page.
+        </p>
+        {photoPreview && (
+          <img
+            src={photoPreview}
+            alt="Preview"
+            style={{
+              width: 120,
+              height: 160,
+              objectFit: "cover",
+              borderRadius: 8,
+              marginBottom: "0.5rem",
+              border: `1px solid ${WARM_BORDER}`,
+              display: "block",
+            }}
+          />
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handlePhotoUpload}
+          data-ocid="admin.upload_button"
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontSize: "0.8rem",
+            color: WARM_TEXT,
+            display: "block",
+          }}
+        />
+      </div>
 
       {/* Document Upload */}
       <div
@@ -2582,6 +3150,340 @@ function AdminAboutTab() {
             outline: "none",
           }}
         />
+      </div>
+
+      {/* Toggle Management Section */}
+      <div
+        style={{
+          background: WARM_PAPER,
+          border: `1px solid ${WARM_BORDER}`,
+          borderRadius: 10,
+          padding: "1rem 1.25rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: WARM_MOCHA,
+            fontWeight: 600,
+            marginBottom: "0.75rem",
+            fontSize: "0.88rem",
+          }}
+        >
+          About Page Toggles
+        </p>
+        <p
+          style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: "italic",
+            fontSize: "0.78rem",
+            color: WARM_BROWN,
+            marginBottom: "1rem",
+          }}
+        >
+          Add collapsible sections (toggles) to the About page that visitors can
+          expand.
+        </p>
+
+        {/* Existing toggles */}
+        {aboutToggles.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+              marginBottom: "1rem",
+            }}
+          >
+            {aboutToggles.map((toggle) => (
+              <div
+                key={toggle.id}
+                style={{
+                  background: "rgba(245,236,215,0.4)",
+                  border: "1px solid rgba(139,111,71,0.2)",
+                  borderRadius: 8,
+                  padding: "0.75rem 1rem",
+                }}
+              >
+                {editToggleId === toggle.id ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <input
+                      type="text"
+                      value={editToggleTitle}
+                      onChange={(e) => setEditToggleTitle(e.target.value)}
+                      placeholder="Toggle title…"
+                      data-ocid="admin.input"
+                      style={{
+                        width: "100%",
+                        background: "rgba(255,255,255,0.7)",
+                        border: "1px solid rgba(139,111,71,0.3)",
+                        borderRadius: 6,
+                        padding: "0.4rem 0.6rem",
+                        fontSize: "0.82rem",
+                        color: WARM_TEXT,
+                        fontFamily: "'Lora', Georgia, serif",
+                        outline: "none",
+                        boxSizing: "border-box" as const,
+                      }}
+                    />
+                    <textarea
+                      value={editToggleContent}
+                      onChange={(e) => setEditToggleContent(e.target.value)}
+                      rows={4}
+                      placeholder="Toggle content…"
+                      data-ocid="admin.textarea"
+                      style={{
+                        width: "100%",
+                        background: "rgba(255,255,255,0.7)",
+                        border: "1px solid rgba(139,111,71,0.3)",
+                        borderRadius: 6,
+                        padding: "0.4rem 0.6rem",
+                        fontSize: "0.82rem",
+                        color: WARM_TEXT,
+                        fontFamily: "'Lora', Georgia, serif",
+                        fontStyle: "italic",
+                        outline: "none",
+                        resize: "vertical",
+                        boxSizing: "border-box" as const,
+                      }}
+                    />
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <button
+                        type="button"
+                        data-ocid="admin.save_button"
+                        onClick={() => {
+                          if (!editToggleTitle.trim()) return;
+                          const updated = aboutToggles.map((t) =>
+                            t.id === editToggleId
+                              ? {
+                                  ...t,
+                                  title: editToggleTitle.trim(),
+                                  content: editToggleContent.trim(),
+                                }
+                              : t,
+                          );
+                          saveToggles(updated);
+                          setEditToggleId(null);
+                        }}
+                        style={{
+                          background: WARM_GOLD,
+                          border: "none",
+                          borderRadius: 6,
+                          padding: "0.3rem 0.8rem",
+                          color: "#3D2B1F",
+                          cursor: "pointer",
+                          fontSize: "0.78rem",
+                          fontFamily: "'Lora', Georgia, serif",
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        data-ocid="admin.cancel_button"
+                        onClick={() => setEditToggleId(null)}
+                        style={{
+                          background: "transparent",
+                          border: "1px solid rgba(139,111,71,0.3)",
+                          borderRadius: 6,
+                          padding: "0.3rem 0.8rem",
+                          color: WARM_BROWN,
+                          cursor: "pointer",
+                          fontSize: "0.78rem",
+                          fontFamily: "'Lora', Georgia, serif",
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "0.75rem",
+                    }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <p
+                        style={{
+                          fontFamily: "'Playfair Display', Georgia, serif",
+                          fontWeight: 600,
+                          fontSize: "0.85rem",
+                          color: WARM_MOCHA,
+                          margin: "0 0 0.25rem",
+                        }}
+                      >
+                        {toggle.title}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: "'Lora', Georgia, serif",
+                          fontStyle: "italic",
+                          fontSize: "0.8rem",
+                          color: WARM_BROWN,
+                          margin: 0,
+                          lineHeight: 1.5,
+                          whiteSpace: "pre-line",
+                        }}
+                      >
+                        {toggle.content.length > 100
+                          ? `${toggle.content.slice(0, 100)}…`
+                          : toggle.content}
+                      </p>
+                    </div>
+                    <div
+                      style={{ display: "flex", gap: "0.35rem", flexShrink: 0 }}
+                    >
+                      <button
+                        type="button"
+                        data-ocid="admin.edit_button"
+                        onClick={() => {
+                          setEditToggleId(toggle.id);
+                          setEditToggleTitle(toggle.title);
+                          setEditToggleContent(toggle.content);
+                        }}
+                        style={{
+                          background: "rgba(212,168,83,0.15)",
+                          border: "1px solid rgba(212,168,83,0.3)",
+                          borderRadius: 5,
+                          padding: "0.2rem 0.5rem",
+                          color: WARM_GOLD,
+                          cursor: "pointer",
+                          fontSize: "0.72rem",
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        data-ocid="admin.delete_button"
+                        onClick={() =>
+                          saveToggles(
+                            aboutToggles.filter((t) => t.id !== toggle.id),
+                          )
+                        }
+                        style={{
+                          background: "rgba(248,113,113,0.08)",
+                          border: "1px solid rgba(248,113,113,0.2)",
+                          borderRadius: 5,
+                          padding: "0.2rem 0.5rem",
+                          color: "rgba(248,113,113,0.7)",
+                          cursor: "pointer",
+                          fontSize: "0.72rem",
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Add new toggle */}
+        <div
+          style={{
+            background: "rgba(245,236,215,0.3)",
+            border: "1px solid rgba(139,111,71,0.15)",
+            borderRadius: 8,
+            padding: "0.75rem 1rem",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "0.82rem",
+              color: WARM_BROWN,
+              margin: "0 0 0.5rem",
+              fontWeight: 600,
+            }}
+          >
+            Add New Toggle
+          </p>
+          <input
+            type="text"
+            value={newToggleTitle}
+            onChange={(e) => setNewToggleTitle(e.target.value)}
+            placeholder="Toggle title (e.g. My Story, A Letter…)"
+            data-ocid="admin.input"
+            style={{
+              width: "100%",
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(139,111,71,0.3)",
+              borderRadius: 6,
+              padding: "0.4rem 0.6rem",
+              fontSize: "0.82rem",
+              color: WARM_TEXT,
+              fontFamily: "'Lora', Georgia, serif",
+              outline: "none",
+              boxSizing: "border-box" as const,
+              marginBottom: "0.5rem",
+              display: "block",
+            }}
+          />
+          <textarea
+            value={newToggleContent}
+            onChange={(e) => setNewToggleContent(e.target.value)}
+            rows={4}
+            placeholder="Write the content for this toggle…"
+            data-ocid="admin.textarea"
+            style={{
+              width: "100%",
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(139,111,71,0.3)",
+              borderRadius: 6,
+              padding: "0.4rem 0.6rem",
+              fontSize: "0.82rem",
+              color: WARM_TEXT,
+              fontFamily: "'Lora', Georgia, serif",
+              fontStyle: "italic",
+              outline: "none",
+              resize: "vertical",
+              boxSizing: "border-box" as const,
+              marginBottom: "0.5rem",
+              display: "block",
+            }}
+          />
+          <button
+            type="button"
+            data-ocid="admin.primary_button"
+            onClick={() => {
+              if (!newToggleTitle.trim()) return;
+              const newToggle = {
+                id: `toggle_${Date.now()}`,
+                title: newToggleTitle.trim(),
+                content: newToggleContent.trim(),
+              };
+              saveToggles([...aboutToggles, newToggle]);
+              setNewToggleTitle("");
+              setNewToggleContent("");
+            }}
+            style={{
+              background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
+              border: "none",
+              borderRadius: 6,
+              padding: "0.4rem 1rem",
+              color: "#FFF8EE",
+              cursor: "pointer",
+              fontSize: "0.8rem",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontWeight: 600,
+            }}
+          >
+            Add Toggle
+          </button>
+        </div>
       </div>
 
       <button

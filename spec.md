@@ -1,48 +1,32 @@
-# CHINNUA_POET — About Admin-Only Editing & Messaging Enhancements
+# CHINNUA_POET
 
 ## Current State
-- `AboutSlide.tsx`: The Poet's Note edit button (pencil icon) and the About section edit button are both already gated behind `isAdmin` (checked via `localStorage.getItem('chinnua_admin_authed') === 'true'`). However, there is still inline editing directly on the About page — the goal is to ensure ZERO edit capability exists outside the Admin Panel, and that the Admin Panel is the single place for all About/bio/photo/poet-note editing.
-- `MessagesSlide.tsx`: Has a `MessagesLoginGate` component that shows a sign-in form when `currentUser` is null. The current flow already gates messages behind login, but the gate only shows when `currentUser` is null as passed from App.tsx. The message background uses cream tones. No file/audio/photo/GIF/sticker/group chat/Spotify-music-sharing UI exists in the input area. User-to-user messaging exists but conversation creation requires knowing a username — there is no user discovery/search to start a new conversation.
-- `CommunitySlide.tsx`: Has a "Join the Community" button that calls `onJoin()` (opens the global UserSetupModal). No embedded username-only login form exists in the community page itself.
-- `AdminSlide.tsx`: Has an About tab with fields to edit bio/story/photo. Poet's Note editing exists in AboutSlide inline (gated by isAdmin). Admin panel does not currently have a dedicated Poet's Note editor field.
+- MessagesSlide has a basic emoji picker with only 8 static emojis (💫🌸🌙✨🎭🦋📖🕊️) rendered as text characters, not animated Noto Emoji
+- EmojiPicker.tsx component exists with full Noto animated emoji support and is used in FeedSlide, but NOT imported in MessagesSlide
+- AboutSlide displays Poet's Note as read-only — this is correct — but has no admin-facing toggle management; the admin panel's About tab has bio/story editing but no toggle add/edit, no photo upload, no document upload that auto-fills About page
+- UserProfileSlide has a SavedItemsTab that shows saved feeds/poems/music with a public/private toggle — this already exists but the display uses generic card layout, not poetic line format
+- AdminSlide's DailyLettersTab only has generic Morning/Night letter buckets with a few placeholder messages. No "Evening" type, no sequential send logic, and the 80 provided poetic messages are not yet pre-loaded
 
 ## Requested Changes (Diff)
 
 ### Add
-- **MessagesSlide**: Attachment toolbar in the chat input area with buttons for: file attach, audio record/send, photo/video from gallery (file input), camera capture, GIF/sticker picker (basic emoji-style), Spotify music link sharing, group chat creation button
-- **MessagesSlide**: Screenshot prevention CSS (`user-select: none`, `-webkit-user-drag: none`) on the chat area + existing watermark already present
-- **MessagesSlide**: "New Conversation" button/input in the sidebar to start messaging any registered user by username
-- **MessagesSlide**: Light pink message background for received messages (`#FFE4EC`) and slightly different for sent (`#FFF0F5`), dark text
-- **MessagesSlide**: Group chat creation modal — user enters group name + selects participants from known conversations
-- **CommunitySlide**: Embedded username-only login form (no password required) with light background (`#FFFFFF` / `#FFF8EE`) and dark text — this is a simplified "join" that creates a guest session by username
-- **AdminSlide**: Poet's Note editor field in the About tab so admin can edit it from the admin panel
+- Messages emoji section: replace 8-static-emoji picker with the full EmojiPicker component (animated Noto Emojis, all categories, search)
+- About page: admin-only toggle management — admin can add/edit/delete collapsible toggles (title + content) that appear on the About page below Poet's Note; stored in localStorage as `chinnua_about_toggles`
+- Admin Panel → About tab: add document upload field (parses text from .txt/.doc and fills bio/story); add photo upload for profile photo; add toggle management UI (add title+content, edit, delete, reorder)
+- Admin Panel → Letters tab: add "Evening" as a third message type alongside Morning and Night; pre-load all 80 provided Good Morning (40), Good Evening (40), and Good Night (30) poetic messages into their respective buckets; add "Send to All Users" button for each type that marks the message as sent with a timestamp; add sequential auto-send logic that cycles Morning → Evening → Night → repeat, with send buttons per round and a "Start Sequence" control
 
 ### Modify
-- **AboutSlide**: Remove all inline edit UI (pencil buttons, edit forms, `aboutEditing` state, `editing` state for Poet's Note) — the page becomes purely read-only for all users. The `isAdmin` checks and edit buttons are stripped out.
-- **MessagesSlide**: `MessagesLoginGate` — ensure it always shows regardless of whether the user is logged into the site. The gate should check its own local auth state independently (already does when `currentUser` is null from props — ensure App.tsx passes null to MessagesSlide always on first load so the gate is always shown first). Change the login gate subtitle for the community join login to light background with dark text.
-- **CommunitySlide**: Replace the plain `onJoin()` button with an embedded lightweight username login form (light background, dark text). No password needed — user just enters username to join the community feed as a named participant.
-- **MessagesSlide**: Message bubble background: received messages → `#FFE4EC` (light pink), sent messages → `rgba(212,168,83,0.2)` (existing warm gold), all text dark `#3D2B1F`.
+- MessagesSlide emoji button: replace the simple 8-emoji popover with `<EmojiPicker onSelect={...} onClose={...} />` (same component used in FeedSlide)
+- AboutSlide: render admin-added toggles from `chinnua_about_toggles` localStorage below Poet's Note as collapsible buttons
+- Admin Panel Letters tab: expand DailyLettersTab to support three types (morning/evening/night), add sequential send controls, pre-load all poems
+- UserProfileSlide SavedItemsTab: improve saved items display with poetic line formatting (italic serif, soft separator lines between items, each item title displayed as a verse line)
 
 ### Remove
-- **AboutSlide**: All edit-related state (`editing`, `editValue`, `aboutEditing`, `aboutFields` local editing UI, save functions triggered from AboutSlide). The page only reads and displays content — never modifies it.
-- **AboutSlide**: Pencil/edit button imports and JSX for Poet's Note and About section editing inline.
+- Nothing removed — all changes are additive
 
 ## Implementation Plan
-
-1. **AboutSlide.tsx** — Strip all edit state and UI. Keep read-only display of poetName, bio, story, poetryFragments (loaded from backend/localStorage). Remove: `editing`, `editValue`, `aboutEditing`, `aboutFields` setter UI, `saveAboutContent`, `startEdit`, `cancelEdit`, `saveNote`, pencil button JSX, `Edit2`/`Pencil` imports. Keep `isAdmin` check only if needed for any remaining admin-indicator (but no edit buttons).
-
-2. **AdminSlide.tsx** — In the About tab, add a "Poet's Note" textarea field alongside the existing bio/story/photo fields. On save, write the note to `localStorage('chinnua_poets_note')` and the saved-at timestamp. This is the only place the Poet's Note can now be edited.
-
-3. **MessagesSlide.tsx**:
-   - Change `WARM_BG` to `#FFF0F5` (light pink), message receive bubble to `#FFE4EC`
-   - Add an attachment toolbar row above/below the text input with icon buttons: 📎 file, 🎵 audio, 🖼️ photo/video, 📷 camera, 😄 GIF/sticker, 🎸 Spotify link, 👥 group
-   - Add file/audio/image input refs (`<input type="file">`) triggered by their buttons
-   - Add "Start New Chat" input in the sidebar: text input + button to add a username to conversations list
-   - Add group chat creation modal: group name input + checkboxes for existing conversations
-   - Message bubbles: received = `#FFE4EC` pink with `#3D2B1F` text; sent = existing warm gold
-   - Add `user-select: none` and `-webkit-user-drag: none` CSS to message area for screenshot deterrence
-   - Spotify share: opens a small inline input to paste a Spotify URL, sends it as a special message with a Spotify link preview card
-
-4. **CommunitySlide.tsx** — Replace `onJoin()` button with an inline form: text input for username, "Join Community" submit button. On submit, create/lookup a user by that username in localStorage and set `chinnua_user`. Style with white/cream background and dark `#3D2B1F` text.
-
-5. **App.tsx** — Ensure `MessagesSlide` always receives `currentUser={null}` on initial render (before any login), so the gate always appears first. Check if App already clears currentUser on mount — if there is a session restore that pre-fills currentUser, we need to keep the message gate independent.
+1. **MessagesSlide.tsx**: Import EmojiPicker component; replace the 8-emoji static popover with the full EmojiPicker component; wire `onSelect` to append emoji to text input
+2. **AboutSlide.tsx**: Add useEffect to read `chinnua_about_toggles` from localStorage; render admin-added toggles below Poet's Note section as collapsible expand/collapse buttons (same style as existing toggles); keep all existing content unchanged
+3. **AdminSlide.tsx** (About tab): Add photo upload field that saves to `chinnua_about_photo`; add document upload (.txt) that auto-parses content into bio field; add toggle management section (add title+content, list with edit/delete buttons, saves to `chinnua_about_toggles`)
+4. **AdminSlide.tsx** (DailyLettersTab): Expand to 3 types: morning/evening/night; pre-populate with all 80 provided poems as default state; add "Send All" button per type with timestamp; add sequential send queue UI (Morning → Evening → Night cycle)
+5. **UserProfileSlide.tsx** (SavedItemsTab): Update saved item card rendering to use italic serif poetic line style, soft gold border-left accent, poem-like line display

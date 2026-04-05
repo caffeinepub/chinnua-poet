@@ -52,6 +52,7 @@ interface Post {
   timestamp: string;
   likes: number;
   replies: Reply[];
+  image?: string; // base64 data URL
 }
 
 interface FeedSlideProps {
@@ -481,6 +482,25 @@ function PostCard({
         </p>
       </button>
 
+      {/* Post image */}
+      {post.image && (
+        <div
+          style={{ marginTop: "0.75rem", borderRadius: 10, overflow: "hidden" }}
+        >
+          <img
+            src={post.image}
+            alt={post.title || "Post attachment"}
+            style={{
+              width: "100%",
+              maxHeight: 280,
+              objectFit: "cover",
+              borderRadius: 10,
+              display: "block",
+            }}
+          />
+        </div>
+      )}
+
       {/* Footer actions */}
       <div
         style={{
@@ -748,7 +768,7 @@ export default function FeedSlide({
     if (showPoll && pollOptionA && pollOptionB) {
       fullContent += `\n\n[POLL]\nA: ${pollOptionA}\nB: ${pollOptionB}`;
     }
-    const post: Post & { image?: string; pollOptions?: string[] } = {
+    const post: Post & { pollOptions?: string[] } = {
       id: `user_${Date.now()}`,
       username: currentUser.username,
       title: postTopic.trim() || "",
@@ -758,7 +778,7 @@ export default function FeedSlide({
       timestamp: new Date().toISOString(),
       likes: 0,
       replies: [],
-      ...(postImage ? { image: postImage } : {}),
+      image: postImage || undefined,
       ...(showPoll && pollOptionA && pollOptionB
         ? { pollOptions: [pollOptionA, pollOptionB] }
         : {}),
@@ -804,6 +824,10 @@ export default function FeedSlide({
       localStorage.setItem("chinnua_saved_items", JSON.stringify(items));
     }
     setSavedPosts(newSaved);
+    const isSaved = newSaved.has(postId);
+    toast(isSaved ? "Saved to your profile ✦" : "Removed from saved", {
+      duration: 2000,
+    });
   };
 
   const handleLike = (postId: string) => {

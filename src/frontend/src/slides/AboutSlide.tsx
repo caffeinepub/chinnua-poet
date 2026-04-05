@@ -231,6 +231,18 @@ export default function AboutSlide() {
     setPoetsNote(savedNote);
   }, []);
 
+  const [adminToggles, setAdminToggles] = useState<
+    { id: string; title: string; content: string }[]
+  >([]);
+  const [openToggles, setOpenToggles] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("chinnua_about_toggles");
+      if (stored) setAdminToggles(JSON.parse(stored));
+    } catch {}
+  }, []);
+
   return (
     <div
       className="slide-container"
@@ -552,6 +564,36 @@ export default function AboutSlide() {
                 {poetsNote || "No note from the poet yet."}
               </p>
             </div>
+
+            {/* Admin-added toggles */}
+            {adminToggles.map((toggle) => (
+              <div key={toggle.id}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setOpenToggles((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(toggle.id)) next.delete(toggle.id);
+                      else next.add(toggle.id);
+                      return next;
+                    })
+                  }
+                  data-ocid="about.toggle"
+                  style={toggleStyle}
+                >
+                  {openToggles.has(toggle.id) ? "Close" : toggle.title}
+                </button>
+                {openToggles.has(toggle.id) && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <p style={personalWritingStyle}>{toggle.content}</p>
+                  </motion.div>
+                )}
+              </div>
+            ))}
 
             {/* === New Personal Writings === */}
 

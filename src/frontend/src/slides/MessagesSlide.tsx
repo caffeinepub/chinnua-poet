@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "motion/react";
+import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import EmojiPicker from "../components/EmojiPicker";
 import { useActor } from "../hooks/useActor";
 import InboxSlide from "./InboxSlide";
 
@@ -110,6 +112,298 @@ function consumeSignals(myUsername: string): PendingSignal[] {
   );
   localStorage.removeItem(key);
   return signals;
+}
+
+// ── Inline SVG icon components ──────────────────────────────────────
+function SvgMailIcon({
+  size = 18,
+  color = WARM_GOLD,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <polyline points="22,4 12,13 2,4" />
+    </svg>
+  );
+}
+
+function SvgMessageCircleIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function SvgInboxIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+      <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+    </svg>
+  );
+}
+
+function SvgUsersIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function SvgBellIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
+
+function SvgShieldIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+function SvgFeatherIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
+      <line x1="16" y1="8" x2="2" y2="22" />
+      <line x1="17.5" y1="15" x2="9" y2="15" />
+    </svg>
+  );
+}
+
+function SvgPaperclipIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+    </svg>
+  );
+}
+
+function SvgMusicIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+    </svg>
+  );
+}
+
+function SvgImageIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
+    </svg>
+  );
+}
+
+function SvgCameraIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </svg>
+  );
+}
+
+function SvgSmileIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M8 13s1.5 2 4 2 4-2 4-2" />
+      <line x1="9" y1="9" x2="9.01" y2="9" />
+      <line x1="15" y1="9" x2="15.01" y2="9" />
+    </svg>
+  );
+}
+
+function SvgMusicNoteIcon({
+  size = 16,
+  color = WARM_BROWN,
+}: { size?: number; color?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+    </svg>
+  );
 }
 
 // Phone SVG icon
@@ -322,7 +616,16 @@ function MessagesLoginGate({
         }}
       >
         <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
-          <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>✉️</div>
+          <div
+            style={{
+              marginBottom: "0.75rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <SvgMailIcon size={36} color="#D4A853" />
+          </div>
           <h2
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
@@ -520,7 +823,9 @@ export default function MessagesSlide({
     | (() => void);
 }) {
   const { actor } = useActor();
-  const [msgGateCleared, setMsgGateCleared] = useState(false);
+  const [msgGateCleared, setMsgGateCleared] = useState<boolean>(() => {
+    return localStorage.getItem("chinnua_user") !== null;
+  });
   const [section, setSection] = useState<MsgSection>("messages");
   const [conversations, setConversations] = useState<string[]>([
     "CHINNUA_POET",
@@ -537,7 +842,7 @@ export default function MessagesSlide({
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [text, setText] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
-  const [showGifPicker, setShowGifPicker] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showSpotifyInput, setShowSpotifyInput] = useState(false);
   const [spotifyUrl, setSpotifyUrl] = useState("");
   const [showGroupModal, setShowGroupModal] = useState(false);
@@ -894,7 +1199,7 @@ export default function MessagesSlide({
     }
   };
 
-  if (!currentUser || !msgGateCleared) {
+  if (!msgGateCleared) {
     return (
       <MessagesLoginGate
         onJoin={onJoin}
@@ -907,6 +1212,7 @@ export default function MessagesSlide({
   }
 
   const currentMessages = messages[activeConv] ?? [];
+  const currentUserName = currentUser?.username ?? "";
 
   return (
     <div className="slide-container" style={{ background: WARM_BG }}>
@@ -945,7 +1251,22 @@ export default function MessagesSlide({
               textTransform: "uppercase",
             }}
           >
-            {s === "messages" ? "Messages" : "Inbox"}
+            <span
+              style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}
+            >
+              {s === "messages" ? (
+                <SvgMessageCircleIcon
+                  size={15}
+                  color={section === s ? "#5C3D2E" : "#8B6F47"}
+                />
+              ) : (
+                <SvgInboxIcon
+                  size={15}
+                  color={section === s ? "#5C3D2E" : "#8B6F47"}
+                />
+              )}
+              {s === "messages" ? "Messages" : "Inbox"}
+            </span>
           </button>
         ))}
       </div>
@@ -1365,7 +1686,27 @@ export default function MessagesSlide({
                         cursor: "pointer",
                       }}
                     >
-                      {t === "inbox" ? "Chats" : "Requests"}
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.3rem",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {t === "inbox" ? (
+                          <SvgUsersIcon
+                            size={12}
+                            color={msgTab === t ? "#5C3D2E" : "#8B6F47"}
+                          />
+                        ) : (
+                          <SvgBellIcon
+                            size={12}
+                            color={msgTab === t ? "#5C3D2E" : "#8B6F47"}
+                          />
+                        )}
+                        {t === "inbox" ? "Chats" : "Requests"}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -1381,7 +1722,17 @@ export default function MessagesSlide({
                     lineHeight: 1.5,
                   }}
                 >
-                  Messages are saved to the platform
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.3rem",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SvgShieldIcon size={11} color="#D4A853" />
+                    Messages are saved to the platform
+                  </span>
                 </p>
 
                 {msgTab === "inbox" ? (
@@ -1519,8 +1870,12 @@ export default function MessagesSlide({
                         fontWeight: 600,
                         color: WARM_MOCHA,
                         margin: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.4rem",
                       }}
                     >
+                      <SvgMessageCircleIcon size={15} color={WARM_GOLD} />
                       {activeConv === "CHINNUA_POET"
                         ? "CHINNUA_POET"
                         : activeConv}
@@ -1596,7 +1951,17 @@ export default function MessagesSlide({
                     textAlign: "center",
                   }}
                 >
-                  Screenshots are not permitted. This conversation is private.
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4rem",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SvgShieldIcon size={12} color="#8B6F47" />
+                    Screenshots are not permitted. This conversation is private.
+                  </span>
                 </div>
                 <div
                   style={{
@@ -1647,7 +2012,17 @@ export default function MessagesSlide({
                       }}
                       data-ocid="messages.empty_state"
                     >
-                      No messages yet. Write something...
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.4rem",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <SvgFeatherIcon size={16} color="#8B6F47" /> No messages
+                        yet. Write something...
+                      </span>
                     </p>
                   )}
                   {currentMessages.map((msg) => (
@@ -1655,18 +2030,18 @@ export default function MessagesSlide({
                       key={msg.id}
                       style={{
                         alignSelf:
-                          msg.from === currentUser.username
+                          msg.from === currentUserName
                             ? "flex-end"
                             : "flex-start",
                         maxWidth: "70%",
                         padding: "0.6rem 1rem",
                         borderRadius: 12,
                         background:
-                          msg.from === currentUser.username
+                          msg.from === currentUserName
                             ? "rgba(212,168,83,0.2)"
                             : "#FFE4EC",
                         border: `1px solid ${
-                          msg.from === currentUser.username
+                          msg.from === currentUserName
                             ? "rgba(212,168,83,0.3)"
                             : WARM_BORDER
                         }`,
@@ -1893,60 +2268,70 @@ export default function MessagesSlide({
                   >
                     {[
                       {
-                        label: "📎",
+                        label: <SvgPaperclipIcon size={14} color="#8B6F47" />,
                         title: "Attach file",
                         action: () => fileInputRef.current?.click(),
                       },
                       {
-                        label: "🎵",
+                        label: <SvgMusicIcon size={14} color="#8B6F47" />,
                         title: "Send audio",
                         action: () => audioInputRef.current?.click(),
                       },
                       {
-                        label: "🖼️",
+                        label: <SvgImageIcon size={14} color="#8B6F47" />,
                         title: "Photo/Video",
                         action: () => photoInputRef.current?.click(),
                       },
                       {
-                        label: "📷",
+                        label: <SvgCameraIcon size={14} color="#8B6F47" />,
                         title: "Camera",
                         action: () => cameraInputRef.current?.click(),
                       },
-                    ].map(({ label, title, action }) => (
-                      <button
-                        key={title}
-                        type="button"
-                        title={title}
-                        onClick={action}
-                        data-ocid="messages.secondary_button"
-                        style={{
-                          background: "rgba(255,240,245,0.8)",
-                          border: `1px solid ${WARM_BORDER}`,
-                          borderRadius: 6,
-                          width: 28,
-                          height: 28,
-                          cursor: "pointer",
-                          fontSize: "0.85rem",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {label}
-                      </button>
-                    ))}
+                    ].map(
+                      ({
+                        label,
+                        title,
+                        action,
+                      }: {
+                        label: React.ReactNode;
+                        title: string;
+                        action: () => void;
+                      }) => (
+                        <button
+                          key={title}
+                          type="button"
+                          title={title}
+                          onClick={action}
+                          data-ocid="messages.secondary_button"
+                          style={{
+                            background: "rgba(255,240,245,0.8)",
+                            border: `1px solid ${WARM_BORDER}`,
+                            borderRadius: 6,
+                            width: 28,
+                            height: 28,
+                            cursor: "pointer",
+                            fontSize: "0.85rem",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {label}
+                        </button>
+                      ),
+                    )}
                     {/* GIF/Sticker */}
                     <div style={{ position: "relative" }}>
                       <button
                         type="button"
                         title="GIF / Sticker"
                         onClick={() => {
-                          setShowGifPicker((v) => !v);
+                          setShowEmojiPicker((v) => !v);
                           setShowSpotifyInput(false);
                         }}
                         data-ocid="messages.toggle"
                         style={{
-                          background: showGifPicker
+                          background: showEmojiPicker
                             ? "rgba(212,168,83,0.15)"
                             : "rgba(255,240,245,0.8)",
                           border: `1px solid ${WARM_BORDER}`,
@@ -1960,49 +2345,28 @@ export default function MessagesSlide({
                           justifyContent: "center",
                         }}
                       >
-                        😄
+                        <SvgSmileIcon
+                          size={14}
+                          color={showEmojiPicker ? "#5C3D2E" : "#8B6F47"}
+                        />
                       </button>
-                      {showGifPicker && (
+                      {showEmojiPicker && (
                         <div
                           style={{
                             position: "absolute",
-                            bottom: "calc(100% + 4px)",
-                            left: 0,
-                            background: "#FFFDF9",
-                            border: `1px solid ${WARM_BORDER}`,
-                            borderRadius: 8,
-                            padding: "0.5rem",
-                            display: "flex",
-                            gap: "0.3rem",
-                            flexWrap: "wrap",
-                            width: 160,
-                            boxShadow: "0 4px 16px rgba(92,61,46,0.12)",
-                            zIndex: 10,
+                            bottom: "calc(100% + 8px)",
+                            right: 0,
+                            zIndex: 50,
                           }}
                           data-ocid="messages.popover"
                         >
-                          {["💫", "🌸", "🌙", "✨", "🎭", "🦋", "📖", "🕊️"].map(
-                            (emoji) => (
-                              <button
-                                key={emoji}
-                                type="button"
-                                onClick={() => {
-                                  setText(emoji);
-                                  setShowGifPicker(false);
-                                }}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  fontSize: "1.3rem",
-                                  padding: "0.2rem",
-                                  borderRadius: 4,
-                                }}
-                              >
-                                {emoji}
-                              </button>
-                            ),
-                          )}
+                          <EmojiPicker
+                            onSelect={(emoji) => {
+                              setText((prev) => prev + emoji);
+                              setShowEmojiPicker(false);
+                            }}
+                            onClose={() => setShowEmojiPicker(false)}
+                          />
                         </div>
                       )}
                     </div>
@@ -2013,7 +2377,7 @@ export default function MessagesSlide({
                         title="Send Spotify link"
                         onClick={() => {
                           setShowSpotifyInput((v) => !v);
-                          setShowGifPicker(false);
+                          setShowEmojiPicker(false);
                         }}
                         data-ocid="messages.toggle"
                         style={{
@@ -2031,7 +2395,10 @@ export default function MessagesSlide({
                           justifyContent: "center",
                         }}
                       >
-                        🎸
+                        <SvgMusicNoteIcon
+                          size={14}
+                          color={showSpotifyInput ? "#1DB954" : "#8B6F47"}
+                        />
                       </button>
                       {showSpotifyInput && (
                         <div
@@ -2108,7 +2475,7 @@ export default function MessagesSlide({
                       title="Create group chat"
                       onClick={() => {
                         setShowGroupModal(true);
-                        setShowGifPicker(false);
+                        setShowEmojiPicker(false);
                         setShowSpotifyInput(false);
                       }}
                       data-ocid="messages.open_modal_button"
@@ -2125,7 +2492,7 @@ export default function MessagesSlide({
                         justifyContent: "center",
                       }}
                     >
-                      👥
+                      <SvgUsersIcon size={14} color="#8B6F47" />
                     </button>
                   </div>
 
@@ -2139,7 +2506,7 @@ export default function MessagesSlide({
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           sendMessage();
-                          setShowGifPicker(false);
+                          setShowEmojiPicker(false);
                           setShowSpotifyInput(false);
                         }
                       }}
@@ -2158,7 +2525,7 @@ export default function MessagesSlide({
                     <Button
                       onClick={() => {
                         sendMessage();
-                        setShowGifPicker(false);
+                        setShowEmojiPicker(false);
                         setShowSpotifyInput(false);
                       }}
                       disabled={!text.trim()}
@@ -2208,7 +2575,16 @@ export default function MessagesSlide({
                           marginBottom: "1rem",
                         }}
                       >
-                        👥 Create Group Chat
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          <SvgUsersIcon size={16} color="#5C3D2E" /> Create
+                          Group Chat
+                        </span>
                       </h3>
                       <input
                         value={groupName}

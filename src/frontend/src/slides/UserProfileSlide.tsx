@@ -141,9 +141,9 @@ function SavedItemsTab({
   viewUsername,
   isOwn,
 }: { viewUsername: string; isOwn: boolean }) {
-  const WARM_PAPER = "#F5ECD7";
-  const WARM_BORDER = "rgba(139,111,71,0.25)";
-  const WARM_MOCHA = "#5C3D2E";
+  const _WARM_PAPER = "#F5ECD7";
+  const _WARM_BORDER = "rgba(139,111,71,0.25)";
+  const _WARM_MOCHA = "#5C3D2E";
   const WARM_BROWN = "#8B6F47";
   const _WARM_TEXT = "#3D2B1F";
 
@@ -313,49 +313,72 @@ function SavedItemsTab({
           No saved items yet.
         </div>
       ) : (
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+          <p
+            style={{
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.65rem",
+              color: "rgba(212,168,83,0.6)",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              marginBottom: "0.75rem",
+              fontVariant: "small-caps",
+            }}
+          >
+            Saved Verses
+          </p>
           {savedItems.map((item, idx) => (
             <div
               key={`${item.type}-${item.id}`}
               data-ocid={`profile.saved.item.${idx + 1}`}
               style={{
-                background: WARM_PAPER,
-                border: `1px solid ${WARM_BORDER}`,
-                borderRadius: 10,
-                padding: "0.75rem 1rem",
+                borderLeft: "2px solid rgba(212,168,83,0.22)",
+                paddingLeft: "1rem",
+                paddingTop: "0.5rem",
+                paddingBottom: "0.5rem",
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "space-between",
                 gap: "0.75rem",
               }}
             >
-              <div>
+              <div style={{ flex: 1 }}>
                 <span
                   style={{
-                    fontSize: "0.7rem",
-                    padding: "1px 6px",
-                    background: "rgba(212,168,83,0.12)",
-                    borderRadius: 4,
-                    color: "#D4A853",
+                    fontSize: "0.65rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    color: "rgba(212,168,83,0.6)",
                     fontFamily: "'Libre Baskerville', Georgia, serif",
-                    textTransform: "capitalize",
                   }}
                 >
-                  {item.type}
+                  {item.type === "poem"
+                    ? "verse"
+                    : item.type === "music"
+                      ? "melody"
+                      : "story"}
                 </span>
                 <p
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontStyle: "italic",
-                    color: WARM_MOCHA,
-                    fontSize: "0.88rem",
-                    margin: "0.25rem 0 0",
+                    fontSize: "0.92rem",
+                    color: "#3D2B1F",
+                    margin: "0.2rem 0 0",
+                    lineHeight: 1.5,
                   }}
                 >
                   {item.title}
                 </p>
+                <span
+                  style={{
+                    fontSize: "0.7rem",
+                    color: "rgba(139,111,71,0.5)",
+                    fontFamily: "'Lora', Georgia, serif",
+                  }}
+                >
+                  {timeAgo(item.savedAt)}
+                </span>
               </div>
               {isOwn && (
                 <button
@@ -366,12 +389,14 @@ function SavedItemsTab({
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    fontSize: "0.72rem",
-                    color: "rgba(92,61,46,0.4)",
+                    fontSize: "0.7rem",
+                    color: "rgba(92,61,46,0.35)",
                     fontFamily: "'Lora', Georgia, serif",
+                    paddingTop: "0.25rem",
+                    flexShrink: 0,
                   }}
                 >
-                  Remove
+                  ✕
                 </button>
               )}
             </div>
