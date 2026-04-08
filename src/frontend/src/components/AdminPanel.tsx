@@ -11,8 +11,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Eye, EyeOff, Loader2, Pencil, Trash2, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import type { AdminPoemEntry } from "../backend";
-import { ChangePasswordResult } from "../backend";
+// Local type definitions (backend interface is minimal)
+export interface AdminPoemEntry {
+  id: bigint;
+  title: string;
+  category: string;
+  content: string;
+}
+
+export const ChangePasswordResult = {
+  success: "success",
+  incorrectPassword: "incorrectPassword",
+  error: "error",
+} as const;
+export type ChangePasswordResult =
+  (typeof ChangePasswordResult)[keyof typeof ChangePasswordResult];
 import { useActor } from "../hooks/useActor";
 
 const SESSION_KEY = "chinnua_admin_authed";

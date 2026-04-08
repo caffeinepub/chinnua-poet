@@ -894,6 +894,26 @@ export default function SettingsSlide({
       case "appearance":
         return (
           <SectionCard title="Appearance Settings" icon={<Palette size={16} />}>
+            <p
+              style={{
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
+                fontSize: "0.87rem",
+                color: "rgba(92,61,46,0.62)",
+                lineHeight: 1.75,
+                marginBottom: "1.4rem",
+                borderLeft: "3px solid rgba(212,168,83,0.4)",
+                paddingLeft: "0.9rem",
+              }}
+            >
+              This space allows you to dress the page in your own colour of
+              feeling — choose from six distinct themes, each carrying its own
+              quiet mood. Select a font that feels like your voice, and let the
+              text breathe at whatever size soothes your eyes. Every change
+              takes effect the moment you choose it. If something doesn't feel
+              quite right after switching, a gentle page refresh will settle the
+              new design into place.
+            </p>
             <p style={labelStyle}>Theme</p>
             <div
               style={{
@@ -1152,10 +1172,49 @@ export default function SettingsSlide({
                 fontStyle: "italic",
                 color: colors.gold,
                 fontSize: "0.9rem",
-                marginBottom: "1.2rem",
+                marginBottom: "1rem",
               }}
             >
               "Sometimes silence needs a voice."
+            </p>
+            <p
+              style={{
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
+                fontSize: "0.87rem",
+                color: "rgba(92,61,46,0.62)",
+                lineHeight: 1.75,
+                marginBottom: "0.9rem",
+                borderLeft: "3px solid rgba(212,168,83,0.4)",
+                paddingLeft: "0.9rem",
+              }}
+            >
+              The Silent Listener offers three ways to colour the voice that
+              reads your words aloud. <em>Soft Emotional</em> wraps each line in
+              warmth and gentleness. <em>Deep Philosophical</em> lets the verse
+              breathe slowly, as if pondering the space between words.{" "}
+              <em>Minimal</em> speaks plainly, leaving meaning to linger in
+              silence. Pair it with your preferred voice — male or female — and
+              choose a Playback Speed that matches your inner rhythm: slow and
+              meditative, clear and natural, or lively and expressive.
+            </p>
+            <p
+              style={{
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
+                fontSize: "0.87rem",
+                color: "rgba(92,61,46,0.62)",
+                lineHeight: 1.75,
+                marginBottom: "1.2rem",
+                borderLeft: "3px solid rgba(212,168,83,0.4)",
+                paddingLeft: "0.9rem",
+              }}
+            >
+              Our companion poets — Luna, SilentInk, VelvetWords, and others —
+              may reach out to you directly in Messages, offering a kind word, a
+              writing prompt, or a gentle reflection. They exist to keep you
+              company in the quiet hours, and every message they send is guided
+              by the same care and tone you set here.
             </p>
             <Toggle
               id="aiEnabled"

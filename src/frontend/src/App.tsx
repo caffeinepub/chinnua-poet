@@ -102,7 +102,14 @@ export default function App() {
   const [adminClickCount, setAdminClickCount] = useState(0);
   const [showUserSetup, setShowUserSetup] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    // Restore session from localStorage on initial load
+    try {
+      const saved = localStorage.getItem("chinnua_current_user");
+      if (saved) return JSON.parse(saved) as User;
+    } catch {}
+    return null;
+  });
   const [isMobile, setIsMobile] = useState(false);
   const [profileUsername, setProfileUsername] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -349,6 +356,8 @@ export default function App() {
         createdAt: new Date().toISOString(),
       };
       localStorage.setItem("chinnua_user", JSON.stringify(user));
+      // Persist session across refreshes
+      localStorage.setItem("chinnua_current_user", JSON.stringify(user));
       try {
         const users: User[] = JSON.parse(
           localStorage.getItem("chinnua_users") || "[]",
@@ -374,12 +383,15 @@ export default function App() {
       bio: user.bio ?? "",
       createdAt: user.createdAt,
     };
+    // Persist session across browser refreshes
+    localStorage.setItem("chinnua_current_user", JSON.stringify(u));
     setCurrentUser(u);
     setShowLoginModal(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("chinnua_user");
+    localStorage.removeItem("chinnua_current_user");
     setCurrentUser(null);
     if (
       activeSlide === "notes" ||

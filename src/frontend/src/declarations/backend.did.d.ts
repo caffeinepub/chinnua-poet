@@ -10,6 +10,13 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface AboutContent {
+  'bio' : string,
+  'poetryFragments' : string,
+  'lastUpdated' : Time,
+  'poetName' : string,
+  'story' : string,
+}
 export interface AdminPoemEntry {
   'id' : PoemId,
   'title' : string,
@@ -22,6 +29,20 @@ export type AdminPoemResult = { 'contentTooShort' : null } |
   { 'notFound' : null } |
   { 'notAdmin' : null } |
   { 'success' : AdminPoemEntry };
+export interface CallSettings { 'allowCalls' : boolean }
+export interface CallSignal {
+  'id' : SignalId,
+  'data' : string,
+  'toUser' : Principal,
+  'timestamp' : Time,
+  'consumed' : boolean,
+  'fromUser' : Principal,
+  'signalType' : CallSignalType,
+}
+export type CallSignalType = { 'iceCandidate' : null } |
+  { 'offer' : null } |
+  { 'answer' : null } |
+  { 'hangup' : null };
 export type ChangePasswordResult = { 'passwordTooShort' : null } |
   { 'incorrectPassword' : null } |
   { 'success' : null };
@@ -38,7 +59,9 @@ export interface CommentReply {
   'timestamp' : Time,
   'postId' : string,
 }
-export type CommentResult = { 'textTooShort' : null } |
+export type CommentResult = { 'pendingReview' : null } |
+  { 'moderationRejected' : string } |
+  { 'textTooShort' : null } |
   { 'success' : PostComment } |
   { 'unauthorized' : null };
 export interface CommunityPoem {
@@ -55,6 +78,38 @@ export type DeleteResult = { 'notFoundInAdminCollection' : null } |
   { 'notFound' : null } |
   { 'notAdmin' : null } |
   { 'success' : null };
+export interface DirectMessage {
+  'id' : MessageId,
+  'read' : boolean,
+  'text' : string,
+  'toUser' : Principal,
+  'toUsername' : string,
+  'timestamp' : Time,
+  'fromUser' : Principal,
+  'fromUsername' : string,
+}
+export type MessageId = bigint;
+export interface ModerationEntry {
+  'id' : ModerationId,
+  'status' : ModerationStatus,
+  'content' : string,
+  'contentType' : string,
+  'authorName' : string,
+  'author' : Principal,
+  'timestamp' : Time,
+  'riskLevel' : string,
+  'reason' : string,
+}
+export type ModerationId = bigint;
+export interface ModerationStats {
+  'pendingCount' : bigint,
+  'approvedCount' : bigint,
+  'rejectedCount' : bigint,
+}
+export type ModerationStatus = { 'pending' : null } |
+  { 'approved' : null } |
+  { 'rejected' : null } |
+  { 'needsReview' : null };
 export type NoteDeleteResult = { 'notFound' : null } |
   { 'success' : null } |
   { 'unauthorized' : null };
@@ -68,8 +123,10 @@ export type PoemDeleteResult = { 'notFound' : null } |
   { 'success' : null } |
   { 'unauthorized' : null };
 export type PoemId = bigint;
-export type PoemResult = { 'contentTooShort' : null } |
+export type PoemResult = { 'pendingReview' : null } |
+  { 'contentTooShort' : null } |
   { 'authorNameTooShort' : null } |
+  { 'moderationRejected' : string } |
   { 'titleTooShort' : null } |
   { 'notFound' : null } |
   { 'themeNameTooShort' : null } |
@@ -84,10 +141,16 @@ export interface PostComment {
   'postId' : string,
 }
 export type ReplyId = bigint;
-export type ReplyResult = { 'commentNotFound' : null } |
+export type ReplyResult = { 'pendingReview' : null } |
+  { 'commentNotFound' : null } |
+  { 'moderationRejected' : string } |
   { 'textTooShort' : null } |
   { 'success' : CommentReply } |
   { 'unauthorized' : null };
+export type SendMessageResult = { 'textTooShort' : null } |
+  { 'success' : DirectMessage } |
+  { 'unauthorized' : null };
+export type SignalId = bigint;
 export interface Theme { 'name' : string, 'description' : string }
 export type Time = bigint;
 export interface UserNote {
@@ -104,34 +167,57 @@ export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
 export interface _SERVICE {
-  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addAdminPoem' : ActorMethod<[string, string, string], AdminPoemResult>,
   'addComment' : ActorMethod<[string, string, string], CommentResult>,
   'addReply' : ActorMethod<[CommentId, string, string, string], ReplyResult>,
-  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'approveModeratedContent' : ActorMethod<[ModerationId], undefined>,
+  'assignRole' : ActorMethod<[Principal, UserRole], undefined>,
   'changeAdminPassword' : ActorMethod<[string, string], ChangePasswordResult>,
+  'checkAdminPassword' : ActorMethod<[string], boolean>,
   'createNote' : ActorMethod<[string, string, boolean], NoteResult>,
   'deleteAdminPoem' : ActorMethod<[PoemId], DeleteResult>,
   'deleteComment' : ActorMethod<[CommentId], CommentDeleteResult>,
   'deleteMyPoem' : ActorMethod<[PoemId], PoemDeleteResult>,
   'deleteNote' : ActorMethod<[NoteId], NoteDeleteResult>,
   'deleteReply' : ActorMethod<[ReplyId], CommentDeleteResult>,
+  'getAboutContent' : ActorMethod<[], [] | [AboutContent]>,
   'getAdminPassword' : ActorMethod<[], string>,
   'getAdminPoems' : ActorMethod<[], Array<AdminPoemEntry>>,
+  'getCallSettings' : ActorMethod<[Principal], CallSettings>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
-  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getCommentsForPost' : ActorMethod<[string], Array<PostComment>>,
   'getCommunityPoems' : ActorMethod<[], Array<CommunityPoem>>,
+  'getConversationByUsername' : ActorMethod<
+    [string, string],
+    Array<DirectMessage>
+  >,
   'getDisplayName' : ActorMethod<[Principal], [] | [string]>,
+  'getMessagesForUser' : ActorMethod<[string], Array<DirectMessage>>,
+  'getModerationQueue' : ActorMethod<[], Array<ModerationEntry>>,
+  'getModerationStats' : ActorMethod<[], ModerationStats>,
   'getMyNotes' : ActorMethod<[], Array<UserNote>>,
+  'getMyPendingSignals' : ActorMethod<[], Array<CallSignal>>,
   'getMyPoems' : ActorMethod<[], Array<CommunityPoem>>,
+  'getMyRole' : ActorMethod<[], UserRole>,
   'getPublicNotesForUser' : ActorMethod<[Principal], Array<UserNote>>,
   'getRepliesForComment' : ActorMethod<[CommentId], Array<CommentReply>>,
+  'getUserPhotoUrl' : ActorMethod<[Principal], [] | [string]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
-  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'login' : ActorMethod<[], UserRole>,
+  'markDirectMessageRead' : ActorMethod<[MessageId], undefined>,
+  'markSignalConsumed' : ActorMethod<[SignalId], undefined>,
+  'rejectModeratedContent' : ActorMethod<[ModerationId, string], undefined>,
   'resetAdminPassword' : ActorMethod<[string], ChangePasswordResult>,
+  'saveAboutContent' : ActorMethod<[string, string, string, string], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'sendCallSignal' : ActorMethod<[Principal, CallSignalType, string], SignalId>,
+  'sendDirectMessage' : ActorMethod<
+    [string, string, string],
+    SendMessageResult
+  >,
+  'setCallSettings' : ActorMethod<[boolean], undefined>,
   'setDisplayName' : ActorMethod<[string], undefined>,
+  'setUserPhotoUrl' : ActorMethod<[string], undefined>,
   'submitPoem' : ActorMethod<[string, string, string], PoemResult>,
   'updateAdminPoem' : ActorMethod<
     [PoemId, string, string, string],

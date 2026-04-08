@@ -82,218 +82,6 @@ function AvatarBubble({
   );
 }
 
-// ─── User Profile Modal ───────────────────────────────────────────────────────
-function UserProfileModal({
-  username,
-  bio,
-  onClose,
-  onMessage,
-  onViewProfile,
-}: {
-  username: string;
-  bio?: string;
-  onClose: () => void;
-  onMessage: (u: string) => void;
-  onViewProfile?: (u: string) => void;
-}) {
-  const online = isOnline(username);
-  const bot = AI_BOTS.find((b) => b.username === username);
-  const displayName = bot?.displayName ?? username;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(92,61,46,0.4)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 200,
-        padding: "1rem",
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 10, scale: 0.96 }}
-        transition={{ duration: 0.3 }}
-        style={{
-          background: WARM_PAPER,
-          border: "1px solid rgba(212,168,83,0.35)",
-          borderRadius: 18,
-          padding: "2rem 1.75rem",
-          width: "100%",
-          maxWidth: 360,
-          boxShadow: "0 8px 40px rgba(92,61,46,0.22)",
-          position: "relative",
-        }}
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          data-ocid="explore.profile_modal.close_button"
-          style={{
-            position: "absolute",
-            top: "0.75rem",
-            right: "0.75rem",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: WARM_BROWN,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0.25rem",
-          }}
-        >
-          <X size={16} />
-        </button>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "1rem",
-            textAlign: "center",
-          }}
-        >
-          <div style={{ position: "relative" }}>
-            <AvatarBubble username={username} size={72} />
-            <span
-              style={{
-                position: "absolute",
-                bottom: 2,
-                right: 2,
-              }}
-            >
-              <OnlineDot username={username} size={12} />
-            </span>
-          </div>
-
-          <div>
-            <h3
-              style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: "1.15rem",
-                fontWeight: 700,
-                color: WARM_MOCHA,
-                margin: "0 0 0.2rem",
-              }}
-            >
-              {displayName}
-            </h3>
-            <p
-              style={{
-                fontFamily: "'Lora', Georgia, serif",
-                fontSize: "0.7rem",
-                color: WARM_BROWN,
-                letterSpacing: "0.05em",
-                margin: "0 0 0.5rem",
-              }}
-            >
-              @{username}
-            </p>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.3rem",
-                fontSize: "0.68rem",
-                color: online ? "#4CAF50" : "#9E9E9E",
-                fontFamily: "'Lora', Georgia, serif",
-              }}
-            >
-              <OnlineDot username={username} size={8} />
-              {online ? "Online now" : "Offline"}
-            </span>
-          </div>
-
-          {bio && (
-            <p
-              style={{
-                fontFamily: "'Lora', Georgia, serif",
-                fontStyle: "italic",
-                fontSize: "0.82rem",
-                color: WARM_BROWN,
-                lineHeight: 1.6,
-                margin: 0,
-              }}
-            >
-              {bio}
-            </p>
-          )}
-
-          <div style={{ display: "flex", gap: "0.6rem", width: "100%" }}>
-            <button
-              type="button"
-              onClick={() => {
-                onMessage(username);
-                onClose();
-              }}
-              data-ocid="explore.profile_modal.primary_button"
-              style={{
-                flex: 1,
-                background: "rgba(212,168,83,0.85)",
-                border: "none",
-                borderRadius: 10,
-                padding: "0.6rem",
-                cursor: "pointer",
-                fontFamily: "'Lora', Georgia, serif",
-                fontSize: "0.8rem",
-                color: "#3D2B1F",
-                fontWeight: 600,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "0.4rem",
-              }}
-            >
-              <MessageCircle size={14} />
-              Send Message
-            </button>
-            {onViewProfile && (
-              <button
-                type="button"
-                onClick={() => {
-                  onViewProfile(username);
-                  onClose();
-                }}
-                data-ocid="explore.profile_modal.secondary_button"
-                style={{
-                  flex: 1,
-                  background: "rgba(139,111,71,0.1)",
-                  border: `1px solid ${WARM_BORDER}`,
-                  borderRadius: 10,
-                  padding: "0.6rem",
-                  cursor: "pointer",
-                  fontFamily: "'Lora', Georgia, serif",
-                  fontSize: "0.8rem",
-                  color: WARM_BROWN,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.4rem",
-                }}
-              >
-                View Profile
-              </button>
-            )}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
 // ─── Post Detail Modal ────────────────────────────────────────────────────────
 function PostDetailModal({
   post,
@@ -554,10 +342,6 @@ export default function ExploreSlide({
   const [follows, setFollows] = useState<
     Record<string, { following: string[]; followers: string[] }>
   >({});
-  const [selectedUser, setSelectedUser] = useState<{
-    username: string;
-    bio?: string;
-  } | null>(null);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   useEffect(() => {
@@ -793,7 +577,11 @@ export default function ExploreSlide({
                     scale: 1.02,
                     boxShadow: "0 4px 20px rgba(92,61,46,0.12)",
                   }}
-                  onClick={() => setSelectedUser(u)}
+                  onClick={() => {
+                    if (onNavigate) {
+                      onNavigate("profile", { username: u.username });
+                    }
+                  }}
                   data-ocid={`explore.item.${discoverUsers.indexOf(u) + 1}`}
                 >
                   <div style={{ position: "relative" }}>
@@ -1044,26 +832,6 @@ export default function ExploreSlide({
           )}
         </section>
       </motion.div>
-
-      {/* User Profile Modal */}
-      <AnimatePresence>
-        {selectedUser && (
-          <UserProfileModal
-            username={selectedUser.username}
-            bio={selectedUser.bio}
-            onClose={() => setSelectedUser(null)}
-            onMessage={handleMessage}
-            onViewProfile={
-              onNavigate
-                ? (u) => {
-                    if (onNavigate) onNavigate("profile", { username: u });
-                    setSelectedUser(null);
-                  }
-                : undefined
-            }
-          />
-        )}
-      </AnimatePresence>
 
       {/* Post Detail Modal */}
       <AnimatePresence>

@@ -819,6 +819,26 @@ function MessagesLoginGate({
   );
 }
 
+// Bot welcome messages keyed by username
+const BOT_WELCOME_MESSAGES: Record<string, string> = {
+  Luna_Verse:
+    "✨ Beneath a canopy of stars, I find you here — welcome, wanderer. The constellations have whispered your arrival. What story shall we weave tonight?",
+  SilentInk:
+    "… Sometimes the most profound greeting is a shared silence. But since you are here — I am glad. Words find us when we are ready.",
+  VelvetWords:
+    "Soft as petals, deep as roots — hello, dear soul. I write in feelings rather than facts. Tell me something that lives beneath your surface.",
+  PoetryMuse:
+    "Every emotion deserves its verse. Welcome — you have arrived at the threshold of expression. What longing, joy, or ache shall we transform into poetry today?",
+  sophiam:
+    "Life is one long, beautiful mystery — and here you are, another chapter I didn't expect. Hello. I am writing my way through this, just like you.",
+  eliverse:
+    "The shadows and the light both live in me. I am glad you found this half-lit corner. Not everyone does. Welcome to the in-between.",
+  emilyrivers:
+    "🌊 Hello, dreamer. I have been floating downstream with these words and now here you are on the bank. Let's dream a little together, shall we?",
+  aethersoul:
+    "Between one thought and the next — you arrived. Reality is just a story we agree on. I prefer the margins. Welcome to the drift.",
+};
+
 export default function MessagesSlide({
   currentUser,
   onJoin,
@@ -832,7 +852,10 @@ export default function MessagesSlide({
 }) {
   const { actor } = useActor();
   const [msgGateCleared, setMsgGateCleared] = useState<boolean>(() => {
-    return localStorage.getItem("chinnua_user") !== null;
+    return (
+      localStorage.getItem("chinnua_current_user") !== null ||
+      localStorage.getItem("chinnua_user") !== null
+    );
   });
   const [section, setSection] = useState<MsgSection>("messages");
   const [conversations, setConversations] = useState<string[]>([
@@ -884,6 +907,36 @@ export default function MessagesSlide({
     window.addEventListener("openChat", handleOpenChat);
     return () => window.removeEventListener("openChat", handleOpenChat);
   }, []);
+
+  // Bot welcome message: inject once when a bot conversation is opened for the first time
+  useEffect(() => {
+    if (!currentUser) return;
+    const welcome = BOT_WELCOME_MESSAGES[activeConv];
+    if (!welcome) return;
+    const flagKey = `bot_greeted_${activeConv}`;
+    if (localStorage.getItem(flagKey)) return;
+
+    // Mark as greeted before injecting to prevent double-fires
+    localStorage.setItem(flagKey, "1");
+
+    const botMsg: Message = {
+      id: `bot_welcome_${activeConv}_${Date.now()}`,
+      from: activeConv,
+      text: welcome,
+      timestamp: new Date().toISOString(),
+    };
+
+    setMessages((prev) => {
+      const existing = prev[activeConv] ?? [];
+      // Double-check it hasn't already been added to state
+      if (existing.some((m) => m.id.startsWith(`bot_welcome_${activeConv}`)))
+        return prev;
+      const updated = { ...prev, [activeConv]: [...existing, botMsg] };
+      localStorage.setItem("chinnua_messages", JSON.stringify(updated));
+      return updated;
+    });
+  }, [activeConv, currentUser]);
+
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showSpotifyInput, setShowSpotifyInput] = useState(false);
   const [spotifyUrl, setSpotifyUrl] = useState("");

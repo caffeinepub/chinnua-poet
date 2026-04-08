@@ -7,15 +7,27 @@ import Nat "mo:core/Nat";
 import Order "mo:core/Order";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
-import AccessControl "authorization/access-control";
-import MixinAuthorization "authorization/MixinAuthorization";
+import AccessControl "authorization";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   // Auth system state
   let accessControlState = AccessControl.initState();
 
-  // Authorization roles
-  include MixinAuthorization(accessControlState);
+  // MixinAuthorization endpoints (inlined — replaces include MixinAuthorization)
+  public shared ({ caller }) func login() : async AccessControl.UserRole {
+    AccessControl.ensureRegistered(accessControlState, caller);
+    AccessControl.getUserRole(accessControlState, caller);
+  };
+
+  public query ({ caller }) func getMyRole() : async AccessControl.UserRole {
+    AccessControl.getUserRole(accessControlState, caller);
+  };
+
+  public shared ({ caller }) func assignRole(user : Principal, role : AccessControl.UserRole) : async () {
+    AccessControl.assignRole(accessControlState, caller, user, role);
+  };
 
   // Admin password (stored in backend for cross-browser sync)
   var adminPassword : Text = "chinnua2025";

@@ -1,59 +1,52 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
-import type { backendInterface } from "../backend";
-import { createActorWithConfig } from "../config";
-import { getSecretParameter } from "../utils/urlParams";
+import { Actor, HttpAgent } from "@icp-sdk/core/agent";
+import { useEffect, useState } from "react";
+import { idlFactory } from "../declarations/backend.did";
 import { useInternetIdentity } from "./useInternetIdentity";
 
-const ACTOR_QUERY_KEY = "actor";
-export function useActor() {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyActor = Record<string, (...args: any[]) => any>;
+
+const CANISTER_ID =
+  (typeof process !== "undefined" && process.env?.CANISTER_ID_BACKEND) || "";
+
+export function useActor(): { actor: AnyActor | null; isFetching: boolean } {
   const { identity } = useInternetIdentity();
-  const queryClient = useQueryClient();
-  const actorQuery = useQuery<backendInterface>({
-    queryKey: [ACTOR_QUERY_KEY, identity?.getPrincipal().toString()],
-    queryFn: async () => {
-      const isAuthenticated = !!identity;
+  const [actor, setActor] = useState<AnyActor | null>(null);
+  const [isFetching, setIsFetching] = useState(true);
 
-      if (!isAuthenticated) {
-        // Return anonymous actor if not authenticated
-        return await createActorWithConfig();
-      }
-
-      const actorOptions = {
-        agentOptions: {
-          identity,
-        },
-      };
-
-      const actor = await createActorWithConfig(actorOptions);
-      const adminToken = getSecretParameter("caffeineAdminToken") || "";
-      await actor._initializeAccessControlWithSecret(adminToken);
-      return actor;
-    },
-    // Only refetch when identity changes
-    staleTime: Number.POSITIVE_INFINITY,
-    // This will cause the actor to be recreated when the identity changes
-    enabled: true,
-  });
-
-  // When the actor changes, invalidate dependent queries
   useEffect(() => {
-    if (actorQuery.data) {
-      queryClient.invalidateQueries({
-        predicate: (query) => {
-          return !query.queryKey.includes(ACTOR_QUERY_KEY);
-        },
-      });
-      queryClient.refetchQueries({
-        predicate: (query) => {
-          return !query.queryKey.includes(ACTOR_QUERY_KEY);
-        },
-      });
-    }
-  }, [actorQuery.data, queryClient]);
+    let cancelled = false;
+    setIsFetching(true);
 
-  return {
-    actor: actorQuery.data || null,
-    isFetching: actorQuery.isFetching,
-  };
+    (async () => {
+      try {
+        const agentOptions = identity ? { identity } : {};
+        const agent = HttpAgent.createSync(agentOptions);
+
+        const canisterId = CANISTER_ID;
+        if (!canisterId) {
+          setActor(null);
+          return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const a = Actor.createActor<any>(idlFactory, {
+          agent,
+          canisterId,
+        });
+
+        if (!cancelled) setActor(a as AnyActor);
+      } catch {
+        if (!cancelled) setActor(null);
+      } finally {
+        if (!cancelled) setIsFetching(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [identity]);
+
+  return { actor, isFetching };
 }

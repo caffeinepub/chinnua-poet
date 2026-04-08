@@ -10,7 +10,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import type { CommunityPoem } from "../backend";
+// Local type definition
+export interface CommunityPoem {
+  id: bigint;
+  title: string;
+  content: string;
+  author: string;
+  authorName: string;
+  category: string;
+  createdAt: bigint;
+  suggestedTheme: { name: string; description: string };
+}
 import { useActor } from "../hooks/useActor";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 

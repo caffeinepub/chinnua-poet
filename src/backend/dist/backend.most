@@ -1,0 +1,266 @@
+// Version: 3.0.0
+type AboutContent__648949057 =
+  {
+    bio : Text;
+    lastUpdated : Time__900049286;
+    poetName : Text;
+    poetryFragments : Text;
+    story : Text
+  };
+type AdminPoem__581159491 = {category : Text; content : Text; title : Text};
+type CallSettings__50954022 = {allowCalls : Bool};
+type CallSignalType__725401189 = {#answer; #hangup; #iceCandidate; #offer};
+type CallSignal__716495205 =
+  {
+    consumed : Bool;
+    data : Text;
+    fromUser : Principal;
+    id : SignalId__270194381;
+    signalType : CallSignalType__725401189;
+    timestamp : Time__900049286;
+    toUser : Principal
+  };
+type CommentId__265911312 = Nat;
+type CommentReply__721687009 =
+  {
+    author : Principal;
+    authorName : Text;
+    commentId : CommentId__265911312;
+    id : ReplyId__471963362;
+    postId : Text;
+    text : Text;
+    timestamp : Time__900049286
+  };
+type CommunityPoem__85080216 =
+  {
+    author : Principal;
+    authorName : Text;
+    content : Text;
+    id : PoemId__139913676;
+    suggestedTheme : Theme__602016509;
+    timestamp : Time__900049286;
+    title : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DirectMessage__546033946 =
+  {
+    fromUser : Principal;
+    fromUsername : Text;
+    id : MessageId__147617357;
+    read : Bool;
+    text : Text;
+    timestamp : Time__900049286;
+    toUser : Principal;
+    toUsername : Text
+  };
+type Int__270357528 = Int__616954475;
+type Int__616954475 = Int;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MessageId__147617357 = Nat;
+type ModerationEntry__1341030 =
+  {
+    author : Principal;
+    authorName : Text;
+    content : Text;
+    contentType : Text;
+    id : ModerationId__189823063;
+    reason : Text;
+    riskLevel : Text;
+    status : ModerationStatus__491165788;
+    timestamp : Time__900049286
+  };
+type ModerationId__189823063 = Nat;
+type ModerationStatus__491165788 =
+  {#approved; #needsReview; #pending; #rejected};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type NoteId__491897279 = Nat;
+type OldAccessControlState__841599830 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__605269027<Principal, OldUserRole__889293160>
+  };
+type OldUserRole__889293160 = {#admin; #guest; #user};
+type PoemId__139913676 = Nat;
+type PostComment__149515686 =
+  {
+    author : Principal;
+    authorName : Text;
+    id : CommentId__265911312;
+    postId : Text;
+    text : Text;
+    timestamp : Time__900049286
+  };
+type ReplyId__471963362 = Nat;
+type SignalId__270194381 = Nat;
+type Theme__602016509 = {description : Text; name : Text};
+type Time__796480547 = Int__270357528;
+type Time__900049286 = Time__796480547;
+type UserNote__578990888 =
+  {
+    author : Principal;
+    content : Text;
+    createdAt : Time__900049286;
+    id : NoteId__491897279;
+    isPublic : Bool;
+    title : Text;
+    updatedAt : Time__900049286
+  };
+type UserProfile__491224006 = {name : Text};
+type UserRole__688487809 = {#admin; #guest; #user};
+actor ({
+  stable var aboutContent : ?AboutContent__648949057;
+  in accessControlState : OldAccessControlState__841599830;
+  stable var adminPassword : Text;
+  stable adminPoems :
+    {
+      var root : Node__46230540<PoemId__139913676, AdminPoem__581159491>;
+      var size : Nat__490723111
+    };
+  stable callSettings :
+    {
+      var root : Node__46230540<Principal, CallSettings__50954022>;
+      var size : Nat__490723111
+    };
+  stable callSignals :
+    {
+      var root : Node__46230540<SignalId__270194381, CallSignal__716495205>;
+      var size : Nat__490723111
+    };
+  stable commentReplies :
+    {
+      var root : Node__46230540<ReplyId__471963362, CommentReply__721687009>;
+      var size : Nat__490723111
+    };
+  stable communityPoems :
+    {
+      var root : Node__46230540<PoemId__139913676, CommunityPoem__85080216>;
+      var size : Nat__490723111
+    };
+  stable directMessages :
+    {
+      var root :
+        Node__46230540<MessageId__147617357, DirectMessage__546033946>;
+      var size : Nat__490723111
+    };
+  stable displayNames :
+    {var root : Node__46230540<Principal, Text>; var size : Nat__490723111};
+  stable moderationQueue :
+    {
+      var root :
+        Node__46230540<ModerationId__189823063, ModerationEntry__1341030>;
+      var size : Nat__490723111
+    };
+  stable var nextCommentId : Nat;
+  stable var nextMessageId : Nat;
+  stable var nextModerationId : Nat;
+  stable var nextNoteId : Nat;
+  stable var nextPoemId : Nat;
+  stable var nextReplyId : Nat;
+  stable var nextSignalId : Nat;
+  stable postComments :
+    {
+      var root : Node__46230540<CommentId__265911312, PostComment__149515686>;
+      var size : Nat__490723111
+    };
+  stable userNotes :
+    {
+      var root : Node__46230540<NoteId__491897279, UserNote__578990888>;
+      var size : Nat__490723111
+    };
+  stable userPhotoUrls :
+    {var root : Node__46230540<Principal, Text>; var size : Nat__490723111};
+  stable userPostCount :
+    {var root : Node__46230540<Principal, Nat>; var size : Nat__490723111};
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__491224006>;
+      var size : Nat__490723111
+    };
+  stable userViolations :
+    {var root : Node__46230540<Principal, Nat>; var size : Nat__490723111}
+}, {
+  stable var aboutContent : ?AboutContent__648949057;
+  stable accessControlState :
+    {
+      var adminPrincipal : ?Principal;
+      roles : Map__605269027<Principal, UserRole__688487809>
+    };
+  stable var adminPassword : Text;
+  stable adminPoems :
+    {
+      var root : Node__46230540<PoemId__139913676, AdminPoem__581159491>;
+      var size : Nat__490723111
+    };
+  stable callSettings :
+    {
+      var root : Node__46230540<Principal, CallSettings__50954022>;
+      var size : Nat__490723111
+    };
+  stable callSignals :
+    {
+      var root : Node__46230540<SignalId__270194381, CallSignal__716495205>;
+      var size : Nat__490723111
+    };
+  stable commentReplies :
+    {
+      var root : Node__46230540<ReplyId__471963362, CommentReply__721687009>;
+      var size : Nat__490723111
+    };
+  stable communityPoems :
+    {
+      var root : Node__46230540<PoemId__139913676, CommunityPoem__85080216>;
+      var size : Nat__490723111
+    };
+  stable directMessages :
+    {
+      var root :
+        Node__46230540<MessageId__147617357, DirectMessage__546033946>;
+      var size : Nat__490723111
+    };
+  stable displayNames :
+    {var root : Node__46230540<Principal, Text>; var size : Nat__490723111};
+  stable moderationQueue :
+    {
+      var root :
+        Node__46230540<ModerationId__189823063, ModerationEntry__1341030>;
+      var size : Nat__490723111
+    };
+  stable var nextCommentId : Nat;
+  stable var nextMessageId : Nat;
+  stable var nextModerationId : Nat;
+  stable var nextNoteId : Nat;
+  stable var nextPoemId : Nat;
+  stable var nextReplyId : Nat;
+  stable var nextSignalId : Nat;
+  stable postComments :
+    {
+      var root : Node__46230540<CommentId__265911312, PostComment__149515686>;
+      var size : Nat__490723111
+    };
+  stable userNotes :
+    {
+      var root : Node__46230540<NoteId__491897279, UserNote__578990888>;
+      var size : Nat__490723111
+    };
+  stable userPhotoUrls :
+    {var root : Node__46230540<Principal, Text>; var size : Nat__490723111};
+  stable userPostCount :
+    {var root : Node__46230540<Principal, Nat>; var size : Nat__490723111};
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__491224006>;
+      var size : Nat__490723111
+    };
+  stable userViolations :
+    {var root : Node__46230540<Principal, Nat>; var size : Nat__490723111}
+}) ;

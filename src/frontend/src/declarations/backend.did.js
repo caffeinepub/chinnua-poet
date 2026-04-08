@@ -34,6 +34,8 @@ export const PostComment = IDL.Record({
   'postId' : IDL.Text,
 });
 export const CommentResult = IDL.Variant({
+  'pendingReview' : IDL.Null,
+  'moderationRejected' : IDL.Text,
   'textTooShort' : IDL.Null,
   'success' : PostComment,
   'unauthorized' : IDL.Null,
@@ -49,11 +51,14 @@ export const CommentReply = IDL.Record({
   'postId' : IDL.Text,
 });
 export const ReplyResult = IDL.Variant({
+  'pendingReview' : IDL.Null,
   'commentNotFound' : IDL.Null,
+  'moderationRejected' : IDL.Text,
   'textTooShort' : IDL.Null,
   'success' : CommentReply,
   'unauthorized' : IDL.Null,
 });
+export const ModerationId = IDL.Nat;
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -103,6 +108,14 @@ export const NoteDeleteResult = IDL.Variant({
   'success' : IDL.Null,
   'unauthorized' : IDL.Null,
 });
+export const AboutContent = IDL.Record({
+  'bio' : IDL.Text,
+  'poetryFragments' : IDL.Text,
+  'lastUpdated' : Time,
+  'poetName' : IDL.Text,
+  'story' : IDL.Text,
+});
+export const CallSettings = IDL.Record({ 'allowCalls' : IDL.Bool });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Theme = IDL.Record({
   'name' : IDL.Text,
@@ -117,9 +130,65 @@ export const CommunityPoem = IDL.Record({
   'author' : IDL.Principal,
   'timestamp' : Time,
 });
+export const MessageId = IDL.Nat;
+export const DirectMessage = IDL.Record({
+  'id' : MessageId,
+  'read' : IDL.Bool,
+  'text' : IDL.Text,
+  'toUser' : IDL.Principal,
+  'toUsername' : IDL.Text,
+  'timestamp' : Time,
+  'fromUser' : IDL.Principal,
+  'fromUsername' : IDL.Text,
+});
+export const ModerationStatus = IDL.Variant({
+  'pending' : IDL.Null,
+  'approved' : IDL.Null,
+  'rejected' : IDL.Null,
+  'needsReview' : IDL.Null,
+});
+export const ModerationEntry = IDL.Record({
+  'id' : ModerationId,
+  'status' : ModerationStatus,
+  'content' : IDL.Text,
+  'contentType' : IDL.Text,
+  'authorName' : IDL.Text,
+  'author' : IDL.Principal,
+  'timestamp' : Time,
+  'riskLevel' : IDL.Text,
+  'reason' : IDL.Text,
+});
+export const ModerationStats = IDL.Record({
+  'pendingCount' : IDL.Nat,
+  'approvedCount' : IDL.Nat,
+  'rejectedCount' : IDL.Nat,
+});
+export const SignalId = IDL.Nat;
+export const CallSignalType = IDL.Variant({
+  'iceCandidate' : IDL.Null,
+  'offer' : IDL.Null,
+  'answer' : IDL.Null,
+  'hangup' : IDL.Null,
+});
+export const CallSignal = IDL.Record({
+  'id' : SignalId,
+  'data' : IDL.Text,
+  'toUser' : IDL.Principal,
+  'timestamp' : Time,
+  'consumed' : IDL.Bool,
+  'fromUser' : IDL.Principal,
+  'signalType' : CallSignalType,
+});
+export const SendMessageResult = IDL.Variant({
+  'textTooShort' : IDL.Null,
+  'success' : DirectMessage,
+  'unauthorized' : IDL.Null,
+});
 export const PoemResult = IDL.Variant({
+  'pendingReview' : IDL.Null,
   'contentTooShort' : IDL.Null,
   'authorNameTooShort' : IDL.Null,
+  'moderationRejected' : IDL.Text,
   'titleTooShort' : IDL.Null,
   'notFound' : IDL.Null,
   'themeNameTooShort' : IDL.Null,
@@ -128,7 +197,6 @@ export const PoemResult = IDL.Variant({
 });
 
 export const idlService = IDL.Service({
-  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addAdminPoem' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text],
       [AdminPoemResult],
@@ -140,31 +208,48 @@ export const idlService = IDL.Service({
       [ReplyResult],
       [],
     ),
-  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'approveModeratedContent' : IDL.Func([ModerationId], [], []),
+  'assignRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'changeAdminPassword' : IDL.Func(
       [IDL.Text, IDL.Text],
       [ChangePasswordResult],
       [],
     ),
+  'checkAdminPassword' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
   'createNote' : IDL.Func([IDL.Text, IDL.Text, IDL.Bool], [NoteResult], []),
   'deleteAdminPoem' : IDL.Func([PoemId], [DeleteResult], []),
   'deleteComment' : IDL.Func([CommentId], [CommentDeleteResult], []),
   'deleteMyPoem' : IDL.Func([PoemId], [PoemDeleteResult], []),
   'deleteNote' : IDL.Func([NoteId], [NoteDeleteResult], []),
   'deleteReply' : IDL.Func([ReplyId], [CommentDeleteResult], []),
+  'getAboutContent' : IDL.Func([], [IDL.Opt(AboutContent)], ['query']),
   'getAdminPassword' : IDL.Func([], [IDL.Text], ['query']),
   'getAdminPoems' : IDL.Func([], [IDL.Vec(AdminPoemEntry)], ['query']),
+  'getCallSettings' : IDL.Func([IDL.Principal], [CallSettings], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
-  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getCommentsForPost' : IDL.Func(
       [IDL.Text],
       [IDL.Vec(PostComment)],
       ['query'],
     ),
   'getCommunityPoems' : IDL.Func([], [IDL.Vec(CommunityPoem)], ['query']),
+  'getConversationByUsername' : IDL.Func(
+      [IDL.Text, IDL.Text],
+      [IDL.Vec(DirectMessage)],
+      ['query'],
+    ),
   'getDisplayName' : IDL.Func([IDL.Principal], [IDL.Opt(IDL.Text)], ['query']),
+  'getMessagesForUser' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(DirectMessage)],
+      ['query'],
+    ),
+  'getModerationQueue' : IDL.Func([], [IDL.Vec(ModerationEntry)], ['query']),
+  'getModerationStats' : IDL.Func([], [ModerationStats], ['query']),
   'getMyNotes' : IDL.Func([], [IDL.Vec(UserNote)], ['query']),
+  'getMyPendingSignals' : IDL.Func([], [IDL.Vec(CallSignal)], ['query']),
   'getMyPoems' : IDL.Func([], [IDL.Vec(CommunityPoem)], ['query']),
+  'getMyRole' : IDL.Func([], [UserRole], ['query']),
   'getPublicNotesForUser' : IDL.Func(
       [IDL.Principal],
       [IDL.Vec(UserNote)],
@@ -175,15 +260,36 @@ export const idlService = IDL.Service({
       [IDL.Vec(CommentReply)],
       ['query'],
     ),
+  'getUserPhotoUrl' : IDL.Func([IDL.Principal], [IDL.Opt(IDL.Text)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
-  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'login' : IDL.Func([], [UserRole], []),
+  'markDirectMessageRead' : IDL.Func([MessageId], [], []),
+  'markSignalConsumed' : IDL.Func([SignalId], [], []),
+  'rejectModeratedContent' : IDL.Func([ModerationId, IDL.Text], [], []),
   'resetAdminPassword' : IDL.Func([IDL.Text], [ChangePasswordResult], []),
+  'saveAboutContent' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [],
+      [],
+    ),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'sendCallSignal' : IDL.Func(
+      [IDL.Principal, CallSignalType, IDL.Text],
+      [SignalId],
+      [],
+    ),
+  'sendDirectMessage' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text],
+      [SendMessageResult],
+      [],
+    ),
+  'setCallSettings' : IDL.Func([IDL.Bool], [], []),
   'setDisplayName' : IDL.Func([IDL.Text], [], []),
+  'setUserPhotoUrl' : IDL.Func([IDL.Text], [], []),
   'submitPoem' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [PoemResult], []),
   'updateAdminPoem' : IDL.Func(
       [PoemId, IDL.Text, IDL.Text, IDL.Text],
@@ -226,6 +332,8 @@ export const idlFactory = ({ IDL }) => {
     'postId' : IDL.Text,
   });
   const CommentResult = IDL.Variant({
+    'pendingReview' : IDL.Null,
+    'moderationRejected' : IDL.Text,
     'textTooShort' : IDL.Null,
     'success' : PostComment,
     'unauthorized' : IDL.Null,
@@ -241,11 +349,14 @@ export const idlFactory = ({ IDL }) => {
     'postId' : IDL.Text,
   });
   const ReplyResult = IDL.Variant({
+    'pendingReview' : IDL.Null,
     'commentNotFound' : IDL.Null,
+    'moderationRejected' : IDL.Text,
     'textTooShort' : IDL.Null,
     'success' : CommentReply,
     'unauthorized' : IDL.Null,
   });
+  const ModerationId = IDL.Nat;
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -295,6 +406,14 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Null,
     'unauthorized' : IDL.Null,
   });
+  const AboutContent = IDL.Record({
+    'bio' : IDL.Text,
+    'poetryFragments' : IDL.Text,
+    'lastUpdated' : Time,
+    'poetName' : IDL.Text,
+    'story' : IDL.Text,
+  });
+  const CallSettings = IDL.Record({ 'allowCalls' : IDL.Bool });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const Theme = IDL.Record({ 'name' : IDL.Text, 'description' : IDL.Text });
   const CommunityPoem = IDL.Record({
@@ -306,9 +425,65 @@ export const idlFactory = ({ IDL }) => {
     'author' : IDL.Principal,
     'timestamp' : Time,
   });
+  const MessageId = IDL.Nat;
+  const DirectMessage = IDL.Record({
+    'id' : MessageId,
+    'read' : IDL.Bool,
+    'text' : IDL.Text,
+    'toUser' : IDL.Principal,
+    'toUsername' : IDL.Text,
+    'timestamp' : Time,
+    'fromUser' : IDL.Principal,
+    'fromUsername' : IDL.Text,
+  });
+  const ModerationStatus = IDL.Variant({
+    'pending' : IDL.Null,
+    'approved' : IDL.Null,
+    'rejected' : IDL.Null,
+    'needsReview' : IDL.Null,
+  });
+  const ModerationEntry = IDL.Record({
+    'id' : ModerationId,
+    'status' : ModerationStatus,
+    'content' : IDL.Text,
+    'contentType' : IDL.Text,
+    'authorName' : IDL.Text,
+    'author' : IDL.Principal,
+    'timestamp' : Time,
+    'riskLevel' : IDL.Text,
+    'reason' : IDL.Text,
+  });
+  const ModerationStats = IDL.Record({
+    'pendingCount' : IDL.Nat,
+    'approvedCount' : IDL.Nat,
+    'rejectedCount' : IDL.Nat,
+  });
+  const SignalId = IDL.Nat;
+  const CallSignalType = IDL.Variant({
+    'iceCandidate' : IDL.Null,
+    'offer' : IDL.Null,
+    'answer' : IDL.Null,
+    'hangup' : IDL.Null,
+  });
+  const CallSignal = IDL.Record({
+    'id' : SignalId,
+    'data' : IDL.Text,
+    'toUser' : IDL.Principal,
+    'timestamp' : Time,
+    'consumed' : IDL.Bool,
+    'fromUser' : IDL.Principal,
+    'signalType' : CallSignalType,
+  });
+  const SendMessageResult = IDL.Variant({
+    'textTooShort' : IDL.Null,
+    'success' : DirectMessage,
+    'unauthorized' : IDL.Null,
+  });
   const PoemResult = IDL.Variant({
+    'pendingReview' : IDL.Null,
     'contentTooShort' : IDL.Null,
     'authorNameTooShort' : IDL.Null,
+    'moderationRejected' : IDL.Text,
     'titleTooShort' : IDL.Null,
     'notFound' : IDL.Null,
     'themeNameTooShort' : IDL.Null,
@@ -317,7 +492,6 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
-    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'addAdminPoem' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text],
         [AdminPoemResult],
@@ -333,35 +507,52 @@ export const idlFactory = ({ IDL }) => {
         [ReplyResult],
         [],
       ),
-    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'approveModeratedContent' : IDL.Func([ModerationId], [], []),
+    'assignRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'changeAdminPassword' : IDL.Func(
         [IDL.Text, IDL.Text],
         [ChangePasswordResult],
         [],
       ),
+    'checkAdminPassword' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'createNote' : IDL.Func([IDL.Text, IDL.Text, IDL.Bool], [NoteResult], []),
     'deleteAdminPoem' : IDL.Func([PoemId], [DeleteResult], []),
     'deleteComment' : IDL.Func([CommentId], [CommentDeleteResult], []),
     'deleteMyPoem' : IDL.Func([PoemId], [PoemDeleteResult], []),
     'deleteNote' : IDL.Func([NoteId], [NoteDeleteResult], []),
     'deleteReply' : IDL.Func([ReplyId], [CommentDeleteResult], []),
+    'getAboutContent' : IDL.Func([], [IDL.Opt(AboutContent)], ['query']),
     'getAdminPassword' : IDL.Func([], [IDL.Text], ['query']),
     'getAdminPoems' : IDL.Func([], [IDL.Vec(AdminPoemEntry)], ['query']),
+    'getCallSettings' : IDL.Func([IDL.Principal], [CallSettings], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
-    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getCommentsForPost' : IDL.Func(
         [IDL.Text],
         [IDL.Vec(PostComment)],
         ['query'],
       ),
     'getCommunityPoems' : IDL.Func([], [IDL.Vec(CommunityPoem)], ['query']),
+    'getConversationByUsername' : IDL.Func(
+        [IDL.Text, IDL.Text],
+        [IDL.Vec(DirectMessage)],
+        ['query'],
+      ),
     'getDisplayName' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(IDL.Text)],
         ['query'],
       ),
+    'getMessagesForUser' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(DirectMessage)],
+        ['query'],
+      ),
+    'getModerationQueue' : IDL.Func([], [IDL.Vec(ModerationEntry)], ['query']),
+    'getModerationStats' : IDL.Func([], [ModerationStats], ['query']),
     'getMyNotes' : IDL.Func([], [IDL.Vec(UserNote)], ['query']),
+    'getMyPendingSignals' : IDL.Func([], [IDL.Vec(CallSignal)], ['query']),
     'getMyPoems' : IDL.Func([], [IDL.Vec(CommunityPoem)], ['query']),
+    'getMyRole' : IDL.Func([], [UserRole], ['query']),
     'getPublicNotesForUser' : IDL.Func(
         [IDL.Principal],
         [IDL.Vec(UserNote)],
@@ -372,15 +563,40 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(CommentReply)],
         ['query'],
       ),
+    'getUserPhotoUrl' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(IDL.Text)],
+        ['query'],
+      ),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
-    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'login' : IDL.Func([], [UserRole], []),
+    'markDirectMessageRead' : IDL.Func([MessageId], [], []),
+    'markSignalConsumed' : IDL.Func([SignalId], [], []),
+    'rejectModeratedContent' : IDL.Func([ModerationId, IDL.Text], [], []),
     'resetAdminPassword' : IDL.Func([IDL.Text], [ChangePasswordResult], []),
+    'saveAboutContent' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'sendCallSignal' : IDL.Func(
+        [IDL.Principal, CallSignalType, IDL.Text],
+        [SignalId],
+        [],
+      ),
+    'sendDirectMessage' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [SendMessageResult],
+        [],
+      ),
+    'setCallSettings' : IDL.Func([IDL.Bool], [], []),
     'setDisplayName' : IDL.Func([IDL.Text], [], []),
+    'setUserPhotoUrl' : IDL.Func([IDL.Text], [], []),
     'submitPoem' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [PoemResult], []),
     'updateAdminPoem' : IDL.Func(
         [PoemId, IDL.Text, IDL.Text, IDL.Text],

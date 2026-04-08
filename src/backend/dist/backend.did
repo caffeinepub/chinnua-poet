@@ -1,0 +1,272 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = record {name: text;};
+type UserNote = 
+ record {
+   author: principal;
+   content: text;
+   createdAt: Time;
+   id: NoteId;
+   isPublic: bool;
+   title: text;
+   updatedAt: Time;
+ };
+type Time = int;
+type Theme = 
+ record {
+   description: text;
+   name: text;
+ };
+type SignalId = nat;
+type SendMessageResult = 
+ variant {
+   success: DirectMessage;
+   textTooShort;
+   unauthorized;
+ };
+type ReplyResult = 
+ variant {
+   commentNotFound;
+   moderationRejected: text;
+   pendingReview;
+   success: CommentReply;
+   textTooShort;
+   unauthorized;
+ };
+type ReplyId = nat;
+type PostComment = 
+ record {
+   author: principal;
+   authorName: text;
+   id: CommentId;
+   postId: text;
+   "text": text;
+   timestamp: Time;
+ };
+type PoemResult = 
+ variant {
+   authorNameTooShort;
+   contentTooShort;
+   moderationRejected: text;
+   notFound;
+   pendingReview;
+   success: CommunityPoem;
+   themeNameTooShort;
+   titleTooShort;
+   unauthorized;
+ };
+type PoemId = nat;
+type PoemDeleteResult = 
+ variant {
+   notFound;
+   success;
+   unauthorized;
+ };
+type NoteResult = 
+ variant {
+   contentTooShort;
+   notFound;
+   success: UserNote;
+   titleTooShort;
+   unauthorized;
+ };
+type NoteId = nat;
+type NoteDeleteResult = 
+ variant {
+   notFound;
+   success;
+   unauthorized;
+ };
+type ModerationStatus = 
+ variant {
+   approved;
+   needsReview;
+   pending;
+   rejected;
+ };
+type ModerationStats = 
+ record {
+   approvedCount: nat;
+   pendingCount: nat;
+   rejectedCount: nat;
+ };
+type ModerationId = nat;
+type ModerationEntry = 
+ record {
+   author: principal;
+   authorName: text;
+   content: text;
+   contentType: text;
+   id: ModerationId;
+   reason: text;
+   riskLevel: text;
+   status: ModerationStatus;
+   timestamp: Time;
+ };
+type MessageId = nat;
+type DirectMessage = 
+ record {
+   fromUser: principal;
+   fromUsername: text;
+   id: MessageId;
+   read: bool;
+   "text": text;
+   timestamp: Time;
+   toUser: principal;
+   toUsername: text;
+ };
+type DeleteResult = 
+ variant {
+   notAdmin;
+   notFound;
+   notFoundInAdminCollection;
+   notFoundInCommunityCollection;
+   success;
+ };
+type CommunityPoem = 
+ record {
+   author: principal;
+   authorName: text;
+   content: text;
+   id: PoemId;
+   suggestedTheme: Theme;
+   timestamp: Time;
+   title: text;
+ };
+type CommentResult = 
+ variant {
+   moderationRejected: text;
+   pendingReview;
+   success: PostComment;
+   textTooShort;
+   unauthorized;
+ };
+type CommentReply = 
+ record {
+   author: principal;
+   authorName: text;
+   commentId: CommentId;
+   id: ReplyId;
+   postId: text;
+   "text": text;
+   timestamp: Time;
+ };
+type CommentId = nat;
+type CommentDeleteResult = 
+ variant {
+   notFound;
+   success;
+   unauthorized;
+ };
+type ChangePasswordResult = 
+ variant {
+   incorrectPassword;
+   passwordTooShort;
+   success;
+ };
+type CallSignalType = 
+ variant {
+   answer;
+   hangup;
+   iceCandidate;
+   offer;
+ };
+type CallSignal = 
+ record {
+   consumed: bool;
+   data: text;
+   fromUser: principal;
+   id: SignalId;
+   signalType: CallSignalType;
+   timestamp: Time;
+   toUser: principal;
+ };
+type CallSettings = record {allowCalls: bool;};
+type AdminPoemResult = 
+ variant {
+   categoryTooShort;
+   contentTooShort;
+   notAdmin;
+   notFound;
+   success: AdminPoemEntry;
+   titleTooShort;
+ };
+type AdminPoemEntry = 
+ record {
+   category: text;
+   content: text;
+   id: PoemId;
+   title: text;
+ };
+type AboutContent = 
+ record {
+   bio: text;
+   lastUpdated: Time;
+   poetName: text;
+   poetryFragments: text;
+   story: text;
+ };
+service : {
+  addAdminPoem: (title: text, content: text, category: text) ->
+   (AdminPoemResult);
+  addComment: (postId: text, "text": text, authorName: text) ->
+   (CommentResult);
+  addReply: (commentId: CommentId, postId: text, "text": text, authorName:
+   text) -> (ReplyResult);
+  approveModeratedContent: (id: ModerationId) -> ();
+  assignRole: (user: principal, role: UserRole) -> ();
+  changeAdminPassword: (currentPw: text, newPw: text) ->
+   (ChangePasswordResult);
+  checkAdminPassword: (pw: text) -> (bool) query;
+  createNote: (title: text, content: text, isPublic: bool) -> (NoteResult);
+  deleteAdminPoem: (id: PoemId) -> (DeleteResult);
+  deleteComment: (commentId: CommentId) -> (CommentDeleteResult);
+  deleteMyPoem: (id: PoemId) -> (PoemDeleteResult);
+  deleteNote: (id: NoteId) -> (NoteDeleteResult);
+  deleteReply: (replyId: ReplyId) -> (CommentDeleteResult);
+  getAboutContent: () -> (opt AboutContent) query;
+  getAdminPassword: () -> (text) query;
+  getAdminPoems: () -> (vec AdminPoemEntry) query;
+  getCallSettings: (user: principal) -> (CallSettings) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCommentsForPost: (postId: text) -> (vec PostComment) query;
+  getCommunityPoems: () -> (vec CommunityPoem) query;
+  getConversationByUsername: (user1: text, user2: text) ->
+   (vec DirectMessage) query;
+  getDisplayName: (user: principal) -> (opt text) query;
+  getMessagesForUser: (username: text) -> (vec DirectMessage) query;
+  getModerationQueue: () -> (vec ModerationEntry) query;
+  getModerationStats: () -> (ModerationStats) query;
+  getMyNotes: () -> (vec UserNote) query;
+  getMyPendingSignals: () -> (vec CallSignal) query;
+  getMyPoems: () -> (vec CommunityPoem) query;
+  getMyRole: () -> (UserRole) query;
+  getPublicNotesForUser: (user: principal) -> (vec UserNote) query;
+  getRepliesForComment: (commentId: CommentId) -> (vec CommentReply) query;
+  getUserPhotoUrl: (user: principal) -> (opt text) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  login: () -> (UserRole);
+  markDirectMessageRead: (msgId: MessageId) -> ();
+  markSignalConsumed: (signalId: SignalId) -> ();
+  rejectModeratedContent: (id: ModerationId, reason: text) -> ();
+  resetAdminPassword: (resetToken: text) -> (ChangePasswordResult);
+  saveAboutContent: (poetName: text, bio: text, story: text, poetryFragments:
+   text) -> ();
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  sendCallSignal: (toUser: principal, signalType: CallSignalType, data:
+   text) -> (SignalId);
+  sendDirectMessage: (fromUsername: text, toUsername: text, "text": text) ->
+   (SendMessageResult);
+  setCallSettings: (allowCalls: bool) -> ();
+  setDisplayName: (name: text) -> ();
+  setUserPhotoUrl: (url: text) -> ();
+  submitPoem: (title: text, content: text, authorName: text) -> (PoemResult);
+  updateAdminPoem: (id: PoemId, title: text, content: text, category:
+   text) -> (AdminPoemResult);
+  updateNote: (id: NoteId, title: text, content: text, isPublic: bool) ->
+   (NoteResult);
+}
