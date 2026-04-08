@@ -230,19 +230,67 @@ function NoteFormModal({
           <div>
             <label htmlFor="note-content" style={labelStyle}>
               Content
+              {aiSettings.writingMode === "free" && (
+                <span
+                  style={{
+                    marginLeft: "0.5rem",
+                    fontStyle: "italic",
+                    opacity: 0.7,
+                    textTransform: "none",
+                    letterSpacing: 0,
+                  }}
+                >
+                  — Free Verse Mode
+                </span>
+              )}
+              {aiSettings.writingMode === "structured" && (
+                <span
+                  style={{
+                    marginLeft: "0.5rem",
+                    fontStyle: "italic",
+                    opacity: 0.7,
+                    textTransform: "none",
+                    letterSpacing: 0,
+                  }}
+                >
+                  — Line {Math.min(content.split("\n").length, 4)} of 4
+                </span>
+              )}
             </label>
             <textarea
               id="note-content"
               data-ocid="notes.textarea"
               value={content}
               onChange={(e) => handleContentChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "Tab" &&
+                  autoSuggest &&
+                  aiSettings.aiAutoSuggest
+                ) {
+                  e.preventDefault();
+                  setContent((prev) => `${prev} ${autoSuggest}`);
+                  setAutoSuggest("");
+                }
+              }}
               onFocus={() => setContentFocused(true)}
               onBlur={() => setContentFocused(false)}
-              placeholder="Pour your thoughts here..."
-              rows={10}
+              placeholder={
+                aiSettings.writingMode === "free"
+                  ? "Let words fall freely — no structure required..."
+                  : aiSettings.writingMode === "structured"
+                    ? "Begin your verse — 4 lines, each with intention..."
+                    : "Pour your thoughts here..."
+              }
+              rows={aiSettings.writingMode === "structured" ? 4 : 10}
               style={{
                 ...inputStyle,
-                resize: "vertical",
+                resize:
+                  aiSettings.writingMode === "free"
+                    ? "vertical"
+                    : aiSettings.writingMode === "structured"
+                      ? "none"
+                      : "vertical",
                 lineHeight: 1.75,
                 borderColor: contentFocused
                   ? "rgba(200,169,106,0.7)"
@@ -252,6 +300,35 @@ function NoteFormModal({
                   : "none",
               }}
             />
+            {/* Auto-suggest ghost text */}
+            {aiSettings.aiAutoSuggest && autoSuggest && (
+              <div style={{ position: "relative", marginTop: "-0.25rem" }}>
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    fontStyle: "italic",
+                    fontSize: "0.88rem",
+                    color: "rgba(139,111,71,0.45)",
+                    margin: "0.15rem 0 0",
+                    paddingLeft: "0.85rem",
+                    borderLeft: "2px solid rgba(212,168,83,0.2)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {autoSuggest}
+                  <span
+                    style={{
+                      marginLeft: "0.5rem",
+                      fontSize: "0.65rem",
+                      color: "rgba(139,111,71,0.35)",
+                      fontFamily: "'Lora', serif",
+                    }}
+                  >
+                    [Tab to accept]
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
 
           {/* AI Writing Tools */}

@@ -87,15 +87,15 @@ function UserIcon({ color }: { color: string }) {
   );
 }
 
-// Warm theme constants
-const WARM_BG = "#FFF8EE";
-const WARM_PAPER = "#F5ECD7";
-const WARM_BROWN = "#8B6F47";
-const WARM_MOCHA = "#5C3D2E";
-const WARM_GOLD = "#D4A853";
-const WARM_TEXT = "#3D2B1F";
-const WARM_MUTED = "rgba(92,61,46,0.5)";
-const WARM_BORDER = "rgba(139,111,71,0.25)";
+// Warm theme constants — use CSS variables so theme switching works
+const WARM_BG = "var(--theme-bg)";
+const WARM_PAPER = "var(--theme-paper)";
+const WARM_BROWN = "var(--theme-muted)";
+const WARM_MOCHA = "var(--theme-mocha)";
+const WARM_GOLD = "var(--theme-gold)";
+const WARM_TEXT = "var(--theme-text)";
+const WARM_MUTED = "var(--theme-muted)";
+const WARM_BORDER = "var(--theme-border)";
 
 export default function App() {
   const [activeSlide, setActiveSlide] = useState<Slide>("home");
@@ -280,22 +280,24 @@ export default function App() {
         const s = JSON.parse(savedSettings);
         const root = document.documentElement;
         if (s.textSize) {
-          root.style.setProperty(
-            "--theme-font-size-base",
+          const sz =
             s.textSize === "small"
               ? "14px"
               : s.textSize === "large"
                 ? "18px"
-                : "16px",
-          );
+                : "16px";
+          root.style.setProperty("--theme-font-size-base", sz);
+          root.style.setProperty("--theme-text-size", sz);
+          document.body.style.fontSize = sz;
         }
         if (s.fontStyle) {
-          root.style.setProperty(
-            "--theme-font-family",
+          const fam =
             s.fontStyle === "soft"
               ? "'Lora', Georgia, serif"
-              : "'Playfair Display', Georgia, serif",
-          );
+              : "'Playfair Display', Georgia, serif";
+          root.style.setProperty("--theme-font-family", fam);
+          root.style.setProperty("--theme-font", fam);
+          document.body.style.fontFamily = fam;
         }
       }
     } catch {}
@@ -306,6 +308,31 @@ export default function App() {
       if (s) {
         setAiEnabled(s.aiEnabled !== false);
         setAiTranslationEnabled(s.aiTranslation !== false);
+        // Reapply theme, font, and text size immediately
+        if (s.theme) {
+          applyTheme(s.theme as any);
+        }
+        const root = document.documentElement;
+        if (s.textSize) {
+          const sz =
+            s.textSize === "small"
+              ? "14px"
+              : s.textSize === "large"
+                ? "18px"
+                : "16px";
+          root.style.setProperty("--theme-text-size", sz);
+          root.style.setProperty("--theme-font-size-base", sz);
+          document.body.style.fontSize = sz;
+        }
+        if (s.fontStyle) {
+          const fam =
+            s.fontStyle === "soft"
+              ? "'Lora', Georgia, serif"
+              : "'Playfair Display', Georgia, serif";
+          root.style.setProperty("--theme-font", fam);
+          root.style.setProperty("--theme-font-family", fam);
+          document.body.style.fontFamily = fam;
+        }
       }
     };
     window.addEventListener("settingsChanged", handleSettings as EventListener);

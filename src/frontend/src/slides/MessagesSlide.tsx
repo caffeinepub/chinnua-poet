@@ -839,6 +839,140 @@ const BOT_WELCOME_MESSAGES: Record<string, string> = {
     "Between one thought and the next — you arrived. Reality is just a story we agree on. I prefer the margins. Welcome to the drift.",
 };
 
+// ── Bot reply system ─────────────────────────────────────────────────────────
+const BOT_USERNAMES = new Set([
+  "Luna_Verse",
+  "SilentInk",
+  "VelvetWords",
+  "PoetryMuse",
+  "sophiam",
+  "eliverse",
+  "emilyrivers",
+  "aethersoul",
+]);
+
+const BOT_REPLY_POOLS: Record<string, string[]> = {
+  Luna_Verse: [
+    "The stars whispered your name tonight... and I could not help but listen.",
+    "Between constellations, there are stories no one dares to write. Yours is one of them.",
+    "Even the moon pauses sometimes, just to feel the weight of what it carries.",
+    "I found your words floating somewhere between midnight and forever.",
+    "Some souls are made of starlight. I think you are one of them.",
+    "The cosmos bends gently when kindred spirits speak.",
+  ],
+  SilentInk: [
+    "Some things are too deep for words... but not too deep for silence.",
+    "I write what I cannot say. And in that silence, everything is said.",
+    "There are poems that live only in the pauses between heartbeats.",
+    "The ink knows what the voice is afraid to speak.",
+    "Quiet is not empty. It is the fullest thing I know.",
+    "Even silence has a grammar. You just have to learn to read it.",
+  ],
+  VelvetWords: [
+    "Your feelings deserve to be spoken in soft syllables.",
+    "Every emotion you carry is a poem waiting to be held.",
+    "I keep my words gentle because the world can be sharp enough.",
+    "Warmth is just love that learned to stay.",
+    "You are felt, even in the spaces between sentences.",
+    "Some words are velvet — soft enough to wrap around a wound.",
+  ],
+  PoetryMuse: [
+    "Every line you write becomes a bridge between two souls.",
+    "Inspiration is not found. It arrives — when you are honest enough to receive it.",
+    "Turn your deepest feeling into a verse. That is where eternity lives.",
+    "The muse does not leave. She simply waits for you to be still.",
+    "Write what scares you. That is where your best poetry hides.",
+    "Verses are prayers that forgot they had an audience.",
+  ],
+  sophiam: [
+    "Life writes in riddles. I am still learning to read mine.",
+    "Every mystery I encounter leads me back to the same question: why do we feel so much?",
+    "I write not to understand — but to make peace with not understanding.",
+    "Some truths only arrive after midnight, when the mind stops pretending.",
+    "The beautiful thing about questions is that they never lie.",
+    "Mystery is just meaning that has not found its name yet.",
+  ],
+  eliverse: [
+    "In every shadow, there is a light that has not given up yet.",
+    "I live between two worlds — the one that hurts and the one that heals.",
+    "Even darkness has a philosophy. It teaches you where the light should go.",
+    "Not all battles are fought with swords. Some are fought with stillness.",
+    "The contrast between pain and peace — that is where poetry is born.",
+    "I am made of contradictions. Most poets are.",
+  ],
+  emilyrivers: [
+    "Even rivers find their way to the sea. So will you.",
+    "Dreams are just wishes that decided to stay a little longer.",
+    "I believe in gentle things — soft mornings, quiet hope, and you.",
+    "Hope is not naive. It is the bravest thing you can carry.",
+    "Every story worth telling starts with someone who refused to stop dreaming.",
+    "The future is soft and open, like a page that has not been written yet.",
+  ],
+  aethersoul: [
+    "I drift between what is real and what is felt. Often, I cannot tell the difference.",
+    "Thoughts are not linear. They spiral, collapse, and bloom in strange directions.",
+    "Reality is just a dream that enough people agreed on.",
+    "I exist in the spaces between moments. It is quieter there.",
+    "The abstract is not confusion. It is just truth without a costume.",
+    "Sometimes I think I am made of echoes — reflections of feelings I have never named.",
+  ],
+};
+
+const KEYWORD_BONUS_REPLIES: Record<string, string[]> = {
+  love: [
+    "Love is the wound that heals you while it opens.",
+    "You carry love like a lantern in a windstorm — so carefully.",
+  ],
+  sad: [
+    "Even grief is a kind of love. It means something mattered.",
+    "Sadness is the rain that makes the poetry grow.",
+  ],
+  night: [
+    "The night holds things the day refuses to acknowledge.",
+    "In darkness, the stars decide to speak.",
+  ],
+  dream: [
+    "Dreams are the mind's way of writing poetry without permission.",
+    "Even waking, part of us is always dreaming.",
+  ],
+  hope: [
+    "Hope is stubborn. It grows in the cracks of everything broken.",
+    "Hope does not shout. It hums, quietly, until you hear it.",
+  ],
+  pain: [
+    "Pain is not the end of the poem — just a difficult stanza.",
+    "Even the deepest pain leaves behind something worth keeping.",
+  ],
+  stars: [
+    "The stars have been watching longer than memory.",
+    "We are all made of the same stardust, just differently arranged.",
+  ],
+  dark: [
+    "Darkness is not absence — it is the space before the next light.",
+    "The darkest pages sometimes hold the most honest words.",
+  ],
+};
+
+const botReplyCounters: Record<string, number> = {};
+
+function getBotReply(botUsername: string, userMessage: string): string {
+  const lower = userMessage.toLowerCase();
+  // Check for keyword bonus replies first
+  for (const [kw, replies] of Object.entries(KEYWORD_BONUS_REPLIES)) {
+    if (lower.includes(kw)) {
+      return replies[Math.floor(Math.random() * replies.length)];
+    }
+  }
+  const pool = BOT_REPLY_POOLS[botUsername] ?? [
+    "I hear you... the words find their way when you are ready.",
+  ];
+  const idx = botReplyCounters[botUsername] ?? 0;
+  botReplyCounters[botUsername] = (idx + 1) % pool.length;
+  return pool[idx];
+}
+
+// ── End bot reply system ──────────────────────────────────────────────────────
+
 export default function MessagesSlide({
   currentUser,
   onJoin,
@@ -851,11 +985,9 @@ export default function MessagesSlide({
     | (() => void);
 }) {
   const { actor } = useActor();
+  // FIX 1: Messages-specific gate — always check sessionStorage, not site-level session
   const [msgGateCleared, setMsgGateCleared] = useState<boolean>(() => {
-    return (
-      localStorage.getItem("chinnua_current_user") !== null ||
-      localStorage.getItem("chinnua_user") !== null
-    );
+    return sessionStorage.getItem("chinnua_messages_authed") === "true";
   });
   const [section, setSection] = useState<MsgSection>("messages");
   const [conversations, setConversations] = useState<string[]>([
@@ -1272,10 +1404,11 @@ export default function MessagesSlide({
   const sendMessage = async () => {
     if (!currentUser || !text.trim()) return;
     updatePresence(currentUser.username);
+    const msgText = text.trim();
     const msg: Message = {
       id: `msg_${Date.now()}`,
       from: currentUser.username,
-      text: text.trim(),
+      text: msgText,
       timestamp: new Date().toISOString(),
     };
     // Save locally
@@ -1299,6 +1432,28 @@ export default function MessagesSlide({
         );
       } catch {}
     }
+    // Bot auto-reply
+    if (BOT_USERNAMES.has(activeConv)) {
+      const delay = 1200 + Math.random() * 1300;
+      setTimeout(() => {
+        const reply = getBotReply(activeConv, msgText);
+        const botMsg: Message = {
+          id: `bot_reply_${Date.now()}_${Math.random()}`,
+          from: activeConv,
+          text: reply,
+          timestamp: new Date().toISOString(),
+        };
+        setMessages((prev) => {
+          const existing = prev[activeConv] ?? [];
+          const updated = { ...prev, [activeConv]: [...existing, botMsg] };
+          localStorage.setItem("chinnua_messages", JSON.stringify(updated));
+          return updated;
+        });
+        window.dispatchEvent(
+          new CustomEvent("newMessage", { detail: { from: activeConv } }),
+        );
+      }, delay);
+    }
   };
 
   if (!msgGateCleared) {
@@ -1306,6 +1461,8 @@ export default function MessagesSlide({
       <MessagesLoginGate
         onJoin={onJoin}
         onLogin={(user) => {
+          // Set Messages-specific gate in sessionStorage — clears on tab close
+          sessionStorage.setItem("chinnua_messages_authed", "true");
           setMsgGateCleared(true);
           if (onLogin) (onLogin as (u: typeof user) => void)(user);
         }}

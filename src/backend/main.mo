@@ -8,9 +8,9 @@ import Order "mo:core/Order";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import AccessControl "authorization";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
 actor {
   // Auth system state
   let accessControlState = AccessControl.initState();

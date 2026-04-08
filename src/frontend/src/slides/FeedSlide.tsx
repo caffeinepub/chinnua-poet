@@ -1017,18 +1017,56 @@ export default function FeedSlide({
               <Textarea
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
-                placeholder="What's new? Share your poetry or thoughts..."
+                placeholder={
+                  aiSettings.writingMode === "free"
+                    ? "Free verse — let words fall as they come..."
+                    : aiSettings.writingMode === "structured"
+                      ? "Line 1 of 4 — begin your stanza..."
+                      : "What's new? Share your poetry or thoughts..."
+                }
                 data-ocid="feed.textarea"
+                rows={aiSettings.writingMode === "structured" ? 4 : undefined}
                 style={{
                   background: "transparent",
                   border: "1px solid rgba(212,168,83,0.2)",
                   color: "#3D2B1F",
                   fontFamily: "'Playfair Display', Georgia, serif",
                   fontSize: "0.95rem",
-                  resize: "none",
+                  resize:
+                    aiSettings.writingMode === "free" ? "vertical" : "none",
                   minHeight: 70,
                 }}
               />
+              {/* Writing mode label */}
+              {aiSettings.writingMode === "free" && (
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.68rem",
+                    color: "#8B6F47",
+                    margin: "0.15rem 0 0",
+                    opacity: 0.8,
+                  }}
+                >
+                  Free Verse Mode — no limits, just flow
+                </p>
+              )}
+              {aiSettings.writingMode === "structured" && (
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.68rem",
+                    color: "#8B6F47",
+                    margin: "0.15rem 0 0",
+                    opacity: 0.8,
+                  }}
+                >
+                  Structured Mode — Line{" "}
+                  {Math.min(newPost.split("\n").length, 4)} of 4
+                </p>
+              )}
               {aiSettings.aiWritingSuggestions && newPost.length > 10 && (
                 <div style={{ position: "relative" }}>
                   <button

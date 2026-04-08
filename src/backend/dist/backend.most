@@ -1,4 +1,4 @@
-// Version: 3.0.0
+// Version: 1.0.0
 type AboutContent__648949057 =
   {
     bio : Text;
@@ -84,12 +84,6 @@ type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
 type NoteId__491897279 = Nat;
-type OldAccessControlState__841599830 =
-  {
-    var adminAssigned : Bool;
-    userRoles : Map__605269027<Principal, OldUserRole__889293160>
-  };
-type OldUserRole__889293160 = {#admin; #guest; #user};
 type PoemId__139913676 = Nat;
 type PostComment__149515686 =
   {
@@ -117,78 +111,7 @@ type UserNote__578990888 =
   };
 type UserProfile__491224006 = {name : Text};
 type UserRole__688487809 = {#admin; #guest; #user};
-actor ({
-  stable var aboutContent : ?AboutContent__648949057;
-  in accessControlState : OldAccessControlState__841599830;
-  stable var adminPassword : Text;
-  stable adminPoems :
-    {
-      var root : Node__46230540<PoemId__139913676, AdminPoem__581159491>;
-      var size : Nat__490723111
-    };
-  stable callSettings :
-    {
-      var root : Node__46230540<Principal, CallSettings__50954022>;
-      var size : Nat__490723111
-    };
-  stable callSignals :
-    {
-      var root : Node__46230540<SignalId__270194381, CallSignal__716495205>;
-      var size : Nat__490723111
-    };
-  stable commentReplies :
-    {
-      var root : Node__46230540<ReplyId__471963362, CommentReply__721687009>;
-      var size : Nat__490723111
-    };
-  stable communityPoems :
-    {
-      var root : Node__46230540<PoemId__139913676, CommunityPoem__85080216>;
-      var size : Nat__490723111
-    };
-  stable directMessages :
-    {
-      var root :
-        Node__46230540<MessageId__147617357, DirectMessage__546033946>;
-      var size : Nat__490723111
-    };
-  stable displayNames :
-    {var root : Node__46230540<Principal, Text>; var size : Nat__490723111};
-  stable moderationQueue :
-    {
-      var root :
-        Node__46230540<ModerationId__189823063, ModerationEntry__1341030>;
-      var size : Nat__490723111
-    };
-  stable var nextCommentId : Nat;
-  stable var nextMessageId : Nat;
-  stable var nextModerationId : Nat;
-  stable var nextNoteId : Nat;
-  stable var nextPoemId : Nat;
-  stable var nextReplyId : Nat;
-  stable var nextSignalId : Nat;
-  stable postComments :
-    {
-      var root : Node__46230540<CommentId__265911312, PostComment__149515686>;
-      var size : Nat__490723111
-    };
-  stable userNotes :
-    {
-      var root : Node__46230540<NoteId__491897279, UserNote__578990888>;
-      var size : Nat__490723111
-    };
-  stable userPhotoUrls :
-    {var root : Node__46230540<Principal, Text>; var size : Nat__490723111};
-  stable userPostCount :
-    {var root : Node__46230540<Principal, Nat>; var size : Nat__490723111};
-  stable userProfiles :
-    {
-      var root : Node__46230540<Principal, UserProfile__491224006>;
-      var size : Nat__490723111
-    };
-  stable userViolations :
-    {var root : Node__46230540<Principal, Nat>; var size : Nat__490723111}
-}, {
+actor {
   stable var aboutContent : ?AboutContent__648949057;
   stable accessControlState :
     {
@@ -263,4 +186,4 @@ actor ({
     };
   stable userViolations :
     {var root : Node__46230540<Principal, Nat>; var size : Nat__490723111}
-}) ;
+};

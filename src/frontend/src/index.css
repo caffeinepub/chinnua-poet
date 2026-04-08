@@ -78,9 +78,9 @@
     scroll-behavior: smooth;
   }
   body {
-    background-color: #fff8ee;
-    color: #3d2b1f;
-    font-family: "Lora", "Libre Baskerville", Georgia, serif;
+    background-color: var(--theme-bg, #fff8ee);
+    color: var(--theme-text, #3d2b1f);
+    font-family: var(--theme-font, "Lora", "Libre Baskerville", Georgia, serif);
   }
 
   /* Warm scrollbar */
@@ -131,10 +131,10 @@
     background-color: #d4a853;
   }
   .bg-surface {
-    background-color: #fff8ee;
+    background-color: var(--theme-bg, #fff8ee);
   }
   .bg-surface-raised {
-    background-color: #f5ecd7;
+    background-color: var(--theme-paper, #f5ecd7);
   }
   .gold-gradient {
     background: linear-gradient(135deg, #d4a853, rgba(212, 168, 83, 0.6));
@@ -157,21 +157,21 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    background-color: #fff8ee;
+    background-color: var(--theme-bg, #fff8ee);
   }
 
   /* Feed card style */
   .feed-card {
-    background: #f5ecd7;
-    border: 1px solid rgba(212, 168, 83, 0.25);
+    background: var(--theme-paper, #f5ecd7);
+    border: 1px solid var(--theme-border, rgba(212, 168, 83, 0.25));
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(92, 61, 46, 0.08);
   }
 
   /* Warm card */
   .warm-card {
-    background: #f5ecd7;
-    border: 1px solid rgba(139, 111, 71, 0.2);
+    background: var(--theme-paper, #f5ecd7);
+    border: 1px solid var(--theme-border, rgba(139, 111, 71, 0.2));
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(92, 61, 46, 0.12);
     transition: box-shadow 0.3s ease;
@@ -225,103 +225,184 @@
 
 :root,
 [data-theme="warm-cream"] {
-  --theme-bg: #fff8ee;
-  --theme-paper: #f5ecd7;
+  --theme-bg: #faf6f0;
+  --theme-paper: #fff8f0;
   --theme-text: #3d2b1f;
   --theme-muted: #8b6f47;
-  --theme-gold: #d4a853;
+  --theme-gold: #b8860b;
   --theme-mocha: #5c3d2e;
-  --theme-border: rgba(139, 111, 71, 0.25);
-  --theme-card: #f5ecd7;
+  --theme-border: #e8ddd0;
+  --theme-card: #fff8f0;
   --theme-input: #fffdf5;
   --theme-msg-bg: #fff0f3;
   --theme-msg-own: #f5ecd7;
   --theme-msg-other: #fde8ed;
   --theme-ai-bg: #fff0f3;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
 }
 
-[data-theme="moonlit"] {
-  --theme-bg: #0d0d1a;
+[data-theme="midnight"] {
+  --theme-bg: #0f0f1a;
   --theme-paper: #1a1a2e;
-  --theme-text: #e8e0d0;
-  --theme-muted: #9e8070;
-  --theme-gold: #9b8fca;
-  --theme-mocha: #c4a882;
-  --theme-border: rgba(155, 143, 202, 0.2);
+  --theme-text: #e8e8f0;
+  --theme-muted: #9b8fff;
+  --theme-gold: #9b8fff;
+  --theme-mocha: #c8c0f0;
+  --theme-border: #2a2a4a;
   --theme-card: #1a1a2e;
-  --theme-input: #13131f;
-  --theme-msg-bg: #1a1228;
-  --theme-msg-own: #221832;
-  --theme-msg-other: #1f1a30;
-  --theme-ai-bg: #1a1228;
+  --theme-input: #0d0d1a;
+  --theme-msg-bg: #12121f;
+  --theme-msg-own: #1a1a2e;
+  --theme-msg-other: #20203c;
+  --theme-ai-bg: #12121f;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
+}
+
+[data-theme="forest"] {
+  --theme-bg: #f0f7f0;
+  --theme-paper: #e8f5e8;
+  --theme-text: #1a3020;
+  --theme-muted: #4a7c59;
+  --theme-gold: #2d6a4f;
+  --theme-mocha: #2d5a3e;
+  --theme-border: #b8d8c0;
+  --theme-card: #e8f5e8;
+  --theme-input: #f0faf0;
+  --theme-msg-bg: #e8f5e8;
+  --theme-msg-own: #d8edd8;
+  --theme-msg-other: #c8e3c8;
+  --theme-ai-bg: #e8f5e8;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
+}
+
+[data-theme="ocean"] {
+  --theme-bg: #f0f5fa;
+  --theme-paper: #e8f0f8;
+  --theme-text: #1a2540;
+  --theme-muted: #4a6e8c;
+  --theme-gold: #2965a0;
+  --theme-mocha: #2a4f73;
+  --theme-border: #b0c8e0;
+  --theme-card: #e8f0f8;
+  --theme-input: #f0f7ff;
+  --theme-msg-bg: #e8f0f8;
+  --theme-msg-own: #d8e8f5;
+  --theme-msg-other: #c8ddf0;
+  --theme-ai-bg: #e8f0f8;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
+}
+
+[data-theme="rose"] {
+  --theme-bg: #fdf0f5;
+  --theme-paper: #fde8ee;
+  --theme-text: #3d1525;
+  --theme-muted: #c0566b;
+  --theme-gold: #c0566b;
+  --theme-mocha: #7a2d3e;
+  --theme-border: #e8c0cc;
+  --theme-card: #fde8ee;
+  --theme-input: #fff5f8;
+  --theme-msg-bg: #fdf0f3;
+  --theme-msg-own: #fde8ee;
+  --theme-msg-other: #fdd0de;
+  --theme-ai-bg: #fdf0f3;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
+}
+
+[data-theme="ink"] {
+  --theme-bg: #f5f0e8;
+  --theme-paper: #f0ead8;
+  --theme-text: #1a1408;
+  --theme-muted: #5c5040;
+  --theme-gold: #4a3a2a;
+  --theme-mocha: #3d3020;
+  --theme-border: #ccc0a8;
+  --theme-card: #f0ead8;
+  --theme-input: #f9f5ee;
+  --theme-msg-bg: #f5f0e8;
+  --theme-msg-own: #f0ead8;
+  --theme-msg-other: #e8e0cc;
+  --theme-ai-bg: #f5f0e8;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
+}
+
+/* Legacy theme names (backward compat) */
+[data-theme="moonlit"] {
+  --theme-bg: #0f0f1a;
+  --theme-paper: #1a1a2e;
+  --theme-text: #e8e8f0;
+  --theme-muted: #9b8fff;
+  --theme-gold: #9b8fff;
+  --theme-mocha: #c8c0f0;
+  --theme-border: #2a2a4a;
+  --theme-card: #1a1a2e;
+  --theme-input: #0d0d1a;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
 }
 
 [data-theme="rose-garden"] {
-  --theme-bg: #fff5f7;
-  --theme-paper: #ffe8ee;
-  --theme-text: #4a2030;
-  --theme-muted: #8c5060;
-  --theme-gold: #d4648a;
-  --theme-mocha: #6b2d3e;
-  --theme-border: rgba(212, 100, 138, 0.25);
-  --theme-card: #ffe8ee;
-  --theme-input: #fff8f9;
-  --theme-msg-bg: #fff0f3;
-  --theme-msg-own: #ffe8ee;
-  --theme-msg-other: #fdd8e2;
-  --theme-ai-bg: #fff0f3;
+  --theme-bg: #fdf0f5;
+  --theme-paper: #fde8ee;
+  --theme-text: #3d1525;
+  --theme-muted: #c0566b;
+  --theme-gold: #c0566b;
+  --theme-mocha: #7a2d3e;
+  --theme-border: #e8c0cc;
+  --theme-card: #fde8ee;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
 }
 
 [data-theme="forest-ink"] {
-  --theme-bg: #0f1a14;
-  --theme-paper: #162210;
-  --theme-text: #d4e8d4;
-  --theme-muted: #6baa75;
-  --theme-gold: #6baa75;
-  --theme-mocha: #a8d4a8;
-  --theme-border: rgba(107, 170, 117, 0.25);
-  --theme-card: #162210;
-  --theme-input: #0c160f;
-  --theme-msg-bg: #0d1a10;
-  --theme-msg-own: #162210;
-  --theme-msg-other: #1a2a14;
-  --theme-ai-bg: #0d1a10;
+  --theme-bg: #f0f7f0;
+  --theme-paper: #e8f5e8;
+  --theme-text: #1a3020;
+  --theme-muted: #4a7c59;
+  --theme-gold: #2d6a4f;
+  --theme-mocha: #2d5a3e;
+  --theme-border: #b8d8c0;
+  --theme-card: #e8f5e8;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
 }
 
 [data-theme="golden-parchment"] {
-  --theme-bg: #f5e6c8;
-  --theme-paper: #ecdbb0;
-  --theme-text: #2c1810;
-  --theme-muted: #7a5c30;
-  --theme-gold: #b8860b;
-  --theme-mocha: #4a2c10;
-  --theme-border: rgba(184, 134, 11, 0.25);
-  --theme-card: #ecdbb0;
-  --theme-input: #f9f0dc;
-  --theme-msg-bg: #f5ead5;
-  --theme-msg-own: #ecdbb0;
-  --theme-msg-other: #e5d5a0;
-  --theme-ai-bg: #f5ead5;
+  --theme-bg: #f5f0e8;
+  --theme-paper: #f0ead8;
+  --theme-text: #1a1408;
+  --theme-muted: #5c5040;
+  --theme-gold: #4a3a2a;
+  --theme-mocha: #3d3020;
+  --theme-border: #ccc0a8;
+  --theme-card: #f0ead8;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
 }
 
 [data-theme="midnight-poet"] {
-  --theme-bg: #1a1a2e;
-  --theme-paper: #252540;
-  --theme-text: #e0d8f0;
-  --theme-muted: #9090b8;
-  --theme-gold: #7b68ee;
-  --theme-mocha: #c0b8e8;
-  --theme-border: rgba(123, 104, 238, 0.25);
-  --theme-card: #252540;
-  --theme-input: #15152a;
-  --theme-msg-bg: #1f1f38;
-  --theme-msg-own: #252540;
-  --theme-msg-other: #2a2a50;
-  --theme-ai-bg: #1f1f38;
+  --theme-bg: #0f0f1a;
+  --theme-paper: #1a1a2e;
+  --theme-text: #e8e8f0;
+  --theme-muted: #9b8fff;
+  --theme-gold: #9b8fff;
+  --theme-mocha: #c8c0f0;
+  --theme-border: #2a2a4a;
+  --theme-card: #1a1a2e;
+  --theme-font: "Playfair Display", Georgia, serif;
+  --theme-text-size: 16px;
 }
 
 /* Apply theme vars to key elements */
 body {
-  background-color: var(--theme-bg, #fff8ee) !important;
+  background-color: var(--theme-bg, #faf6f0) !important;
   color: var(--theme-text, #3d2b1f) !important;
+  font-family: var(--theme-font, "Playfair Display", Georgia, serif);
+  font-size: var(--theme-text-size, 16px);
 }

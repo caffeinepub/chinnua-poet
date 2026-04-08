@@ -195,6 +195,32 @@ export function applyTheme(theme: keyof typeof THEME_PALETTES) {
   document.body.style.color = p.text;
   document.documentElement.setAttribute("data-theme", theme);
   localStorage.setItem("chinnua_theme", theme);
+  // Also apply font/size from saved settings
+  try {
+    const s = JSON.parse(localStorage.getItem("chinnua_user_settings") || "{}");
+    if (s.fontStyle) {
+      root.style.setProperty(
+        "--theme-font",
+        s.fontStyle === "soft"
+          ? "'Lora', Georgia, serif"
+          : "'Playfair Display', Georgia, serif",
+      );
+      document.body.style.fontFamily =
+        s.fontStyle === "soft"
+          ? "'Lora', Georgia, serif"
+          : "'Playfair Display', Georgia, serif";
+    }
+    if (s.textSize) {
+      const sz =
+        s.textSize === "small"
+          ? "14px"
+          : s.textSize === "large"
+            ? "18px"
+            : "16px";
+      root.style.setProperty("--theme-text-size", sz);
+      document.body.style.fontSize = sz;
+    }
+  } catch {}
   window.dispatchEvent(new CustomEvent("themeChanged", { detail: p }));
 }
 
@@ -243,14 +269,14 @@ const FAQ_ITEMS = [
 ];
 
 const colors = {
-  bg: "#FFF8EE",
-  paper: "#F5ECD7",
-  brown: "#8B6F47",
-  mocha: "#5C3D2E",
-  gold: "#D4A853",
-  text: "#3D2B1F",
-  muted: "rgba(92,61,46,0.5)",
-  border: "rgba(139,111,71,0.25)",
+  bg: "var(--theme-bg)",
+  paper: "var(--theme-paper)",
+  brown: "var(--theme-muted)",
+  mocha: "var(--theme-mocha)",
+  gold: "var(--theme-gold)",
+  text: "var(--theme-text)",
+  muted: "var(--theme-muted)",
+  border: "var(--theme-border)",
 };
 
 function Toggle({
@@ -301,7 +327,7 @@ function Toggle({
           width: 44,
           height: 24,
           borderRadius: 12,
-          background: checked ? colors.gold : "rgba(139,111,71,0.25)",
+          background: checked ? "var(--theme-gold)" : "var(--theme-border)",
           position: "relative",
           transition: "background 0.3s",
           flexShrink: 0,
@@ -339,7 +365,7 @@ function SectionCard({
         padding: "1.5rem",
         marginBottom: "1.5rem",
         boxShadow: "0 2px 12px rgba(92,61,46,0.08)",
-        border: "1px solid rgba(139,111,71,0.25)",
+        border: "1px solid var(--theme-border)",
       }}
     >
       <h2
@@ -414,18 +440,23 @@ export default function SettingsSlide({
       }
       // Apply font/size CSS vars immediately
       if (key === "textSize") {
+        const sz =
+          value === "small" ? "14px" : value === "large" ? "18px" : "16px";
         document.documentElement.style.setProperty(
           "--theme-font-size-base",
-          value === "small" ? "14px" : value === "large" ? "18px" : "16px",
+          sz,
         );
+        document.documentElement.style.setProperty("--theme-text-size", sz);
+        document.body.style.fontSize = sz;
       }
       if (key === "fontStyle") {
-        document.documentElement.style.setProperty(
-          "--theme-font-family",
+        const fam =
           value === "soft"
             ? "'Lora', Georgia, serif"
-            : "'Playfair Display', Georgia, serif",
-        );
+            : "'Playfair Display', Georgia, serif";
+        document.documentElement.style.setProperty("--theme-font-family", fam);
+        document.documentElement.style.setProperty("--theme-font", fam);
+        document.body.style.fontFamily = fam;
       }
       window.dispatchEvent(
         new CustomEvent("settingsChanged", { detail: next }),
@@ -482,7 +513,7 @@ export default function SettingsSlide({
   const inputStyle: React.CSSProperties = {
     width: "100%",
     background: colors.bg,
-    border: "1px solid rgba(139,111,71,0.25)",
+    border: "1px solid var(--theme-border)",
     borderRadius: 8,
     padding: "0.6rem 0.8rem",
     fontFamily: "'Lora', serif",
@@ -652,7 +683,7 @@ export default function SettingsSlide({
                     width: "100%",
                     maxWidth: 240,
                     borderRadius: 12,
-                    border: "1px solid rgba(139,111,71,0.25)",
+                    border: "1px solid var(--theme-border)",
                   }}
                 >
                   <track kind="captions" />
@@ -671,9 +702,9 @@ export default function SettingsSlide({
                     style={{
                       padding: "0.4rem 0.8rem",
                       borderRadius: 8,
-                      background: colors.gold,
+                      background: "var(--theme-gold)",
                       border: "none",
-                      color: "#3D2B1F",
+                      color: "var(--theme-bg)",
                       cursor: "pointer",
                     }}
                   >
@@ -689,7 +720,7 @@ export default function SettingsSlide({
                       padding: "0.4rem 0.8rem",
                       borderRadius: 8,
                       background: "transparent",
-                      border: "1px solid rgba(139,111,71,0.25)",
+                      border: "1px solid var(--theme-border)",
                       color: colors.muted,
                       cursor: "pointer",
                     }}
@@ -706,7 +737,7 @@ export default function SettingsSlide({
               style={{
                 padding: "0.5rem 1rem",
                 borderRadius: 8,
-                border: "1px solid rgba(139,111,71,0.25)",
+                border: "1px solid var(--theme-border)",
                 background: "transparent",
                 color: colors.muted,
                 fontFamily: "'Lora', serif",
@@ -753,9 +784,9 @@ export default function SettingsSlide({
                 width: "100%",
                 padding: "0.75rem",
                 borderRadius: 10,
-                background: colors.gold,
+                background: "var(--theme-gold)",
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "1rem",
                 cursor: "pointer",
@@ -827,7 +858,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -880,7 +911,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -899,7 +930,7 @@ export default function SettingsSlide({
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
                 fontSize: "0.87rem",
-                color: "rgba(92,61,46,0.62)",
+                color: "var(--theme-muted)",
                 lineHeight: 1.75,
                 marginBottom: "1.4rem",
                 borderLeft: "3px solid rgba(212,168,83,0.4)",
@@ -1009,7 +1040,7 @@ export default function SettingsSlide({
             <div
               style={{
                 background: colors.bg,
-                border: "1px solid rgba(139,111,71,0.25)",
+                border: "1px solid var(--theme-border)",
                 borderRadius: 10,
                 padding: "1rem 1.2rem",
                 marginTop: "0.5rem",
@@ -1058,7 +1089,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1097,7 +1128,7 @@ export default function SettingsSlide({
                     fontFamily: "'Lora', serif",
                     fontStyle: "italic",
                     fontSize: "0.75rem",
-                    color: "rgba(92,61,46,0.6)",
+                    color: "var(--theme-muted)",
                     margin: 0,
                   }}
                 >
@@ -1110,7 +1141,7 @@ export default function SettingsSlide({
                     fontFamily: "'Lora', serif",
                     fontStyle: "italic",
                     fontSize: "0.75rem",
-                    color: "rgba(92,61,46,0.6)",
+                    color: "var(--theme-muted)",
                     margin: 0,
                   }}
                 >
@@ -1123,7 +1154,7 @@ export default function SettingsSlide({
                     fontFamily: "'Lora', serif",
                     fontStyle: "italic",
                     fontSize: "0.75rem",
-                    color: "rgba(92,61,46,0.6)",
+                    color: "var(--theme-muted)",
                     margin: 0,
                   }}
                 >
@@ -1152,7 +1183,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1182,7 +1213,7 @@ export default function SettingsSlide({
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
                 fontSize: "0.87rem",
-                color: "rgba(92,61,46,0.62)",
+                color: "var(--theme-muted)",
                 lineHeight: 1.75,
                 marginBottom: "0.9rem",
                 borderLeft: "3px solid rgba(212,168,83,0.4)",
@@ -1203,7 +1234,7 @@ export default function SettingsSlide({
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
                 fontSize: "0.87rem",
-                color: "rgba(92,61,46,0.62)",
+                color: "var(--theme-muted)",
                 lineHeight: 1.75,
                 marginBottom: "1.2rem",
                 borderLeft: "3px solid rgba(212,168,83,0.4)",
@@ -1233,7 +1264,7 @@ export default function SettingsSlide({
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
                 fontSize: "0.72rem",
-                color: "rgba(92,61,46,0.5)",
+                color: "var(--theme-muted)",
                 margin: "-0.25rem 0 0.6rem 1.8rem",
               }}
             >
@@ -1250,7 +1281,7 @@ export default function SettingsSlide({
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
                 fontSize: "0.72rem",
-                color: "rgba(92,61,46,0.5)",
+                color: "var(--theme-muted)",
                 margin: "-0.25rem 0 0.6rem 1.8rem",
               }}
             >
@@ -1267,7 +1298,7 @@ export default function SettingsSlide({
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
                 fontSize: "0.72rem",
-                color: "rgba(92,61,46,0.5)",
+                color: "var(--theme-muted)",
                 margin: "-0.25rem 0 0.6rem 1.8rem",
               }}
             >
@@ -1284,7 +1315,7 @@ export default function SettingsSlide({
                 fontFamily: "'Lora', serif",
                 fontStyle: "italic",
                 fontSize: "0.72rem",
-                color: "rgba(92,61,46,0.5)",
+                color: "var(--theme-muted)",
                 margin: "-0.25rem 0 0.25rem 1.8rem",
               }}
             >
@@ -1307,7 +1338,7 @@ export default function SettingsSlide({
                     fontFamily: "'Playfair Display', serif",
                     fontStyle: "italic",
                     fontSize: "0.82rem",
-                    color: "#D4A853",
+                    color: "var(--theme-gold)",
                     marginBottom: "0.2rem",
                     fontWeight: 600,
                   }}
@@ -1318,7 +1349,7 @@ export default function SettingsSlide({
                   style={{
                     fontFamily: "'Lora', serif",
                     fontSize: "0.72rem",
-                    color: "rgba(92,61,46,0.55)",
+                    color: "var(--theme-muted)",
                     marginBottom: "0.9rem",
                     lineHeight: 1.5,
                   }}
@@ -1332,7 +1363,7 @@ export default function SettingsSlide({
                   style={{
                     fontFamily: "'Lora', serif",
                     fontSize: "0.8rem",
-                    color: "#5C3D2E",
+                    color: "var(--theme-mocha)",
                     fontWeight: 600,
                     marginBottom: "0.15rem",
                   }}
@@ -1344,7 +1375,7 @@ export default function SettingsSlide({
                     fontFamily: "'Lora', serif",
                     fontStyle: "italic",
                     fontSize: "0.72rem",
-                    color: "rgba(92,61,46,0.5)",
+                    color: "var(--theme-muted)",
                     marginBottom: "0.5rem",
                   }}
                 >
@@ -1388,7 +1419,7 @@ export default function SettingsSlide({
                         flex: "1 1 130px",
                         padding: "0.65rem",
                         borderRadius: 10,
-                        border: `1px solid ${settings.aiMode === val ? "#D4A853" : "rgba(139,111,71,0.25)"}`,
+                        border: `1px solid ${settings.aiMode === val ? "var(--theme-gold)" : "var(--theme-border)"}`,
                         background:
                           settings.aiMode === val
                             ? "rgba(212,168,83,0.12)"
@@ -1407,7 +1438,9 @@ export default function SettingsSlide({
                           fontFamily: "'Playfair Display', serif",
                           fontSize: "0.82rem",
                           color:
-                            settings.aiMode === val ? "#5C3D2E" : "#7A6050",
+                            settings.aiMode === val
+                              ? "var(--theme-mocha)"
+                              : "var(--theme-muted)",
                           fontWeight: settings.aiMode === val ? 600 : 400,
                         }}
                       >
@@ -1418,7 +1451,7 @@ export default function SettingsSlide({
                           fontFamily: "'Lora', serif",
                           fontSize: "0.7rem",
                           fontStyle: "italic",
-                          color: "rgba(92,61,46,0.5)",
+                          color: "var(--theme-muted)",
                           marginTop: "0.1rem",
                         }}
                       >
@@ -1433,7 +1466,7 @@ export default function SettingsSlide({
                   style={{
                     fontFamily: "'Lora', serif",
                     fontSize: "0.8rem",
-                    color: "#5C3D2E",
+                    color: "var(--theme-mocha)",
                     fontWeight: 600,
                     marginBottom: "0.15rem",
                   }}
@@ -1445,7 +1478,7 @@ export default function SettingsSlide({
                     fontFamily: "'Lora', serif",
                     fontStyle: "italic",
                     fontSize: "0.72rem",
-                    color: "rgba(92,61,46,0.5)",
+                    color: "var(--theme-muted)",
                     marginBottom: "0.5rem",
                   }}
                 >
@@ -1469,15 +1502,15 @@ export default function SettingsSlide({
                       style={{
                         padding: "0.4rem 0.9rem",
                         borderRadius: 20,
-                        border: `1px solid ${settings.defaultVoice === v ? "#D4A853" : "rgba(139,111,71,0.25)"}`,
+                        border: `1px solid ${settings.defaultVoice === v ? "var(--theme-gold)" : "var(--theme-border)"}`,
                         background:
                           settings.defaultVoice === v
                             ? "rgba(212,168,83,0.12)"
                             : "transparent",
                         color:
                           settings.defaultVoice === v
-                            ? "#5C3D2E"
-                            : "rgba(92,61,46,0.55)",
+                            ? "var(--theme-mocha)"
+                            : "var(--theme-muted)",
                         fontFamily: "'Lora', serif",
                         fontSize: "0.85rem",
                         cursor: "pointer",
@@ -1494,7 +1527,7 @@ export default function SettingsSlide({
                   style={{
                     fontFamily: "'Lora', serif",
                     fontSize: "0.8rem",
-                    color: "#5C3D2E",
+                    color: "var(--theme-mocha)",
                     fontWeight: 600,
                     marginBottom: "0.15rem",
                   }}
@@ -1506,7 +1539,7 @@ export default function SettingsSlide({
                     fontFamily: "'Lora', serif",
                     fontStyle: "italic",
                     fontSize: "0.72rem",
-                    color: "rgba(92,61,46,0.5)",
+                    color: "var(--theme-muted)",
                     marginBottom: "0.5rem",
                   }}
                 >
@@ -1537,15 +1570,15 @@ export default function SettingsSlide({
                       style={{
                         padding: "0.4rem 0.9rem",
                         borderRadius: 20,
-                        border: `1px solid ${settings.playbackSpeed === val ? "#D4A853" : "rgba(139,111,71,0.25)"}`,
+                        border: `1px solid ${settings.playbackSpeed === val ? "var(--theme-gold)" : "var(--theme-border)"}`,
                         background:
                           settings.playbackSpeed === val
                             ? "rgba(212,168,83,0.12)"
                             : "transparent",
                         color:
                           settings.playbackSpeed === val
-                            ? "#5C3D2E"
-                            : "rgba(92,61,46,0.55)",
+                            ? "var(--theme-mocha)"
+                            : "var(--theme-muted)",
                         fontFamily: "'Lora', serif",
                         fontSize: "0.82rem",
                         cursor: "pointer",
@@ -1566,7 +1599,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1632,7 +1665,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1700,7 +1733,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1720,7 +1753,7 @@ export default function SettingsSlide({
             <div
               style={{
                 background: colors.bg,
-                border: "1px solid rgba(139,111,71,0.25)",
+                border: "1px solid var(--theme-border)",
                 borderRadius: 10,
                 padding: "1.2rem",
                 textAlign: "center",
@@ -1734,7 +1767,7 @@ export default function SettingsSlide({
                   justifyContent: "center",
                 }}
               >
-                <Globe size={32} style={{ color: "#8B6F47" }} />
+                <Globe size={32} style={{ color: "var(--theme-muted)" }} />
               </p>
               <p
                 style={{
@@ -1802,7 +1835,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -1823,7 +1856,7 @@ export default function SettingsSlide({
                 borderRadius: 10,
                 padding: "1rem",
                 marginBottom: "1rem",
-                border: "1px solid rgba(139,111,71,0.25)",
+                border: "1px solid var(--theme-border)",
               }}
             >
               <p
@@ -1856,7 +1889,7 @@ export default function SettingsSlide({
                   borderRadius: 8,
                   background: colors.gold,
                   border: "none",
-                  color: "#3D2B1F",
+                  color: "var(--theme-bg)",
                   cursor: "pointer",
                   fontFamily: "'Lora', serif",
                   fontSize: "0.85rem",
@@ -2011,7 +2044,7 @@ export default function SettingsSlide({
                       borderRadius: 8,
                       background: colors.gold,
                       border: "none",
-                      color: "#3D2B1F",
+                      color: "var(--theme-bg)",
                       cursor: "pointer",
                       fontFamily: "'Lora', serif",
                     }}
@@ -2055,7 +2088,7 @@ export default function SettingsSlide({
                 style={{
                   padding: "0.4rem 0.9rem",
                   borderRadius: 20,
-                  border: "1px solid rgba(139,111,71,0.25)",
+                  border: "1px solid var(--theme-border)",
                   color: colors.mocha,
                   textDecoration: "none",
                   fontFamily: "'Lora', serif",
@@ -2071,7 +2104,7 @@ export default function SettingsSlide({
                 style={{
                   padding: "0.4rem 0.9rem",
                   borderRadius: 20,
-                  border: "1px solid rgba(139,111,71,0.25)",
+                  border: "1px solid var(--theme-border)",
                   color: colors.mocha,
                   textDecoration: "none",
                   fontFamily: "'Lora', serif",
@@ -2095,7 +2128,7 @@ export default function SettingsSlide({
                 marginBottom: "0.75rem",
                 padding: "0.65rem",
                 borderRadius: 8,
-                border: "1px solid rgba(139,111,71,0.25)",
+                border: "1px solid var(--theme-border)",
                 background: "transparent",
                 color: colors.text,
                 fontFamily: "'Lora', serif",
@@ -2263,7 +2296,7 @@ export default function SettingsSlide({
                         background: colors.gold,
                         border: "none",
                         borderRadius: 8,
-                        color: "#3D2B1F",
+                        color: "var(--theme-bg)",
                         fontFamily: "'Lora', serif",
                         cursor: "pointer",
                         fontWeight: 600,
@@ -2373,7 +2406,7 @@ export default function SettingsSlide({
                           borderRadius: 8,
                           background: colors.gold,
                           border: "none",
-                          color: "#3D2B1F",
+                          color: "var(--theme-bg)",
                           cursor: "pointer",
                           fontFamily: "'Lora', serif",
                         }}
@@ -2393,7 +2426,7 @@ export default function SettingsSlide({
                           flex: 1,
                           padding: "0.6rem",
                           borderRadius: 8,
-                          border: "1px solid rgba(139,111,71,0.25)",
+                          border: "1px solid var(--theme-border)",
                           background: "transparent",
                           color: colors.muted,
                           cursor: "pointer",
@@ -2444,7 +2477,7 @@ export default function SettingsSlide({
                 borderRadius: 8,
                 background: colors.gold,
                 border: "none",
-                color: "#3D2B1F",
+                color: "var(--theme-bg)",
                 cursor: "pointer",
                 fontFamily: "'Lora', serif",
               }}
@@ -2466,7 +2499,7 @@ export default function SettingsSlide({
                 marginBottom: "0.75rem",
                 padding: "0.7rem",
                 borderRadius: 8,
-                border: "1px solid rgba(139,111,71,0.25)",
+                border: "1px solid var(--theme-border)",
                 background: "transparent",
                 color: colors.text,
                 fontFamily: "'Lora', serif",
@@ -2572,7 +2605,7 @@ export default function SettingsSlide({
                           flex: 1,
                           padding: "0.6rem",
                           borderRadius: 8,
-                          border: "1px solid rgba(139,111,71,0.25)",
+                          border: "1px solid var(--theme-border)",
                           background: "transparent",
                           color: colors.muted,
                           cursor: "pointer",
@@ -2594,7 +2627,7 @@ export default function SettingsSlide({
                           borderRadius: 8,
                           background: colors.brown,
                           border: "none",
-                          color: "#3D2B1F",
+                          color: "var(--theme-bg)",
                           cursor: "pointer",
                           fontFamily: "'Lora', serif",
                         }}
@@ -2675,7 +2708,7 @@ export default function SettingsSlide({
                           flex: 1,
                           padding: "0.6rem",
                           borderRadius: 8,
-                          border: "1px solid rgba(139,111,71,0.25)",
+                          border: "1px solid var(--theme-border)",
                           background: "transparent",
                           color: colors.muted,
                           cursor: "pointer",
@@ -2704,7 +2737,7 @@ export default function SettingsSlide({
                               ? "#c0392b"
                               : "rgba(192,57,43,0.4)",
                           border: "none",
-                          color: "#3D2B1F",
+                          color: "var(--theme-bg)",
                           cursor:
                             deleteText === "DELETE" ? "pointer" : "not-allowed",
                           fontFamily: "'Lora', serif",
@@ -2788,7 +2821,7 @@ export default function SettingsSlide({
             borderRadius: 16,
             padding: "1rem 0.5rem",
             boxShadow: "0 2px 12px rgba(92,61,46,0.08)",
-            border: "1px solid rgba(139,111,71,0.25)",
+            border: "1px solid var(--theme-border)",
             position: "sticky",
             top: 16,
             display: window.innerWidth < 640 ? "none" : undefined,
