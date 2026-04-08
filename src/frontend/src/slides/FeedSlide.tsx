@@ -14,6 +14,7 @@ import {
   MessageCircle,
   MessageSquare,
   Smile,
+  Sparkles,
   Tag,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -26,6 +27,11 @@ import CommentThread, {
 import EmojiPicker from "../components/EmojiPicker";
 import { LoginGate } from "../components/LoginGate";
 import { AI_BOTS, BOT_POSTS, seedBotData } from "../data/ai-bots";
+import {
+  generateAIImage,
+  getWritingSuggestions,
+  useAISettings,
+} from "../hooks/useAISettings";
 import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
 
@@ -659,6 +665,11 @@ export default function FeedSlide({
   onViewProfile,
 }: FeedSlideProps) {
   const [posts, setPosts] = useState<Post[]>([]);
+  const aiSettings = useAISettings();
+  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
+  const [showAiSuggestions, setShowAiSuggestions] = useState(false);
+  const [aiImageData, setAiImageData] = useState<string | null>(null);
+  const [generatingAiImage, setGeneratingAiImage] = useState(false);
   const [newPost, setNewPost] = useState("");
   const [postTopic, setPostTopic] = useState("");
   const [whoCanReply, setWhoCanReply] = useState<string>(
@@ -1018,6 +1029,62 @@ export default function FeedSlide({
                   minHeight: 70,
                 }}
               />
+              {aiSettings.aiWritingSuggestions && newPost.length > 10 && (
+                <div style={{ position: "relative" }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAiSuggestions(getWritingSuggestions(newPost));
+                      setShowAiSuggestions((v) => !v);
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "'Lora', serif",
+                      fontStyle: "italic",
+                      fontSize: "0.72rem",
+                      color: "#8B6F47",
+                      padding: "0.25rem 0",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.3rem",
+                    }}
+                    data-ocid="feed.toggle"
+                  >
+                    <Sparkles size={11} />
+                    Writing Tips
+                  </button>
+                  {showAiSuggestions && aiSuggestions.length > 0 && (
+                    <div
+                      style={{
+                        background: "#F5ECD7",
+                        border: "1px solid rgba(212,168,83,0.3)",
+                        borderRadius: 8,
+                        padding: "0.6rem 0.9rem",
+                        marginTop: "0.25rem",
+                        zIndex: 20,
+                      }}
+                    >
+                      {aiSuggestions.map((s) => (
+                        <p
+                          key={s}
+                          style={{
+                            fontFamily: "'Lora', serif",
+                            fontStyle: "italic",
+                            fontSize: "0.78rem",
+                            color: "#5C3D2E",
+                            margin: "0.2rem 0",
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          • {s}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               {postImage && (
                 <div style={{ position: "relative", marginTop: "0.5rem" }}>
                   <img
@@ -1138,6 +1205,41 @@ export default function FeedSlide({
                 >
                   <Camera size={16} />
                 </button>
+                {aiSettings.aiImageGen && (
+                  <button
+                    type="button"
+                    title="Generate AI Image"
+                    onClick={async () => {
+                      if (!newPost.trim()) return;
+                      setGeneratingAiImage(true);
+                      try {
+                        const img = await generateAIImage(newPost);
+                        setAiImageData(img);
+                        setPostImage(img);
+                      } finally {
+                        setGeneratingAiImage(false);
+                      }
+                    }}
+                    disabled={generatingAiImage || !newPost.trim()}
+                    style={{
+                      background: aiImageData ? "rgba(212,168,83,0.2)" : "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "0.8rem",
+                      padding: "0.2rem 0.4rem",
+                      borderRadius: 4,
+                      color: "#8B6F47",
+                      fontFamily: "'Lora', serif",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.2rem",
+                    }}
+                    data-ocid="feed.secondary_button"
+                  >
+                    <Sparkles size={14} />
+                    {generatingAiImage ? "…" : "AI Image"}
+                  </button>
+                )}
                 <div style={{ position: "relative" }}>
                   <button
                     type="button"

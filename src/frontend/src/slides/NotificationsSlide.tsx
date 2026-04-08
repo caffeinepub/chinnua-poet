@@ -5,6 +5,7 @@ import {
   Heart,
   Mail,
   MessageSquare,
+  Send,
   User,
   X,
 } from "lucide-react";
@@ -208,14 +209,60 @@ function NotificationDetail({
   notification,
   onClose,
   onMarkRead,
+  onNavigate,
 }: {
   notification: Notification;
   onClose: () => void;
   onMarkRead: (id: string) => void;
+  onNavigate: (slide: string, extra?: Record<string, string>) => void;
 }) {
   useEffect(() => {
     if (!notification.read) onMarkRead(notification.id);
   }, [notification.id, notification.read, onMarkRead]);
+
+  const goToMessages = () => {
+    onNavigate("messages", { openUser: notification.fromUser });
+    onClose();
+  };
+
+  const goToProfile = () => {
+    onNavigate("profile", { username: notification.fromUser });
+    onClose();
+  };
+
+  const goToPost = () => {
+    const dest =
+      notification.type === "like" && notification.targetContent
+        ? "poems"
+        : "feed";
+    onNavigate(dest);
+    onClose();
+  };
+
+  const actionBtn = (label: string, handler: () => void, primary = true) => (
+    <button
+      type="button"
+      onClick={handler}
+      style={{
+        flex: 1,
+        padding: "0.55rem",
+        background: primary ? "rgba(212,168,83,0.85)" : "rgba(139,111,71,0.1)",
+        border: primary ? "none" : `1px solid ${WARM_BORDER}`,
+        borderRadius: 8,
+        cursor: "pointer",
+        fontFamily: "'Libre Baskerville', Georgia, serif",
+        fontSize: "0.82rem",
+        color: "#3D2B1F",
+        fontWeight: primary ? 600 : 400,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.3rem",
+      }}
+    >
+      {label}
+    </button>
+  );
 
   return (
     <motion.div
@@ -354,71 +401,40 @@ function NotificationDetail({
         </p>
 
         {/* Actions */}
-        <div style={{ display: "flex", gap: "0.6rem" }}>
-          {notification.type === "message" && (
-            <button
-              type="button"
-              data-ocid="notifications.confirm_button"
-              onClick={onClose}
-              style={{
-                flex: 1,
-                padding: "0.55rem",
-                background: "rgba(212,168,83,0.85)",
-                border: "none",
-                borderRadius: 8,
-                cursor: "pointer",
-                fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontSize: "0.82rem",
-                color: "#3D2B1F",
-                fontWeight: 600,
-              }}
-            >
-              Go to Messages
-            </button>
-          )}
-          {notification.type === "follow" && (
-            <button
-              type="button"
-              data-ocid="notifications.confirm_button"
-              onClick={onClose}
-              style={{
-                flex: 1,
-                padding: "0.55rem",
-                background: "rgba(212,168,83,0.85)",
-                border: "none",
-                borderRadius: 8,
-                cursor: "pointer",
-                fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontSize: "0.82rem",
-                color: "#3D2B1F",
-                fontWeight: 600,
-              }}
-            >
-              View Profile
-            </button>
-          )}
-          {(notification.type === "like" ||
-            notification.type === "comment") && (
-            <button
-              type="button"
-              data-ocid="notifications.confirm_button"
-              onClick={onClose}
-              style={{
-                flex: 1,
-                padding: "0.55rem",
-                background: "rgba(212,168,83,0.85)",
-                border: "none",
-                borderRadius: 8,
-                cursor: "pointer",
-                fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontSize: "0.82rem",
-                color: "#3D2B1F",
-                fontWeight: 600,
-              }}
-            >
-              View Post
-            </button>
-          )}
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          {notification.type === "message" &&
+            actionBtn("Go to Messages", goToMessages)}
+          {notification.type === "follow" &&
+            actionBtn("View Profile", goToProfile)}
+          {(notification.type === "like" || notification.type === "comment") &&
+            actionBtn("View Post", goToPost)}
+
+          {/* Message user button always present */}
+          <button
+            type="button"
+            onClick={goToMessages}
+            data-ocid="notifications.confirm_button"
+            style={{
+              flex: 1,
+              padding: "0.55rem",
+              background: "rgba(212,168,83,0.15)",
+              border: "1px solid rgba(212,168,83,0.45)",
+              borderRadius: 8,
+              cursor: "pointer",
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: "0.82rem",
+              color: WARM_MOCHA,
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.3rem",
+            }}
+          >
+            <Send width={12} height={12} />
+            Message {notification.fromUser}
+          </button>
+
           <button
             type="button"
             data-ocid="notifications.cancel_button"
@@ -445,9 +461,11 @@ function NotificationDetail({
 export default function NotificationsSlide({
   currentUser,
   onLogin,
+  onNavigate,
 }: {
   currentUser: IUser | null;
   onLogin: () => void;
+  onNavigate?: (slide: string, extra?: Record<string, string>) => void;
 }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [selected, setSelected] = useState<Notification | null>(null);
@@ -481,6 +499,12 @@ export default function NotificationsSlide({
 
   const handleClick = (n: Notification) => {
     setSelected(n);
+  };
+
+  const handleNavigate = (slide: string, extra?: Record<string, string>) => {
+    if (onNavigate) {
+      onNavigate(slide, extra);
+    }
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -573,6 +597,7 @@ export default function NotificationsSlide({
             notification={selected}
             onClose={() => setSelected(null)}
             onMarkRead={markRead}
+            onNavigate={handleNavigate}
           />
         )}
       </AnimatePresence>
@@ -701,7 +726,8 @@ export default function NotificationsSlide({
                 marginTop: "0.5rem",
               }}
             >
-              When someone likes, comments, or follows you — it appears here
+              When someone likes, comments, or follows you \u2014 it appears
+              here
             </p>
           </motion.div>
         ) : (

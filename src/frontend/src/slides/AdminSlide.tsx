@@ -20,6 +20,7 @@ interface UserEntry {
   phone?: string;
   createdAt?: string;
   joinedAt?: string;
+  isBot?: boolean;
 }
 interface Post {
   id: string;
@@ -2752,15 +2753,39 @@ function UsersTab({
                   }}
                 >
                   <td style={{ padding: "0.6rem 0.9rem" }}>
-                    <span
+                    <div
                       style={{
-                        fontWeight: 700,
-                        color: WARM_MOCHA,
-                        fontSize: "0.88rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.4rem",
                       }}
                     >
-                      @{user.username}
-                    </span>
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: WARM_MOCHA,
+                          fontSize: "0.88rem",
+                        }}
+                      >
+                        @{user.username}
+                      </span>
+                      {user.isBot && (
+                        <span
+                          style={{
+                            background: "rgba(212,168,83,0.15)",
+                            border: "1px solid rgba(212,168,83,0.4)",
+                            borderRadius: 10,
+                            padding: "0.1rem 0.4rem",
+                            fontSize: "0.62rem",
+                            color: "#5C3D2E",
+                            fontFamily: "'Lora', serif",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          🤖 Bot
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td
                     style={{

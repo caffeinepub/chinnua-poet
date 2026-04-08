@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { generateAIImage, useAISettings } from "../hooks/useAISettings";
 
 const WARM_BG = "#FFF8EE";
 const WARM_PAPER = "#F5ECD7";
@@ -76,6 +77,10 @@ export default function GallerySlide({
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [likedPhotos, setLikedPhotos] = useState<Set<string>>(new Set());
   const fileRef = useRef<HTMLInputElement>(null);
+  const aiSettings = useAISettings();
+  const [showAiPrompt, setShowAiPrompt] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [generatingAiImage, setGeneratingAiImage] = useState(false);
 
   useEffect(() => {
     const stored: GalleryPhoto[] = JSON.parse(
@@ -135,6 +140,32 @@ export default function GallerySlide({
   };
 
   const openFileDialog = () => fileRef.current?.click();
+
+  const handleAiGenerate = async () => {
+    if (!aiPrompt.trim()) return;
+    setGeneratingAiImage(true);
+    try {
+      const src = await generateAIImage(aiPrompt);
+      if (!src) return;
+      const photo: GalleryPhoto = {
+        id: `ai_${Date.now()}`,
+        src,
+        uploader: currentUser?.username || "AI",
+        timestamp: new Date().toISOString(),
+        likes: 0,
+      };
+      const stored: GalleryPhoto[] = JSON.parse(
+        localStorage.getItem("chinnua_gallery") || "[]",
+      );
+      stored.unshift(photo);
+      localStorage.setItem("chinnua_gallery", JSON.stringify(stored));
+      setPhotos((prev) => [photo, ...prev]);
+      setAiPrompt("");
+      setShowAiPrompt(false);
+    } finally {
+      setGeneratingAiImage(false);
+    }
+  };
 
   if (isGalleryLocked) {
     return (
@@ -236,18 +267,84 @@ export default function GallerySlide({
             onChange={handleUpload}
             style={{ display: "none" }}
           />
-          <Button
-            onClick={openFileDialog}
-            data-ocid="gallery.upload_button"
-            style={{
-              background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
-              border: "none",
-              color: "#3D2B1F",
-              fontFamily: "'Libre Baskerville', Georgia, serif",
-            }}
-          >
-            Upload Photo
-          </Button>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <Button
+              onClick={openFileDialog}
+              data-ocid="gallery.upload_button"
+              style={{
+                background: `linear-gradient(135deg, ${WARM_GOLD}, ${WARM_BROWN})`,
+                border: "none",
+                color: "#3D2B1F",
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+              }}
+            >
+              Upload Photo
+            </Button>
+            {aiSettings.aiImageGen && (
+              <Button
+                onClick={() => setShowAiPrompt((v) => !v)}
+                data-ocid="gallery.secondary_button"
+                style={{
+                  background: "rgba(212,168,83,0.15)",
+                  border: "1px solid rgba(212,168,83,0.4)",
+                  color: WARM_MOCHA,
+                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                }}
+              >
+                ✦ Generate with AI
+              </Button>
+            )}
+          </div>
+          {aiSettings.aiImageGen && showAiPrompt && (
+            <div
+              style={{
+                background: "#F5ECD7",
+                border: "1px solid rgba(212,168,83,0.3)",
+                borderRadius: 10,
+                padding: "0.75rem 1rem",
+                marginTop: "0.5rem",
+                display: "flex",
+                gap: "0.5rem",
+                flexWrap: "wrap",
+              }}
+            >
+              <input
+                type="text"
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="Describe the image you want to generate..."
+                data-ocid="gallery.input"
+                style={{
+                  flex: 1,
+                  minWidth: 200,
+                  background: "#FFF8EE",
+                  border: "1px solid rgba(212,168,83,0.3)",
+                  borderRadius: 6,
+                  padding: "0.4rem 0.7rem",
+                  fontFamily: "'Lora', serif",
+                  fontSize: "0.85rem",
+                  color: "#3D2B1F",
+                  outline: "none",
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAiGenerate();
+                }}
+              />
+              <Button
+                onClick={handleAiGenerate}
+                disabled={generatingAiImage || !aiPrompt.trim()}
+                data-ocid="gallery.submit_button"
+                style={{
+                  background: "rgba(212,168,83,0.85)",
+                  border: "none",
+                  color: "#3D2B1F",
+                  fontFamily: "'Libre Baskerville', serif",
+                }}
+              >
+                {generatingAiImage ? "Generating…" : "Generate"}
+              </Button>
+            </div>
+          )}
         </div>
 
         {photos.length === 0 ? (

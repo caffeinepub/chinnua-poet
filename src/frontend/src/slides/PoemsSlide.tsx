@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import type { Comment, CommentReply } from "../components/CommentThread";
 import CommentThread from "../components/CommentThread";
 import { LoginGate } from "../components/LoginGate";
+import { generateAIImage, useAISettings } from "../hooks/useAISettings";
 import { useActor } from "../hooks/useActor";
 import { POEMS } from "../poems-data";
 import { getAiSettings, speakText } from "../utils/aiFeatures";
@@ -431,6 +432,10 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
   const [search2, setSearch2] = useState("");
   const [category2, setCategory2] = useState("All");
   const [selected, setSelected] = useState<PoemType | null>(null);
+  const aiSettings = useAISettings();
+  const [aiPoemImage, setAiPoemImage] = useState<string | null>(null);
+  const [generatingAiImage, setGeneratingAiImage] = useState(false);
+  const [showAiImageModal, setShowAiImageModal] = useState(false);
   const [savedPoems, setSavedPoems] = useState<Set<string>>(() => {
     try {
       const user = JSON.parse(localStorage.getItem("chinnua_user") || "null");
@@ -1045,6 +1050,92 @@ export default function PoemsSlide({ currentUser, onLogin }: PoemsSlideProps) {
                 >
                   <Volume2 size={14} /> Listen
                 </button>
+              )}
+              {aiSettings.aiImageGen && selected && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setGeneratingAiImage(true);
+                    try {
+                      const img = await generateAIImage(
+                        `${selected.title || ""} ${(selected.full || selected.excerpt || "").slice(0, 80)}`,
+                      );
+                      setAiPoemImage(img);
+                      setShowAiImageModal(true);
+                    } finally {
+                      setGeneratingAiImage(false);
+                    }
+                  }}
+                  disabled={generatingAiImage}
+                  data-ocid="poems.toggle"
+                  style={{
+                    padding: "0.35rem 0.9rem",
+                    background: "transparent",
+                    border: "1px solid rgba(139,111,71,0.3)",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.78rem",
+                    color: "#8B6F47",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.3rem",
+                  }}
+                >
+                  ✦ {generatingAiImage ? "Generating…" : "Poem Image"}
+                </button>
+              )}
+              {/* AI Image Modal */}
+              {showAiImageModal && aiPoemImage && (
+                <div
+                  style={{
+                    position: "fixed",
+                    inset: 0,
+                    background: "rgba(0,0,0,0.7)",
+                    zIndex: 300,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "1rem",
+                  }}
+                >
+                  <div
+                    role="presentation"
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    style={{
+                      background: "#F5ECD7",
+                      borderRadius: 16,
+                      padding: "1rem",
+                      maxWidth: 440,
+                      width: "100%",
+                    }}
+                  >
+                    <img
+                      src={aiPoemImage}
+                      alt="AI poem"
+                      style={{ width: "100%", borderRadius: 10 }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowAiImageModal(false)}
+                      style={{
+                        marginTop: "0.75rem",
+                        width: "100%",
+                        background: "rgba(212,168,83,0.15)",
+                        border: "none",
+                        borderRadius: 8,
+                        padding: "0.45rem",
+                        cursor: "pointer",
+                        fontFamily: "'Lora', serif",
+                        fontSize: "0.82rem",
+                        color: "#5C3D2E",
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           )}

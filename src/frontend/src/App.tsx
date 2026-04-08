@@ -23,6 +23,7 @@ import PrivacySlide from "./slides/PrivacySlide";
 import SettingsSlide, { applyTheme } from "./slides/SettingsSlide";
 import TermsSlide from "./slides/TermsSlide";
 import UserProfileSlide from "./slides/UserProfileSlide";
+import { updatePresence } from "./utils/presence";
 
 type Slide =
   | "home"
@@ -104,6 +105,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [profileUsername, setProfileUsername] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     // Auto-follow admin on startup for all users
@@ -150,6 +152,30 @@ export default function App() {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  // Presence tracking: update on activity
+  useEffect(() => {
+    if (!currentUser?.username) return;
+    const handler = () => updatePresence(currentUser.username);
+    handler(); // update immediately on login
+    window.addEventListener("mousemove", handler);
+    window.addEventListener("keydown", handler);
+    return () => {
+      window.removeEventListener("mousemove", handler);
+      window.removeEventListener("keydown", handler);
+    };
+  }, [currentUser?.username]);
+
+  // Unread messages: listen for newMessage events when not on messages slide
+  useEffect(() => {
+    const handler = (_e: Event) => {
+      if (activeSlide !== "messages") {
+        setUnreadCount((c) => c + 1);
+      }
+    };
+    window.addEventListener("newMessage", handler);
+    return () => window.removeEventListener("newMessage", handler);
+  }, [activeSlide]);
 
   // AI enabled state
   const [aiEnabled, setAiEnabled] = useState(() => {
@@ -237,6 +263,35 @@ export default function App() {
     if (saved && PALETTES[saved]) {
       document.documentElement.setAttribute("data-theme", saved);
     }
+
+    // Restore settings (font/size CSS vars) on startup
+    try {
+      const savedSettings =
+        localStorage.getItem("chinnua_user_settings") ||
+        localStorage.getItem("chinnua_settings");
+      if (savedSettings) {
+        const s = JSON.parse(savedSettings);
+        const root = document.documentElement;
+        if (s.textSize) {
+          root.style.setProperty(
+            "--theme-font-size-base",
+            s.textSize === "small"
+              ? "14px"
+              : s.textSize === "large"
+                ? "18px"
+                : "16px",
+          );
+        }
+        if (s.fontStyle) {
+          root.style.setProperty(
+            "--theme-font-family",
+            s.fontStyle === "soft"
+              ? "'Lora', Georgia, serif"
+              : "'Playfair Display', Georgia, serif",
+          );
+        }
+      }
+    } catch {}
 
     // Listen for settings changes
     const handleSettings = (e: CustomEvent) => {
@@ -340,6 +395,7 @@ export default function App() {
     } else if (slide !== "profile") {
       setProfileUsername(null);
     }
+    if (slide === "messages") setUnreadCount(0);
     setActiveSlide(slide);
     window.location.hash = slide;
   };
@@ -382,12 +438,36 @@ export default function App() {
       case "about":
         return <AboutSlide />;
       case "explore":
-        return <ExploreSlide currentUser={currentUser} />;
+        return (
+          <ExploreSlide
+            currentUser={currentUser}
+            onNavigate={(slide: string, extra?: Record<string, string>) => {
+              if (extra?.username) setProfileUsername(extra.username);
+              if (extra?.openUser) {
+                sessionStorage.setItem(
+                  "chinnua_open_user_chat",
+                  extra.openUser,
+                );
+              }
+              setActiveSlide(slide as any);
+            }}
+          />
+        );
       case "notifications":
         return (
           <NotificationsSlide
             currentUser={currentUser}
             onLogin={() => setShowLoginModal(true)}
+            onNavigate={(slide: string, extra?: Record<string, string>) => {
+              if (extra?.username) setProfileUsername(extra.username);
+              if (extra?.openUser) {
+                sessionStorage.setItem(
+                  "chinnua_open_user_chat",
+                  extra.openUser,
+                );
+              }
+              setActiveSlide(slide as any);
+            }}
           />
         );
       case "notes":
@@ -598,7 +678,37 @@ export default function App() {
                     transition: "color 0.2s",
                   }}
                 >
-                  {item.label}
+                  {item.label === "Messages" && unreadCount > 0 ? (
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.3rem",
+                      }}
+                    >
+                      Messages
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "#e53935",
+                          color: "#fff",
+                          borderRadius: "50%",
+                          minWidth: 16,
+                          height: 16,
+                          fontSize: "0.55rem",
+                          fontFamily: "sans-serif",
+                          fontWeight: 700,
+                          padding: "0 3px",
+                        }}
+                      >
+                        {unreadCount > 9 ? "9+" : unreadCount}
+                      </span>
+                    </span>
+                  ) : (
+                    item.label
+                  )}
                 </span>
               </button>
             ))}
@@ -826,7 +936,37 @@ export default function App() {
                   whiteSpace: "nowrap",
                 }}
               >
-                {item.label}
+                {item.label === "Messages" && unreadCount > 0 ? (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.2rem",
+                    }}
+                  >
+                    Msg
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "#e53935",
+                        color: "#fff",
+                        borderRadius: "50%",
+                        minWidth: 12,
+                        height: 12,
+                        fontSize: "0.4rem",
+                        fontFamily: "sans-serif",
+                        fontWeight: 700,
+                        padding: "0 2px",
+                      }}
+                    >
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  </span>
+                ) : (
+                  item.label
+                )}
               </span>
             </button>
           ))}

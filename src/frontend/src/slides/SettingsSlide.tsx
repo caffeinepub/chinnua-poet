@@ -49,7 +49,7 @@ interface UserSettings {
   theme: "warm-cream" | "midnight" | "forest" | "ocean" | "rose" | "ink";
   fontStyle: "classic" | "soft";
   textSize: "small" | "medium" | "large";
-  writingMode: "free" | "structured";
+  writingMode: "default" | "free" | "structured";
   autoSave: boolean;
   writingSuggestions: boolean;
   aiEnabled: boolean;
@@ -92,7 +92,7 @@ const defaultSettings: UserSettings = {
   theme: "warm-cream",
   fontStyle: "classic",
   textSize: "medium",
-  writingMode: "free",
+  writingMode: "default",
   autoSave: true,
   writingSuggestions: true,
   aiEnabled: true,
@@ -404,7 +404,34 @@ export default function SettingsSlide({
     key: K,
     value: UserSettings[K],
   ) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
+    setSettings((prev) => {
+      const next = { ...prev, [key]: value };
+      localStorage.setItem("chinnua_user_settings", JSON.stringify(next));
+      localStorage.setItem("chinnua_settings", JSON.stringify(next));
+      // Apply theme immediately
+      if (key === "theme") {
+        applyTheme(value as keyof typeof THEME_PALETTES);
+      }
+      // Apply font/size CSS vars immediately
+      if (key === "textSize") {
+        document.documentElement.style.setProperty(
+          "--theme-font-size-base",
+          value === "small" ? "14px" : value === "large" ? "18px" : "16px",
+        );
+      }
+      if (key === "fontStyle") {
+        document.documentElement.style.setProperty(
+          "--theme-font-family",
+          value === "soft"
+            ? "'Lora', Georgia, serif"
+            : "'Playfair Display', Georgia, serif",
+        );
+      }
+      window.dispatchEvent(
+        new CustomEvent("settingsChanged", { detail: next }),
+      );
+      return next;
+    });
   };
 
   const saveAll = () => {
@@ -1027,6 +1054,12 @@ export default function SettingsSlide({
           <SectionCard title="Writing Preferences" icon={<PenTool size={16} />}>
             <p style={labelStyle}>Default Writing Mode</p>
             <div style={radioGroupStyle}>
+              {radioOption(
+                "default",
+                settings.writingMode,
+                "Default Writing Mode",
+                () => update("writingMode", "default"),
+              )}
               {radioOption("free", settings.writingMode, "Free Verse", () =>
                 update("writingMode", "free"),
               )}
@@ -1035,6 +1068,47 @@ export default function SettingsSlide({
                 settings.writingMode,
                 "Structured",
                 () => update("writingMode", "structured"),
+              )}
+            </div>
+            <div style={{ marginTop: "0.4rem", marginBottom: "0.75rem" }}>
+              {settings.writingMode === "default" && (
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.75rem",
+                    color: "rgba(92,61,46,0.6)",
+                    margin: 0,
+                  }}
+                >
+                  Standard text area — no special formatting applied
+                </p>
+              )}
+              {settings.writingMode === "free" && (
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.75rem",
+                    color: "rgba(92,61,46,0.6)",
+                    margin: 0,
+                  }}
+                >
+                  Open, unstructured, flowing — let words fall freely
+                </p>
+              )}
+              {settings.writingMode === "structured" && (
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.75rem",
+                    color: "rgba(92,61,46,0.6)",
+                    margin: 0,
+                  }}
+                >
+                  Template with title, stanza breaks, and lines
+                </p>
               )}
             </div>
             <Toggle
@@ -1095,129 +1169,336 @@ export default function SettingsSlide({
               onChange={(v) => update("aiAutoSuggest", v)}
               label="Auto-suggest Lines"
             />
+            <p
+              style={{
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
+                fontSize: "0.72rem",
+                color: "rgba(92,61,46,0.5)",
+                margin: "-0.25rem 0 0.6rem 1.8rem",
+              }}
+            >
+              Active in: Notes
+            </p>
             <Toggle
               id="aiWritingSug"
               checked={settings.aiWritingSuggestions}
               onChange={(v) => update("aiWritingSuggestions", v)}
               label="Writing Suggestions"
             />
+            <p
+              style={{
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
+                fontSize: "0.72rem",
+                color: "rgba(92,61,46,0.5)",
+                margin: "-0.25rem 0 0.6rem 1.8rem",
+              }}
+            >
+              Active in: Notes, Feed
+            </p>
             <Toggle
               id="aiImageGen"
               checked={settings.aiImageGen}
               onChange={(v) => update("aiImageGen", v)}
               label="AI Image Generation"
             />
+            <p
+              style={{
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
+                fontSize: "0.72rem",
+                color: "rgba(92,61,46,0.5)",
+                margin: "-0.25rem 0 0.6rem 1.8rem",
+              }}
+            >
+              Active in: Notes, Poems, Gallery, Feed, Messages
+            </p>
             <Toggle
               id="aiAudioGen"
               checked={settings.aiAudioGen}
               onChange={(v) => update("aiAudioGen", v)}
               label="AI Audio Generation"
             />
-            <Toggle
-              id="aiTranslation"
-              checked={settings.aiTranslation}
-              onChange={(v) => update("aiTranslation", v)}
-              label="AI Translation"
-            />
-            <p style={{ ...labelStyle, marginTop: "1rem" }}>AI Mode</p>
-            <div
+            <p
               style={{
-                display: "flex",
-                gap: "0.75rem",
-                flexWrap: "wrap",
-                marginBottom: "1rem",
+                fontFamily: "'Lora', serif",
+                fontStyle: "italic",
+                fontSize: "0.72rem",
+                color: "rgba(92,61,46,0.5)",
+                margin: "-0.25rem 0 0.25rem 1.8rem",
               }}
             >
-              {(
-                [
-                  {
-                    val: "soft",
-                    icon: "soft",
-                    name: "Soft Emotional",
-                    desc: "Gentle & comforting",
-                  },
-                  {
-                    val: "philosophical",
-                    icon: "deep",
-                    name: "Deep Philosophical",
-                    desc: "Reflective & thought-provoking",
-                  },
-                  {
-                    val: "minimal",
-                    icon: "minimal",
-                    name: "Minimal",
-                    desc: "Short & direct",
-                  },
-                ] as const
-              ).map(({ val, icon, name, desc }) => (
-                <button
-                  type="button"
-                  key={val}
-                  onClick={() => update("aiMode", val)}
+              Active in: Notes, Poems, Messages
+            </p>
+
+            {/* AI Audio Generation sub-settings — only visible when enabled */}
+            {settings.aiAudioGen && (
+              <div
+                style={{
+                  background: "rgba(212,168,83,0.06)",
+                  border: "1px solid rgba(212,168,83,0.2)",
+                  borderRadius: 10,
+                  padding: "1rem",
+                  margin: "0.25rem 0 0.75rem 1.5rem",
+                }}
+              >
+                <p
                   style={{
-                    flex: "1 1 140px",
-                    padding: "0.75rem",
-                    borderRadius: 12,
-                    border: `1px solid ${settings.aiMode === val ? colors.gold : colors.border}`,
-                    background:
-                      settings.aiMode === val
-                        ? "rgba(212,168,83,0.1)"
-                        : "transparent",
-                    textAlign: "left",
-                    cursor: "pointer",
-                    transition: "all 0.2s",
+                    fontFamily: "'Playfair Display', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.82rem",
+                    color: "#D4A853",
+                    marginBottom: "0.2rem",
+                    fontWeight: 600,
                   }}
-                  data-ocid={`settings.ai_mode_${val}.button`}
                 >
-                  <div style={{ fontSize: "1.2rem", marginBottom: "0.25rem" }}>
-                    {icon}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: "0.85rem",
-                      color:
-                        settings.aiMode === val ? colors.mocha : colors.text,
-                    }}
-                  >
-                    {name}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "'Lora', serif",
-                      fontSize: "0.75rem",
-                      color: colors.muted,
-                    }}
-                  >
-                    {desc}
-                  </div>
-                </button>
-              ))}
-            </div>
-            <p style={labelStyle}>Default Voice</p>
-            <div style={radioGroupStyle}>
-              {radioOption("male", settings.defaultVoice, "Male", () =>
-                update("defaultVoice", "male"),
-              )}
-              {radioOption("female", settings.defaultVoice, "Female", () =>
-                update("defaultVoice", "female"),
-              )}
-            </div>
-            <p style={labelStyle}>Playback Speed</p>
-            <div style={radioGroupStyle}>
-              {radioOption("slow", settings.playbackSpeed, "Slow", () =>
-                update("playbackSpeed", "slow"),
-              )}
-              {radioOption("normal", settings.playbackSpeed, "Normal", () =>
-                update("playbackSpeed", "normal"),
-              )}
-              {radioOption(
-                "expressive",
-                settings.playbackSpeed,
-                "Expressive",
-                () => update("playbackSpeed", "expressive"),
-              )}
-            </div>
+                  AI Audio Generation Settings
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontSize: "0.72rem",
+                    color: "rgba(92,61,46,0.55)",
+                    marginBottom: "0.9rem",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  These settings control voice tone, gender, and speed used when
+                  speaking aloud in Notes, Poems, and Messages.
+                </p>
+
+                {/* AI Mode */}
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontSize: "0.8rem",
+                    color: "#5C3D2E",
+                    fontWeight: 600,
+                    marginBottom: "0.15rem",
+                  }}
+                >
+                  AI Mode
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.72rem",
+                    color: "rgba(92,61,46,0.5)",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Sets the emotional tone of the voice
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "0.75rem",
+                    flexWrap: "wrap",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  {(
+                    [
+                      {
+                        val: "soft",
+                        icon: "🌸",
+                        name: "Soft Emotional",
+                        desc: "Warm & gentle delivery",
+                      },
+                      {
+                        val: "philosophical",
+                        icon: "🌙",
+                        name: "Deep Philosophical",
+                        desc: "Slow, reflective tone",
+                      },
+                      {
+                        val: "minimal",
+                        icon: "✦",
+                        name: "Minimal",
+                        desc: "Brief, direct reading",
+                      },
+                    ] as const
+                  ).map(({ val, icon, name, desc }) => (
+                    <button
+                      type="button"
+                      key={val}
+                      onClick={() => update("aiMode", val)}
+                      style={{
+                        flex: "1 1 130px",
+                        padding: "0.65rem",
+                        borderRadius: 10,
+                        border: `1px solid ${settings.aiMode === val ? "#D4A853" : "rgba(139,111,71,0.25)"}`,
+                        background:
+                          settings.aiMode === val
+                            ? "rgba(212,168,83,0.12)"
+                            : "rgba(255,248,238,0.6)",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                      }}
+                      data-ocid={`settings.ai_mode_${val}.button`}
+                    >
+                      <div style={{ fontSize: "1rem", marginBottom: "0.2rem" }}>
+                        {icon}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "'Playfair Display', serif",
+                          fontSize: "0.82rem",
+                          color:
+                            settings.aiMode === val ? "#5C3D2E" : "#7A6050",
+                          fontWeight: settings.aiMode === val ? 600 : 400,
+                        }}
+                      >
+                        {name}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "'Lora', serif",
+                          fontSize: "0.7rem",
+                          fontStyle: "italic",
+                          color: "rgba(92,61,46,0.5)",
+                          marginTop: "0.1rem",
+                        }}
+                      >
+                        {desc}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Default Voice */}
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontSize: "0.8rem",
+                    color: "#5C3D2E",
+                    fontWeight: 600,
+                    marginBottom: "0.15rem",
+                  }}
+                >
+                  Default Voice
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.72rem",
+                    color: "rgba(92,61,46,0.5)",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Selects voice gender for playback
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "0.75rem",
+                    flexWrap: "wrap",
+                    marginBottom: "0.9rem",
+                  }}
+                >
+                  {["male", "female"].map((v) => (
+                    <button
+                      type="button"
+                      key={v}
+                      onClick={() =>
+                        update("defaultVoice", v as "male" | "female")
+                      }
+                      style={{
+                        padding: "0.4rem 0.9rem",
+                        borderRadius: 20,
+                        border: `1px solid ${settings.defaultVoice === v ? "#D4A853" : "rgba(139,111,71,0.25)"}`,
+                        background:
+                          settings.defaultVoice === v
+                            ? "rgba(212,168,83,0.12)"
+                            : "transparent",
+                        color:
+                          settings.defaultVoice === v
+                            ? "#5C3D2E"
+                            : "rgba(92,61,46,0.55)",
+                        fontFamily: "'Lora', serif",
+                        fontSize: "0.85rem",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                      }}
+                    >
+                      {v === "male" ? "Male" : "Female"}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Playback Speed */}
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontSize: "0.8rem",
+                    color: "#5C3D2E",
+                    fontWeight: 600,
+                    marginBottom: "0.15rem",
+                  }}
+                >
+                  Playback Speed
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'Lora', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.72rem",
+                    color: "rgba(92,61,46,0.5)",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Controls how fast the text is spoken
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "0.75rem",
+                    flexWrap: "wrap",
+                    marginBottom: "0.25rem",
+                  }}
+                >
+                  {(
+                    [
+                      { val: "slow", label: "Slow — calm & meditative" },
+                      { val: "normal", label: "Normal — clear & natural" },
+                      {
+                        val: "expressive",
+                        label: "Expressive — lively & dynamic",
+                      },
+                    ] as const
+                  ).map(({ val, label }) => (
+                    <button
+                      type="button"
+                      key={val}
+                      onClick={() => update("playbackSpeed", val)}
+                      style={{
+                        padding: "0.4rem 0.9rem",
+                        borderRadius: 20,
+                        border: `1px solid ${settings.playbackSpeed === val ? "#D4A853" : "rgba(139,111,71,0.25)"}`,
+                        background:
+                          settings.playbackSpeed === val
+                            ? "rgba(212,168,83,0.12)"
+                            : "transparent",
+                        color:
+                          settings.playbackSpeed === val
+                            ? "#5C3D2E"
+                            : "rgba(92,61,46,0.55)",
+                        fontFamily: "'Lora', serif",
+                        fontSize: "0.82rem",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <button
               type="button"
               onClick={saveAll}

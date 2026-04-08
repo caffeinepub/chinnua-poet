@@ -2,11 +2,12 @@ import { Lightbulb, Sparkles, Volume2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import {
-  getAiSettings,
-  getAutoSuggestLine,
+  generateAIImage,
+  getAISettings,
   getWritingSuggestions,
-  speakText,
-} from "../utils/aiFeatures";
+  speakText as speakTextFromHook,
+} from "../hooks/useAISettings";
+import { getAutoSuggestLine } from "../utils/aiFeatures";
 
 interface Note {
   id: string;
@@ -92,7 +93,9 @@ function NoteFormModal({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [autoSuggest, setAutoSuggest] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const aiSettings = getAiSettings();
+  const [noteAiImage, setNoteAiImage] = useState<string | null>(null);
+  const [generatingAiImage, setGeneratingAiImage] = useState(false);
+  const aiSettings = getAISettings();
 
   // Auto-suggest debounce
   const handleContentChange = (val: string) => {
@@ -254,7 +257,8 @@ function NoteFormModal({
           {/* AI Writing Tools */}
           {(aiSettings.aiAutoSuggest ||
             aiSettings.aiWritingSuggestions ||
-            aiSettings.aiAudioGen) && (
+            aiSettings.aiAudioGen ||
+            aiSettings.aiImageGen) && (
             <div
               style={{
                 display: "flex",
@@ -266,13 +270,7 @@ function NoteFormModal({
               {aiSettings.aiAudioGen && (
                 <button
                   type="button"
-                  onClick={() =>
-                    speakText(
-                      content,
-                      aiSettings.defaultVoice,
-                      aiSettings.playbackSpeed,
-                    )
-                  }
+                  onClick={() => speakTextFromHook(content, aiSettings)}
                   data-ocid="notes.secondary_button"
                   style={{
                     padding: "0.25rem 0.7rem",
@@ -310,8 +308,76 @@ function NoteFormModal({
                   <Sparkles size={13} /> Suggestions
                 </button>
               )}
+              {aiSettings.aiImageGen && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setGeneratingAiImage(true);
+                    try {
+                      const img = await generateAIImage(`${title} ${content}`);
+                      setNoteAiImage(img);
+                    } finally {
+                      setGeneratingAiImage(false);
+                    }
+                  }}
+                  disabled={generatingAiImage}
+                  data-ocid="notes.secondary_button"
+                  style={{
+                    padding: "0.25rem 0.7rem",
+                    background: noteAiImage
+                      ? "rgba(212,168,83,0.1)"
+                      : "transparent",
+                    border: "1px solid rgba(139,111,71,0.3)",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontSize: "0.72rem",
+                    color: "#8B6F47",
+                  }}
+                >
+                  ✦ {generatingAiImage ? "Generating…" : "Generate Image"}
+                </button>
+              )}
             </div>
           )}
+          {/* AI generated image preview */}
+          {noteAiImage && (
+            <div style={{ position: "relative", marginTop: "0.25rem" }}>
+              <img
+                src={noteAiImage}
+                alt="AI"
+                style={{
+                  maxHeight: 100,
+                  borderRadius: 8,
+                  maxWidth: "100%",
+                  objectFit: "cover",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setNoteAiImage(null)}
+                style={{
+                  position: "absolute",
+                  top: 3,
+                  right: 3,
+                  background: "rgba(0,0,0,0.45)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 18,
+                  height: 18,
+                  cursor: "pointer",
+                  color: "white",
+                  fontSize: "0.65rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
           {/* Auto-suggest ghost text */}
           {aiSettings.aiAutoSuggest && autoSuggest && (
             <div

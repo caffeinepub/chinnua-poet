@@ -3,7 +3,15 @@ import { AnimatePresence, motion } from "motion/react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import EmojiPicker from "../components/EmojiPicker";
+import OnlineDot from "../components/OnlineDot";
+import { AI_BOTS } from "../data/ai-bots";
+import {
+  generateAIImage,
+  speakText,
+  useAISettings,
+} from "../hooks/useAISettings";
 import { useActor } from "../hooks/useActor";
+import { isOnline, updatePresence } from "../utils/presence";
 import InboxSlide from "./InboxSlide";
 
 const WARM_BG = "#FFF0F5";
@@ -830,7 +838,11 @@ export default function MessagesSlide({
   const [conversations, setConversations] = useState<string[]>([
     "CHINNUA_POET",
   ]);
-  const [activeConv, setActiveConv] = useState("CHINNUA_POET");
+  const [activeConv, setActiveConv] = useState(() => {
+    const openUser = sessionStorage.getItem("chinnua_open_user_chat");
+    if (openUser) return openUser;
+    return "CHINNUA_POET";
+  });
   const [msgTab, setMsgTab] = useState<"inbox" | "requests">("inbox");
   const [blockedUsers, setBlockedUsers] = useState<string[]>(() => {
     try {
@@ -841,7 +853,37 @@ export default function MessagesSlide({
   });
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [text, setText] = useState("");
+  const aiSettings = useAISettings();
+  const [aiAttachedImage, setAiAttachedImage] = useState<string | null>(null);
+  const [generatingAiImage, setGeneratingAiImage] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  // Handle open-user-chat from sessionStorage (set by Notifications/Explore)
+  useEffect(() => {
+    const openUser = sessionStorage.getItem("chinnua_open_user_chat");
+    if (openUser) {
+      sessionStorage.removeItem("chinnua_open_user_chat");
+      setConversations((prev) => {
+        if (!prev.includes(openUser)) return [openUser, ...prev];
+        return prev;
+      });
+      setActiveConv(openUser);
+    }
+    // Also listen for openChat custom event
+    const handleOpenChat = (e: Event) => {
+      const username = (e as CustomEvent).detail?.username;
+      if (username) {
+        localStorage.removeItem("chinnua_open_chat_user");
+        setConversations((prev) => {
+          if (!prev.includes(username)) return [username, ...prev];
+          return prev;
+        });
+        setActiveConv(username);
+      }
+    };
+    window.addEventListener("openChat", handleOpenChat);
+    return () => window.removeEventListener("openChat", handleOpenChat);
+  }, []);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showSpotifyInput, setShowSpotifyInput] = useState(false);
   const [spotifyUrl, setSpotifyUrl] = useState("");
@@ -908,6 +950,12 @@ export default function MessagesSlide({
           );
           const updated = { ...prev, [activeConv]: merged };
           localStorage.setItem("chinnua_messages", JSON.stringify(updated));
+          // Notify App of new incoming messages
+          if (newOnes.some((m) => m.from !== currentUser?.username)) {
+            window.dispatchEvent(
+              new CustomEvent("newMessage", { detail: { from: activeConv } }),
+            );
+          }
           return updated;
         });
 
@@ -1170,6 +1218,7 @@ export default function MessagesSlide({
 
   const sendMessage = async () => {
     if (!currentUser || !text.trim()) return;
+    updatePresence(currentUser.username);
     const msg: Message = {
       id: `msg_${Date.now()}`,
       from: currentUser.username,
@@ -1735,6 +1784,151 @@ export default function MessagesSlide({
                   </span>
                 </p>
 
+                {/* All Users quick-start section */}
+                {msgTab === "inbox" &&
+                  (() => {
+                    let allStoredUsers: { username: string }[] = [];
+                    try {
+                      allStoredUsers = JSON.parse(
+                        localStorage.getItem("chinnua_users") || "[]",
+                      );
+                    } catch {}
+                    const botUsernames = AI_BOTS.map((b) => b.username);
+                    const realUsernames = allStoredUsers.map((u) => u.username);
+                    const allUsernames = [
+                      ...new Set([...botUsernames, ...realUsernames]),
+                    ].filter(
+                      (u) =>
+                        u !== currentUser?.username &&
+                        !conversations.includes(u),
+                    );
+                    if (allUsernames.length === 0) return null;
+                    return (
+                      <div style={{ marginBottom: "0.75rem" }}>
+                        <p
+                          style={{
+                            fontFamily: "'Lora', Georgia, serif",
+                            fontSize: "0.58rem",
+                            color: WARM_BROWN,
+                            letterSpacing: "0.08em",
+                            textTransform: "uppercase",
+                            marginBottom: "0.4rem",
+                            paddingLeft: "0.25rem",
+                          }}
+                        >
+                          All Users
+                        </p>
+                        {allUsernames.slice(0, 8).map((uname) => {
+                          const bot = AI_BOTS.find((b) => b.username === uname);
+                          const displayName = bot?.displayName ?? uname;
+                          const online = isOnline(uname);
+                          return (
+                            <button
+                              key={uname}
+                              type="button"
+                              onClick={() => {
+                                setConversations((prev) =>
+                                  prev.includes(uname)
+                                    ? prev
+                                    : [uname, ...prev],
+                                );
+                                setActiveConv(uname);
+                              }}
+                              style={{
+                                width: "100%",
+                                textAlign: "left",
+                                padding: "0.45rem 0.6rem",
+                                borderRadius: 7,
+                                background: "transparent",
+                                border: "1px solid transparent",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.4rem",
+                                marginBottom: "0.15rem",
+                                transition: "background 0.15s",
+                              }}
+                              onMouseEnter={(e) => {
+                                (
+                                  e.currentTarget as HTMLButtonElement
+                                ).style.background = "rgba(212,168,83,0.08)";
+                              }}
+                              onMouseLeave={(e) => {
+                                (
+                                  e.currentTarget as HTMLButtonElement
+                                ).style.background = "transparent";
+                              }}
+                            >
+                              <div
+                                style={{ position: "relative", flexShrink: 0 }}
+                              >
+                                <div
+                                  style={{
+                                    width: 22,
+                                    height: 22,
+                                    borderRadius: "50%",
+                                    background: "rgba(139,111,71,0.15)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    fontSize: "0.6rem",
+                                    fontWeight: 700,
+                                    color: WARM_BROWN,
+                                    overflow: "hidden",
+                                  }}
+                                >
+                                  {bot?.photo ? (
+                                    <img
+                                      src={bot.photo}
+                                      alt={uname}
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                  ) : (
+                                    uname.charAt(0).toUpperCase()
+                                  )}
+                                </div>
+                                <span
+                                  style={{
+                                    position: "absolute",
+                                    bottom: -1,
+                                    right: -1,
+                                  }}
+                                >
+                                  <OnlineDot username={uname} size={7} />
+                                </span>
+                              </div>
+                              <span
+                                style={{
+                                  fontFamily:
+                                    "'Libre Baskerville', Georgia, serif",
+                                  fontSize: "0.7rem",
+                                  color: online ? WARM_MOCHA : WARM_BROWN,
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  flex: 1,
+                                }}
+                              >
+                                {displayName}
+                              </span>
+                            </button>
+                          );
+                        })}
+                        <div
+                          style={{
+                            height: 1,
+                            background: WARM_BORDER,
+                            margin: "0.5rem 0",
+                          }}
+                        />
+                      </div>
+                    );
+                  })()}
+
                 {msgTab === "inbox" ? (
                   conversations
                     .filter((c) => !blockedUsers.includes(c))
@@ -1774,7 +1968,18 @@ export default function MessagesSlide({
                             paddingRight: "2rem",
                           }}
                         >
-                          <AvatarBubble username={conv} size={26} />
+                          <div style={{ position: "relative", flexShrink: 0 }}>
+                            <AvatarBubble username={conv} size={26} />
+                            <span
+                              style={{
+                                position: "absolute",
+                                bottom: -1,
+                                right: -1,
+                              }}
+                            >
+                              <OnlineDot username={conv} size={8} />
+                            </span>
+                          </div>
                           <span
                             style={{
                               overflow: "hidden",
@@ -2171,12 +2376,24 @@ export default function MessagesSlide({
                           fontSize: "0.7rem",
                           margin: "0.2rem 0 0",
                           textAlign: "right",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                          gap: "0.25rem",
                         }}
                       >
                         {new Date(msg.timestamp).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
+                        {msg.from === currentUserName && (
+                          <span
+                            style={{ color: "#D4A853", fontSize: "0.7rem" }}
+                            title="Delivered"
+                          >
+                            ✓✓
+                          </span>
+                        )}
                       </p>
                     </div>
                   ))}
@@ -2495,6 +2712,114 @@ export default function MessagesSlide({
                       <SvgUsersIcon size={14} color="#8B6F47" />
                     </button>
                   </div>
+
+                  {/* AI compose buttons */}
+                  {(aiSettings.aiAudioGen || aiSettings.aiImageGen) && (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.4rem",
+                        marginBottom: "0.4rem",
+                      }}
+                    >
+                      {aiSettings.aiAudioGen && (
+                        <button
+                          type="button"
+                          title="Listen to message preview"
+                          onClick={() => {
+                            if (text.trim()) speakText(text, aiSettings);
+                          }}
+                          disabled={!text.trim()}
+                          style={{
+                            background: "rgba(255,240,245,0.8)",
+                            border: `1px solid ${WARM_BORDER}`,
+                            borderRadius: 6,
+                            padding: "0.2rem 0.5rem",
+                            cursor: text.trim() ? "pointer" : "default",
+                            fontSize: "0.7rem",
+                            color: WARM_BROWN,
+                            fontFamily: "'Libre Baskerville', serif",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.25rem",
+                            opacity: text.trim() ? 1 : 0.5,
+                          }}
+                        >
+                          ▶ Preview
+                        </button>
+                      )}
+                      {aiSettings.aiImageGen && (
+                        <button
+                          type="button"
+                          title="Generate AI image to attach"
+                          onClick={async () => {
+                            setGeneratingAiImage(true);
+                            try {
+                              const img = await generateAIImage(
+                                text || "poetic abstract",
+                              );
+                              setAiAttachedImage(img);
+                            } finally {
+                              setGeneratingAiImage(false);
+                            }
+                          }}
+                          disabled={generatingAiImage}
+                          style={{
+                            background: aiAttachedImage
+                              ? "rgba(212,168,83,0.15)"
+                              : "rgba(255,240,245,0.8)",
+                            border: `1px solid ${WARM_BORDER}`,
+                            borderRadius: 6,
+                            padding: "0.2rem 0.5rem",
+                            cursor: "pointer",
+                            fontSize: "0.7rem",
+                            color: WARM_BROWN,
+                            fontFamily: "'Libre Baskerville', serif",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.25rem",
+                          }}
+                        >
+                          ✦{" "}
+                          {generatingAiImage
+                            ? "Generating…"
+                            : aiAttachedImage
+                              ? "Image Ready"
+                              : "AI Image"}
+                        </button>
+                      )}
+                      {aiAttachedImage && (
+                        <button
+                          type="button"
+                          onClick={() => setAiAttachedImage(null)}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            fontSize: "0.7rem",
+                            color: WARM_BROWN,
+                          }}
+                        >
+                          ✕ Remove image
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {/* AI image preview */}
+                  {aiAttachedImage && (
+                    <div style={{ marginBottom: "0.4rem" }}>
+                      <img
+                        src={aiAttachedImage}
+                        alt="AI"
+                        style={{
+                          maxHeight: 80,
+                          borderRadius: 6,
+                          maxWidth: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  )}
 
                   {/* Text input + send */}
                   <div style={{ display: "flex", gap: "0.5rem" }}>

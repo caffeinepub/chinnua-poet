@@ -972,7 +972,22 @@ export default function UserProfileSlide({
                 {!isOwn && currentUser && (
                   <button
                     type="button"
-                    onClick={onGoToMessages}
+                    onClick={() => {
+                      localStorage.setItem(
+                        "chinnua_open_chat_user",
+                        viewUsername,
+                      );
+                      sessionStorage.setItem(
+                        "chinnua_open_user_chat",
+                        viewUsername,
+                      );
+                      window.dispatchEvent(
+                        new CustomEvent("openChat", {
+                          detail: { username: viewUsername },
+                        }),
+                      );
+                      onGoToMessages();
+                    }}
                     data-ocid="profile.primary_button"
                     style={GoldBtn}
                   >
